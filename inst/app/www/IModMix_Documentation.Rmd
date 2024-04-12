@@ -1,0 +1,43 @@
+---
+title: "iModMix -integrative Modules for Multi-omics data"
+date: "2024-04-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("knitr")
+
+```
+
+## Introduction
+
+Welcome to the Integrative Modules for Multi-omics data (IModMix) shiny app. This app implements integrative analysis of molecular data in a user-friendly interface.
+
+## What is IModMix?
+IModMix is a novel integrative analysis framework by which networks and molecular modules are determined to increase the statistical power to uncover biological relevant associations with a phenotype of interest. 
+
+## What does this application do?
+This application allows users with little or no coding skills to try, explore and play with the IModMix method.
+
+In general terms, this application will let the user:
+
+generate a partial correlation network of all features available in the selected dataset,
+interrogate this network to identify groups of genes (modules) correlated with each other,
+cross these gene modules with available clinical data,
+explore the relations between metabololites modules and gene modules and
+generate a network of modules beetween metabolomics ans proteomics/genomics datasets. 
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
