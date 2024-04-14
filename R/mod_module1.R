@@ -550,6 +550,8 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     output$PCA1 <- renderPlot({
+      requireNamespace("ggplot2", quietly = TRUE)
+      requireNamespace("ggfortify", quietly = TRUE)
       if(is.null(filedata5()$fileInput)){
       ggplot2::autoplot(pca1()$pca_res)
        } else {
@@ -596,6 +598,8 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     output$PCA2 <- renderPlot({
+      requireNamespace("ggplot2", quietly = TRUE)
+      requireNamespace("ggfortify", quietly = TRUE)
       if(is.null(filedata5()$fileInput)){
         ggplot2::autoplot(pca2()$pca_res)
       } else {
@@ -846,6 +850,8 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     output$Loadings1 <- renderPlot({
+      requireNamespace("ggplot2", quietly = TRUE)
+      requireNamespace("ggfortify", quietly = TRUE)
         ggplot2::autoplot(loadings_metab()$pca_res, data = filedata5()$fileInput, colour = input$phenotypeSelector, loadings = TRUE)
     })
 
@@ -1080,6 +1086,8 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     output$Loadings2 <- renderPlot({
+      requireNamespace("ggplot2", quietly = TRUE)
+      requireNamespace("ggfortify", quietly = TRUE)
       ggplot2::autoplot(loadings_Prot()$pca_res, data = filedata6()$fileInput, colour = input$phenotypeSelector2, loadings = TRUE)
     })
 
