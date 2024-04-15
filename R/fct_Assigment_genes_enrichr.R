@@ -8,7 +8,6 @@
 #'
 
 Assigment_genes_enrichr <- function(cluster_assignments_ProtGenes,
-                                    #species = "Human",
                                     database = "GO_Biological_Process_2023" ) {
   websiteLive <- getOption("enrichR.live")
   if (websiteLive) {
@@ -16,14 +15,6 @@ Assigment_genes_enrichr <- function(cluster_assignments_ProtGenes,
     enrichR::setEnrichrSite("Enrichr") # Human genes
   }
   if (websiteLive) dbs <- enrichR::listEnrichrDbs()
-
-  # if (species == "Human") {
-  #   dbs <- c("GO_Molecular_Function_2023", "GO_Cellular_Component_2023", "GO_Biological_Process_2023", "HDSigDB_Human_2021")
-  # } else if (species == "Mouse") {
-  #   dbs <- c("Mouse_Gene_Atlas","WikiPathways_2019_Mouse","KEGG_2019_Mouse", "HDSigDB_Mouse_2021")
-  # } else {
-  #   stop("Invalid species. Please provide 'Human' or 'Mouse'.")
-  # }
 
   dbs <- database
 

@@ -16,244 +16,6 @@ mod_module1_ui <- function(id, input, output, session) {
 
     sidebarPanel(
       width = 4,
-      # selectInput(
-      #   ns("speciesSelector"),
-      #   label = "Select Species",
-      #   choices = c("Human", "Mouse"),
-      #   selected = "Human"
-      # ),
-
-      selectInput(
-        ns("databaseSelector"),
-        label = "Select Library",
-        choices = c("Achilles_fitness_decrease",
-                    "Achilles_fitness_increase",
-                    "Aging_Perturbations_from_GEO_down",
-                    "Aging_Perturbations_from_GEO_up",
-                    "Allen_Brain_Atlas_10x_scRNA_2021",
-                    "Allen_Brain_Atlas_down",
-                    "Allen_Brain_Atlas_up",
-                    "ARCHS4_Cell-lines",
-                    "ARCHS4_IDG_Coexp",
-                    "ARCHS4_Kinases_Coexp",
-                    "ARCHS4_TFs_Coexp",
-                    "ARCHS4_Tissues",
-                    "Azimuth_2023",
-                    "Azimuth_Cell_Types_2021",
-                    "BioCarta_2013",
-                    "BioCarta_2015",
-                    "BioCarta_2016",
-                    "BioPlanet_2019",
-                    "BioPlex_2017",
-                    "Cancer_Cell_Line_Encyclopedia",
-                    "CCLE_Proteomics_2020",
-                    "CellMarker_2024",
-                    "CellMarker_Augmented_2021",
-                    "ChEA_2013",
-                    "ChEA_2015",
-                    "ChEA_2016",
-                    "ChEA_2022",
-                    "Chromosome_Location",
-                    "Chromosome_Location_hg19",
-                    "ClinVar_2019",
-                    "CORUM",
-                    "COVID-19_Related_Gene_Sets",
-                    "COVID-19_Related_Gene_Sets_2021",
-                    "Data_Acquisition_Method_Most_Popular_Genes",
-                    "dbGaP",
-                    "DepMap_WG_CRISPR_Screens_Broad_CellLines_2019",
-                    "DepMap_WG_CRISPR_Screens_Sanger_CellLines_2019",
-                    "Descartes_Cell_Types_and_Tissue_2021",
-                    "Diabetes_Perturbations_GEO_2022",
-                    "Disease_Perturbations_from_GEO_down",
-                    "Disease_Perturbations_from_GEO_up",
-                    "Disease_Signatures_from_GEO_down_2014",
-                    "Disease_Signatures_from_GEO_up_2014",
-                    "DisGeNET",
-                    "Drug_Perturbations_from_GEO_2014",
-                    "Drug_Perturbations_from_GEO_down",
-                    "Drug_Perturbations_from_GEO_up",
-                    "DrugMatrix",
-                    "DSigDB",
-                    "Elsevier_Pathway_Collection",
-                    "ENCODE_and_ChEA_Consensus_TFs_from_ChIP-X",
-                    "ENCODE_Histone_Modifications_2013",
-                    "ENCODE_Histone_Modifications_2015",
-                    "ENCODE_TF_ChIP-seq_2014",
-                    "ENCODE_TF_ChIP-seq_2015",
-                    "Enrichr_Libraries_Most_Popular_Genes",
-                    "Enrichr_Submissions_TF-Gene_Coocurrence",
-                    "Enrichr_Users_Contributed_Lists_2020",
-                    "Epigenomics_Roadmap_HM_ChIP-seq",
-                    "ESCAPE",
-                    "FANTOM6_lncRNA_KD_DEGs",
-                    "GeDiPNet_2023",
-                    "Gene_Perturbations_from_GEO_down",
-                    "Gene_Perturbations_from_GEO_up",
-                    "Genes_Associated_with_NIH_Grants",
-                    "GeneSigDB",
-                    "Genome_Browser_PWMs",
-                    "GlyGen_Glycosylated_Proteins_2022",
-                    "GO_Biological_Process_2013",
-                    "GO_Biological_Process_2015",
-                    "GO_Biological_Process_2017",
-                    "GO_Biological_Process_2017b",
-                    "GO_Biological_Process_2018",
-                    "GO_Biological_Process_2021",
-                    "GO_Biological_Process_2023",
-                    "GO_Cellular_Component_2013",
-                    "GO_Cellular_Component_2015",
-                    "GO_Cellular_Component_2017",
-                    "GO_Cellular_Component_2017b",
-                    "GO_Cellular_Component_2018",
-                    "GO_Cellular_Component_2021",
-                    "GO_Cellular_Component_2023",
-                    "GO_Molecular_Function_2013",
-                    "GO_Molecular_Function_2015",
-                    "GO_Molecular_Function_2017",
-                    "GO_Molecular_Function_2017b",
-                    "GO_Molecular_Function_2018",
-                    "GO_Molecular_Function_2021",
-                    "GO_Molecular_Function_2023",
-                    "GTEx_Aging_Signatures_2021",
-                    "GTEx_Tissue_Expression_Down",
-                    "GTEx_Tissue_Expression_Up",
-                    "GTEx_Tissues_V8_2023",
-                    "GWAS_Catalog_2019",
-                    "GWAS_Catalog_2023",
-                    "HDSigDB_Human_2021",
-                    "HDSigDB_Mouse_2021",
-                    "HMDB_Metabolites",
-                    "HMS_LINCS_KinomeScan",
-                    "HomoloGene",
-                    "HuBMAP_ASCT_plus_B_augmented_w_RNAseq_Coexpression",
-                    "HuBMAP_ASCTplusB_augmented_2022",
-                    "Human_Gene_Atlas",
-                    "Human_Phenotype_Ontology",
-                    "HumanCyc_2015",
-                    "HumanCyc_2016",
-                    "huMAP",
-                    "IDG_Drug_Targets_2022",
-                    "InterPro_Domains_2019",
-                    "Jensen_COMPARTMENTS",
-                    "Jensen_DISEASES",
-                    "Jensen_TISSUES",
-                    "KEA_2013",
-                    "KEA_2015",
-                    "KEGG_2013",
-                    "KEGG_2015",
-                    "KEGG_2016",
-                    "KEGG_2019_Human",
-                    "KEGG_2019_Mouse",
-                    "KEGG_2021_Human",
-                    "Kinase_Perturbations_from_GEO_down",
-                    "Kinase_Perturbations_from_GEO_up",
-                    "KOMP2_Mouse_Phenotypes_2022",
-                    "L1000_Kinase_and_GPCR_Perturbations_down",
-                    "L1000_Kinase_and_GPCR_Perturbations_up",
-                    "Ligand_Perturbations_from_GEO_down",
-                    "Ligand_Perturbations_from_GEO_up",
-                    "LINCS_L1000_Chem_Pert_Consensus_Sigs",
-                    "LINCS_L1000_Chem_Pert_down",
-                    "LINCS_L1000_Chem_Pert_up",
-                    "LINCS_L1000_CRISPR_KO_Consensus_Sigs",
-                    "LINCS_L1000_Ligand_Perturbations_down",
-                    "LINCS_L1000_Ligand_Perturbations_up",
-                    "lncHUB_lncRNA_Co-Expression",
-                    "MAGMA_Drugs_and_Diseases",
-                    "MAGNET_2023",
-                    "MCF7_Perturbations_from_GEO_down",
-                    "MCF7_Perturbations_from_GEO_up",
-                    "Metabolomics_Workbench_Metabolites_2022",
-                    "MGI_Mammalian_Phenotype_2013",
-                    "MGI_Mammalian_Phenotype_2017",
-                    "MGI_Mammalian_Phenotype_Level_3",
-                    "MGI_Mammalian_Phenotype_Level_4",
-                    "MGI_Mammalian_Phenotype_Level_4_2019",
-                    "MGI_Mammalian_Phenotype_Level_4_2021",
-                    "Microbe_Perturbations_from_GEO_down",
-                    "Microbe_Perturbations_from_GEO_up",
-                    "miRTarBase_2017",
-                    "MoTrPAC_2023",
-                    "Mouse_Gene_Atlas",
-                    "MSigDB_Computational",
-                    "MSigDB_Hallmark_2020",
-                    "MSigDB_Oncogenic_Signatures",
-                    "NCI-60_Cancer_Cell_Lines",
-                    "NCI-Nature_2015",
-                    "NCI-Nature_2016",
-                    "NIH_Funded_PIs_2017_AutoRIF_ARCHS4_Predictions",
-                    "NIH_Funded_PIs_2017_GeneRIF_ARCHS4_Predictions",
-                    "NIH_Funded_PIs_2017_Human_AutoRIF",
-                    "NIH_Funded_PIs_2017_Human_GeneRIF",
-                    "NURSA_Human_Endogenous_Complexome",
-                    "Old_CMAP_down",
-                    "Old_CMAP_up",
-                    "OMIM_Disease",
-                    "OMIM_Expanded",
-                    "Orphanet_Augmented_2021",
-                    "PanglaoDB_Augmented_2021",
-                    "Panther_2015",
-                    "Panther_2016",
-                    "Pfam_Domains_2019",
-                    "Pfam_InterPro_Domains",
-                    "PFOCR_Pathways",
-                    "PFOCR_Pathways_2023",
-                    "PhenGenI_Association_2021",
-                    "PheWeb_2019",
-                    "Phosphatase_Substrates_from_DEPOD",
-                    "PPI_Hub_Proteins",
-                    "Proteomics_Drug_Atlas_2023",
-                    "ProteomicsDB_2020",
-                    "Rare_Diseases_AutoRIF_ARCHS4_Predictions",
-                    "Rare_Diseases_AutoRIF_Gene_Lists",
-                    "Rare_Diseases_GeneRIF_ARCHS4_Predictions",
-                    "Rare_Diseases_GeneRIF_Gene_Lists",
-                    "Reactome_2013",
-                    "Reactome_2015",
-                    "Reactome_2016",
-                    "Reactome_2022",
-                    "RNA-Seq_Disease_Gene_and_Drug_Signatures_from_GEO",
-                    "RNAseq_Automatic_GEO_Signatures_Human_Down",
-                    "RNAseq_Automatic_GEO_Signatures_Human_Up",
-                    "RNAseq_Automatic_GEO_Signatures_Mouse_Down",
-                    "RNAseq_Automatic_GEO_Signatures_Mouse_Up",
-                    "Rummagene_kinases",
-                    "Rummagene_signatures",
-                    "Rummagene_transcription_factors",
-                    "SILAC_Phosphoproteomics",
-                    "SubCell_BarCode",
-                    "SynGO_2022",
-                    "SynGO_2024",
-                    "SysMyo_Muscle_Gene_Sets",
-                    "Table_Mining_of_CRISPR_Studies",
-                    "Tabula_Muris",
-                    "Tabula_Sapiens",
-                    "TargetScan_microRNA",
-                    "TargetScan_microRNA_2017",
-                    "TF-LOF_Expression_from_GEO",
-                    "TF_Perturbations_Followed_by_Expression",
-                    "TG_GATES_2020",
-                    "The_Kinase_Library_2023",
-                    "Tissue_Protein_Expression_from_Human_Proteome_Map",
-                    "Tissue_Protein_Expression_from_ProteomicsDB",
-                    "Transcription_Factor_PPIs",
-                    "TRANSFAC_and_JASPAR_PWMs",
-                    "TRRUST_Transcription_Factors_2019",
-                    "UK_Biobank_GWAS_v1",
-                    "Virus-Host_PPI_P-HIPSTer_2020",
-                    "Virus_Perturbations_from_GEO_down",
-                    "Virus_Perturbations_from_GEO_up",
-                    "VirusMINT",
-                    "WikiPathway_2021_Human",
-                    "WikiPathway_2023_Human",
-                    "WikiPathways_2013",
-                    "WikiPathways_2015",
-                    "WikiPathways_2016",
-                    "WikiPathways_2019_Human",
-                    "WikiPathways_2019_Mouse"),
-        selected = "GO_Biological_Process_2023"
-      ),
 
       fileInput(
         ns("DataSet"),
@@ -395,8 +157,12 @@ mod_module1_ui <- function(id, input, output, session) {
                             verbatimTextOutput(ns("matrizTable2")),
                             h4("Herarchical clustering"),
                             plotOutput(ns("hc_plot2")),
-                            #DT::DTOutput(ns("tableClusterAssig2")),
                             h4("Cluster Assignments"),
+                            DT::DTOutput(ns("tableClusterAssig4")),
+                            selectInput(
+                              ns("databaseSelector"),
+                              label = "Select Library",
+                              choices = NULL),
                             DT::DTOutput(ns("tableClusterAssig3")),
                             h4("First principal component from each module"),
                             DT::DTOutput(ns("tableEigengene2"))
@@ -442,7 +208,7 @@ mod_module1_ui <- function(id, input, output, session) {
                  )
 
                  ),
-        tabPanel("Metabolomics-Proteomics/Genomics",
+        tabPanel("Multi-omics Analysis",
                  tabsetPanel(
                    type = "tabs",
                    tabPanel("Modules correlation",
@@ -453,9 +219,14 @@ mod_module1_ui <- function(id, input, output, session) {
                                         step = 0.05,
                                         value = 0.5),
                             h4("Correlation: Metabolites and Proteins/Genes"),
+                            #DT::DTOutput(ns("tableCorrelation_AnnoNull")),
                             DT::DTOutput(ns("tableCorrelation")),
+
+                            #plotOutput(ns("Correlation_plot_AnnoNull")),
                             plotOutput(ns("Correlation_plot")),
+
                             h4("Module Network of Metabolites and Proteins/Genes"),
+                            #plotOutput(ns("Network_plot_AnnoNull")),
                             plotOutput(ns("Network_plot"))
                    ),
                    tabPanel("Important features",
@@ -495,9 +266,6 @@ mod_module1_ui <- function(id, input, output, session) {
 
                             h4("Proteins/Genes"),
                             DT::DTOutput(ns("cluster_assignments_1"))
-
-
-
                  )
           )
         )
@@ -709,7 +477,6 @@ mod_module1_server <- function(id, input, output, session){
       updateSelectInput(session, "moduleSelector", choices = unique_variables())
     })
 
-
     unique_variables2 <- reactive({
       unique(hierarchical_cluster2()$hcCluster_assignments$col)
     })
@@ -717,8 +484,6 @@ mod_module1_server <- function(id, input, output, session){
     observe({
       updateSelectInput(session, "moduleSelector2", choices = unique_variables2())
     })
-
-
 
     cluster_assignments_metabolites1 <- reactive({
       #metab_annotation_data = filedata3()$fileInput
@@ -914,6 +679,11 @@ mod_module1_server <- function(id, input, output, session){
                   hcCluster_assignments = hcCluster_assignments ))
     })
 
+    output$tableClusterAssig4 <- DT::renderDataTable({
+      df1 = hierarchical_cluster2()$hcCluster_assignments
+      DT::datatable(df1)
+    })
+
     cluster_assignments_genes1 <- reactive({
       req(filedata4()$fileInput)
       Prot_annotation = filedata4()$fileInput
@@ -923,15 +693,18 @@ mod_module1_server <- function(id, input, output, session){
       return(list(cluster_assignments_Prot = cluster_assignments_Prot))
     })
 
-    # output$tableClusterAssig2 <- DT::renderDataTable({
-    #   df2 = cluster_assignments_genes1()$cluster_assignments_Prot
-    #   DT::datatable(df2)
-    # })
+    databaseSelectorList <- reactive({
+      gene_set_library = readxl::read_excel("example_data/Gene_set_Library.xlsx", col_names = FALSE)
+      choices <- gene_set_library[[1]]  # Tomar la primera columna como opciones
+      data.frame(choices = choices)
+    })
+
+    observe({
+      updateSelectInput(session, "databaseSelector", choices = databaseSelectorList()$choices)
+    })
+
 
     Genes_Prot_enrich <- reactive({
-      #req(input$speciesSelector)
-      #selected_species <- input$speciesSelector
-
       req(input$databaseSelector)
       selected_database <- input$databaseSelector
 
@@ -1122,7 +895,57 @@ mod_module1_server <- function(id, input, output, session){
                            annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
     })
 
+    #If annotation is NULL
+    # Cor_Prot_Metab_AnnoNull <- reactive({
+    #   threshold = input$pValueThreshold3
+    #   eigengenes_Prot = Eigengene2()$Eigengenes
+    #   eigengenes_metab = Eigengene1()$Eigengenes
+    #   cor_Prot_metab_WGCNA <- cor(eigengenes_Prot, eigengenes_metab, method = 'spearman', use = "pairwise.complete.obs")
+    #   cor_Prot_metab_list <- reshape2::melt(cor_Prot_metab_WGCNA, id.var = "Correlation")
+    #   colnames(cor_Prot_metab_list) <- c("Prot_module", "Metab_module", "Correlation")
+    #   # Filter the correlation list
+    #   Top_cor_Prot_metab <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
+    #   Top_cor_Prot_metab$Correlation <- round(Top_cor_Prot_metab$Correlation, 2)
+    #   return(list(Top_cor_Prot_metab = Cor_Prot_Metab_AnnoNull()$Top_cor_Prot_metab,
+    #               cor_Prot_metab_WGCNA = Cor_Prot_Metab_AnnoNull()$cor_Prot_metab_WGCNA))
+    # })
+    #
+    # output$tableCorrelation_AnnoNull <- DT::renderDataTable({
+    #   df4 = as.data.frame(Cor_Prot_Metab_AnnoNull()$Top_cor_Prot_metab)
+    #   DT::datatable(df4)
+    # })
+    #
+    # # Create a histogram of correlation
+    # output$Correlation_plot_AnnoNull <- renderPlot({
+    #   cor_Prot_metab_WGCNA = Cor_Prot_Metab_AnnoNull()$cor_Prot_metab_WGCNA
+    #   hist(cor_Prot_metab_WGCNA, main = "Histogram of Correlation")
+    # })
+    #
+    # output$Network_plot_AnnoNull <- renderPlot({
+    #   filtered_cor_Prot_metab_list = as.data.frame(Cor_Prot_Metab_AnnoNull()$Top_cor_Prot_metab)
+    #   # Create the network graph
+    #   network <- igraph::graph_from_data_frame(filtered_cor_Prot_metab_list, directed = FALSE)
+    #   igraph::E(network)$label <- filtered_cor_Prot_metab_list$Correlation
+    #   # Conditions for node type and color
+    #   condicion_tipo <- ifelse(grepl("Gene", igraph::V(network)$name), "lightgreen", "#E69F00")
+    #   color_text <- ifelse(grepl("Gene", igraph::V(network)$name), "darkgreen", "orange")
+    #
+    #   plot(
+    #     network,
+    #     edge.label = igraph::E(network)$label,
+    #     vertex.size = 2,
+    #     vertex.color = condicion_tipo,
+    #     vertex.label.color = color_text,
+    #     edge.label.cex = 0.8,
+    #     edge.label.color = "black",
+    #     edge.width = 2,
+    #     edge.color = "gray",
+    #     main = "Modules network"
+    #   )
+    # })
 
+
+    # If annotation data is available
     Cor_Prot_Metab1 <- reactive({
       eigengenes_Prot = Eigengene2()$Eigengenes
       eigengenes_metab = Eigengene1()$Eigengenes
@@ -1170,9 +993,7 @@ mod_module1_server <- function(id, input, output, session){
         edge.color = "gray",
         main = "Modules network"
       )
-
      })
-
 
     ImpVar_Prot_Metab1 <- reactive({
       Cor_Prot_Metab = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
@@ -1190,7 +1011,7 @@ mod_module1_server <- function(id, input, output, session){
                                                      metab_annotation,
                                                      Prot_t,
                                                      metab_t,
-                                                     top_n = 5) #$correlation_matrices_list
+                                                     top_n = 1) #$correlation_matrices_list
       return(list(
         Top_correlations = ImpVar_Prot_Metab$Top_correlations,
         cluster_assignments = ImpVar_Prot_Metab$cluster_assignments,
