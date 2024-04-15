@@ -38,7 +38,7 @@ the metabolite,proteins and genes must be identified in, `Feture ID` which conta
 knitr::include_graphics(paste0(here::here(),"/documentation/Expression.png"), error = FALSE)
 ```
 
-Metabolomics data must be have `KEGG.ID` for the metabolites that have corresponding KEGG IDs for enrichment analysis.
+Metabolomics data must be have `KEGG` for the metabolites that have corresponding KEGG IDs for annotation purposes.
 Proteomics/Genomics data must be have `Symbol` for the features that have corresponding Symbols for enrichment analysis.
 *See Figure 2 for an example of the annotation data input format.*
 
