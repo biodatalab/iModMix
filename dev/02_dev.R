@@ -58,6 +58,7 @@ golem::add_fct("Modules_correlation", with_test = TRUE)
 golem::add_fct("FeaturesAnnot_correlation", with_test = TRUE)
 golem::add_fct("annotation_matrices_list", with_test = TRUE)
 golem::add_fct("perform_classification", with_test = TRUE)
+golem::add_fct("Modules_correlation_AnnoNull", with_test = TRUE)
 golem::add_utils("utils_load", with_test = TRUE)
 
 ## External resources
