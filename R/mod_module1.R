@@ -89,6 +89,8 @@ mod_module1_ui <- function(id, input, output, session) {
                    tabPanel("Module Assignments",
                             h4("Sparse partial correlations: Metabolites"),
                             verbatimTextOutput(ns("matrizTable")),
+                            downloadButton(ns("downloadParCor"),
+                                           "Download Partial Correlation"),
                             h4("Herarchical clustering"),
                             plotOutput(ns("hc_plot")),
                             h4("Cluster Assignments"),
@@ -155,6 +157,8 @@ mod_module1_ui <- function(id, input, output, session) {
                    tabPanel("Module Assignments",
                             h4("Sparse partial correlations: Proteins/Genes"),
                             verbatimTextOutput(ns("matrizTable2")),
+                            downloadButton(ns("downloadParCor2"),
+                                           "Download Partial Correlation"),
                             h4("Herarchical clustering"),
                             plotOutput(ns("hc_plot2")),
                             h4("Cluster Assignments"),
@@ -447,13 +451,22 @@ mod_module1_server <- function(id, input, output, session){
       feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
       colnames(feature_mat_t) <- features
       par_cor1=partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
-      return(list(par_cor1 = par_cor1, feature_mat_t = feature_mat_t))
+      return(list(par_cor1 = par_cor1))
     })
 
     output$matrizTable <- renderPrint({
       partial_cors1()$par_cor1[1:5,1:5]
     })
 
+    # Render the download handler
+    output$downloadParCor <- downloadHandler(
+      filename = function() {
+        "PartialCorMetabolites.csv"
+      },
+      content = function(file) {
+        write.csv(partial_cors1()$par_cor1, file, row.names = TRUE)
+      }
+    )
 
     hierarchical_cluster1 <- reactive({
       par_cor2 = partial_cors1()$par_cor1
@@ -525,7 +538,7 @@ mod_module1_server <- function(id, input, output, session){
       colnames(feature_mat_t) <- features
       Cluster_assignments = hierarchical_cluster1()$hcCluster_assignments2[,3]
       Eigengenes = Eigengenes(feature_mat_t = feature_mat_t, cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
-      return(list(Eigengenes = Eigengenes))
+      return(list(Eigengenes = Eigengenes, feature_mat_t = feature_mat_t))
     })
 
     output$tableEigengene <- DT::renderDataTable({
@@ -661,12 +674,22 @@ mod_module1_server <- function(id, input, output, session){
       feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
       colnames(feature_mat_t) <- features
       par_cor=partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
-      return(list(par_cor = par_cor, feature_mat_t = feature_mat_t))
+      return(list(par_cor = par_cor))
     })
 
     output$matrizTable2 <- renderPrint({
       partial_cors2()$par_cor[1:5,1:5]
     })
+
+    # Render the download handler
+    output$downloadParCor2 <- downloadHandler(
+      filename = function() {
+        "PartialCorProtGenes.csv"
+      },
+      content = function(file) {
+        write.csv(partial_cors2()$par_cor, file, row.names = TRUE)
+      }
+    )
 
     hierarchical_cluster2 <- reactive({
       par_cor = partial_cors2()$par_cor
@@ -715,10 +738,10 @@ mod_module1_server <- function(id, input, output, session){
       return(list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich))
     })
 
-    #curl::has_internet()
-    #assign("has_internet_via_proxy", TRUE, environment(curl::has_internet))
-    #library(enrichR)
-    #enrichR::listEnrichrSites()
+    # curl::has_internet()
+    # assign("has_internet_via_proxy", TRUE, environment(curl::has_internet))
+    # library(enrichR)
+    # enrichR::listEnrichrSites()
     output$tableClusterAssig3 <- DT::renderDataTable({
       df3 = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
       DT::datatable(df3)
@@ -748,7 +771,7 @@ mod_module1_server <- function(id, input, output, session){
       Cluster_assignments = hierarchical_cluster2()$hcCluster_assignments[,3]
       Eigengenes = Eigengenes(feature_mat_t = feature_mat_t,
                               cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
-      return(list(Eigengenes = Eigengenes))
+      return(list(Eigengenes = Eigengenes, feature_mat_t = feature_mat_t))
     })
 
     output$tableEigengene2 <- DT::renderDataTable({
@@ -1002,8 +1025,8 @@ mod_module1_server <- function(id, input, output, session){
       cluster_assignments_metab = cluster_assignments_metabolites1()$cluster_assignments_metab
       Prot_annotation = filedata4()$fileInput
       metab_annotation = filedata3()$fileInput
-      Prot_t = partial_cors2()$feature_mat_t
-      metab_t = partial_cors1()$feature_mat_t
+      Prot_t = Eigengene2()$feature_mat_t
+      metab_t = Eigengene1()$feature_mat_t
       ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Prot_Metab,
                                                      cluster_assignments_Prot_enrich,
                                                      cluster_assignments_metab,
