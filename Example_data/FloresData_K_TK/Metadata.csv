@@ -1,0 +1,21 @@
+Sample,Mouse ID,Genotype,Condition,column_name
+K1A,R186,KrasLSLG12D/+; RosaM/M,K,K1A
+K2A,R185,KrasLSLG12D/+; RosaM/M,K,K2A
+K2B,R185,KrasLSLG12D/+; RosaM/M,K,K2B
+K2C,R185,KrasLSLG12D/+; RosaM/M,K,K2C
+K3A,R190,KrasLSLG12D/+; RosaM/M,K,K3A
+K4A,R189,KrasLSLG12D/+; RosaM/M,K,K4A
+K5B,R769,KrasLSLG12D/+; RosaM/M,K,K5B
+K5C,R769,KrasLSLG12D/+; RosaM/M,K,K5C
+K6A,R771,KrasLSLG12D/+; RosaM/M,K,K6A
+K6B,R771,KrasLSLG12D/+; RosaM/M,K,K6B
+TK1A,R192,TAp73fltd/fltd; Rosa+/+; KrasLSLG12D/+,TK,TK1A
+TK2A,R194,TAp73fltd/fltd; Rosa+/+; KrasLSLG12D/+,TK,TK2A
+TK4A,R913,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+,TK,TK4A
+TK4B,R913,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+,TK,TK4B
+TK4C,R913,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+,TK,TK4C
+TK4D,R913,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+,TK,TK4D
+TK5B,R911,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+,TK,TK5B
+TK5C,R911,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+,TK,TK5C
+TK5D,R911,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+,TK,TK5D
+TK5E,R911,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+,TK,TK5E

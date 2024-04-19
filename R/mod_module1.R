@@ -8,6 +8,8 @@
 #'
 #' @importFrom shiny NS tagList
 #'
+
+
 mod_module1_ui <- function(id, input, output, session) {
 
   ns <- NS(id)
@@ -64,7 +66,14 @@ mod_module1_ui <- function(id, input, output, session) {
                    'text/plain',
                    '.csv'),
         label = h5("Metadata")
+      ),
+
+      div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
+
+      actionButton(
+        ns("runDemo"), "Run with Demo Data", icon = icon("play")
       )
+
     ),
 
 
@@ -284,16 +293,55 @@ mod_module1_ui <- function(id, input, output, session) {
 mod_module1_server <- function(id, input, output, session){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    filedata <- reactive({
+
+    filedata <- reactiveVal(NULL)
+    filedata3 <- reactiveVal(NULL)
+    filedata2 <- reactiveVal(NULL)
+    filedata4 <- reactiveVal(NULL)
+    metadata <- reactiveVal(NULL)
+
+    observeEvent(input$DataSet, {
       req(input$DataSet)
-      fileInput <- load_file(input$DataSet$name, input$DataSet$datapath)
-      fileInput <- as.data.frame(fileInput)
-      return(list(fileInput = fileInput))
+      filedata_value <- read.csv(input$DataSet$datapath)
+      filedata(filedata_value)
     })
+
+    observeEvent(input$DataSet3, {
+      req(input$DataSet)
+      filedata_value <- read.csv(input$DataSet3$datapath)
+      filedata3(filedata_value)
+    })
+
+    observeEvent(input$DataSet2, {
+      req(input$DataSet)
+      filedata_value <- read.csv(input$DataSet2$datapath)
+      filedata2(filedata_value)
+    })
+
+    observeEvent(input$DataSet4, {
+      req(input$DataSet)
+      filedata_value <- read.csv(input$DataSet4$datapath)
+      filedata4(filedata_value)
+    })
+
+    observeEvent(input$metadata, {
+      req(input$metadata)
+      filedata_metadata <- read.csv(input$metadata$datapath)
+      metadata(filedata_metadata)
+    })
+
+    observeEvent(input$runDemo, {
+      filedata(load_data("Metab_exp.csv"))
+      filedata3(load_data("Metab_annot.csv"))
+      filedata2(load_data("Prot_exp.csv"))
+      filedata4(load_data("Prot_annot.csv"))
+      metadata(load_data("Metadata.csv"))
+    })
+
     data_info <- reactive({
-      req(filedata()$fileInput)
-      Nobservations <- nrow(filedata()$fileInput)
-      Ncells <- ncol(filedata()$fileInput)-1
+      req(filedata())
+      Nobservations <- nrow(filedata())
+      Ncells <- ncol(filedata())-1
       SummaryData <- as.data.frame(list(Number = c(Ncells, Nobservations)))
       rownames(SummaryData) <- c("Samples", "Features")
       list(SummaryData = SummaryData)
@@ -303,13 +351,13 @@ mod_module1_server <- function(id, input, output, session){
       DT::datatable(df)
     })
     output$table <- DT::renderDataTable({
-      df <- filedata()$fileInput
+      df <- filedata()
       DT::datatable(df)
     })
 
     pca1 <- reactive({
-      req(filedata()$fileInput)
-      data = filedata()$fileInput
+      req(filedata())
+      data = filedata()
       data$missing_count = rowSums(is.na(data))
       feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
       features <- feature_mat[,1]
@@ -324,24 +372,18 @@ mod_module1_server <- function(id, input, output, session){
     output$PCA1 <- renderPlot({
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
-      if(is.null(filedata5()$fileInput)){
+      if(is.null(metadata())){
       ggplot2::autoplot(pca1()$pca_res)
        } else {
-        req(filedata5()$fileInput)
-        ggplot2::autoplot(pca1()$pca_res, data = filedata5()$fileInput, colour = input$phenotypeSelectorPCA)
+        req(metadata())
+        ggplot2::autoplot(pca1()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA)
       }
     })
 
-    filedata2 <- reactive({
-      req(input$DataSet2)
-      fileInput <- load_file(input$DataSet2$name, input$DataSet2$datapath)
-      fileInput <- as.data.frame(fileInput)
-      return(list(fileInput = fileInput))
-    })
     data_info2 <- reactive({
-      req(filedata2()$fileInput)
-      Nobservations <- nrow(filedata2()$fileInput)
-      Ncells <- ncol(filedata2()$fileInput)-1
+      req(filedata2())
+      Nobservations <- nrow(filedata2())
+      Ncells <- ncol(filedata2())-1
       SummaryData <- as.data.frame(list(Number = c(Ncells, Nobservations)))
       rownames(SummaryData) <- c("Samples", "Features")
       list(SummaryData = SummaryData)
@@ -351,13 +393,13 @@ mod_module1_server <- function(id, input, output, session){
       DT::datatable(df)
     })
     output$table2 <- DT::renderDataTable({
-      df <- filedata2()$fileInput
+      df <- filedata2()
       DT::datatable(df)
     })
 
     pca2 <- reactive({
-      req(filedata2()$fileInput)
-      data = filedata2()$fileInput
+      req(filedata2())
+      data = filedata2()
       data$missing_count = rowSums(is.na(data))
       feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
       features <- feature_mat[,1]
@@ -372,50 +414,35 @@ mod_module1_server <- function(id, input, output, session){
     output$PCA2 <- renderPlot({
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
-      if(is.null(filedata5()$fileInput)){
+      if(is.null(metadata())){
         ggplot2::autoplot(pca2()$pca_res)
       } else {
-        ggplot2::autoplot(pca2()$pca_res, data = filedata5()$fileInput, colour = input$phenotypeSelectorPCA2)
+        ggplot2::autoplot(pca2()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA2)
       }
     })
 
-
-    filedata3 <- reactive({
-      req(input$DataSet3)
-      fileInput <- load_file(input$DataSet3$name, input$DataSet3$datapath)
-      fileInput <- as.data.frame(fileInput)
-      return(list(fileInput = fileInput))
-    })
     output$table3 <- DT::renderDataTable({
-      df <- filedata3()$fileInput
+      df <- filedata3()
       DT::datatable(df)
     })
 
-    filedata4 <- reactive({
-      req(input$DataSet4)
-      fileInput <- load_file(input$DataSet4$name, input$DataSet4$datapath)
-      fileInput <- as.data.frame(fileInput)
-      return(list(fileInput = fileInput))
-    })
     output$table4 <- DT::renderDataTable({
-      df <- filedata4()$fileInput
+      df <- filedata4()
       DT::datatable(df)
     })
 
-    filedata5 <- reactive({
-      req(input$metadata)
-      fileInput <- load_file(input$metadata$name, input$metadata$datapath)
-      fileInput <- as.data.frame(fileInput)
-      return(list(fileInput = fileInput))
-    })
+    # filedata5 <- reactive({
+    #   req(input$metadata)
+    #   as.data.frame(load_file(input$metadata$name, input$metadata$datapath))
+    # })
 
     output$table5 <- DT::renderDataTable({
-      df <- filedata5()$fileInput
+      df <- metadata()
       DT::datatable(df)
     })
 
     pheno_variablesPCA <- reactive({
-      names(filedata5()$fileInput)
+      names(metadata())
     })
 
     # For metabolites global PCA
@@ -424,7 +451,7 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     pheno_variables <- reactive({
-      names(filedata5()$fileInput)
+      names(metadata())
     })
 
     # for modules loading plot
@@ -433,7 +460,7 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     pheno_variables2 <- reactive({
-      names(filedata5()$fileInput)
+      names(metadata())
     })
 
     # for modules loading plot
@@ -443,8 +470,8 @@ mod_module1_server <- function(id, input, output, session){
 
 
     partial_cors1 <- reactive({
-      req(filedata()$fileInput)
-      data = filedata()$fileInput
+      req(filedata())
+      data = filedata()
       data$missing_count = rowSums(is.na(data))
       feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
       features <- feature_mat[,1]
@@ -499,12 +526,12 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     cluster_assignments_metabolites1 <- reactive({
-      #metab_annotation_data = filedata3()$fileInput
+      #metab_annotation_data = filedata3()
       cluster_metabolites = as.data.frame(hierarchical_cluster1()$hcCluster_assignments2)
-      if (is.null(filedata3()$fileInput)) {
+      if (is.null(filedata3())) {
         cluster_assignments_metab <- cluster_assignments_metabolites(cluster_metabolites = cluster_metabolites, metab_annotation = NULL)
       } else {
-        cluster_assignments_metab <- cluster_assignments_metabolites(cluster_metabolites = cluster_metabolites, metab_annotation = filedata3()$fileInput)
+        cluster_assignments_metab <- cluster_assignments_metabolites(cluster_metabolites = cluster_metabolites, metab_annotation = filedata3())
       }
       #cluster_assignments_metab = cluster_assignments_metabolites(cluster_metabolites = cluster_metabolites, metab_annotation = metab_annotation)
       return(list(cluster_assignments_metab = cluster_assignments_metab))
@@ -529,8 +556,8 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     Eigengene1 <- reactive({
-      req(filedata()$fileInput)
-      data = filedata()$fileInput
+      req(filedata())
+      data = filedata()
       data$missing_count = rowSums(is.na(data))
       feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
       features <- feature_mat[,1]
@@ -548,7 +575,7 @@ mod_module1_server <- function(id, input, output, session){
 
     Classification_Metabolites <- reactive({
       eigengenes_metab = as.data.frame(Eigengene1()$Eigengenes)
-      metadata <- as.data.frame(filedata5()$fileInput)
+      metadata <- as.data.frame(metadata())
       phenotype_variable = input$phenotypeSelector
       significance_threshold = input$pValueThreshold
       classification_metabolite <- perform_classification( eigengene_data = eigengenes_metab,
@@ -567,7 +594,7 @@ mod_module1_server <- function(id, input, output, session){
 
     output$classification_plot_1_all <- renderPlot({
       selected_variable <- input$phenotypeSelector
-      levels_selected_variable <- unique(filedata5()$fileInput[[selected_variable]])
+      levels_selected_variable <- unique(metadata()[[selected_variable]])
       if (length(levels_selected_variable) < 3) {
         class_names <- levels_selected_variable
         class_label <- paste(class_names, collapse = " vs ")
@@ -588,8 +615,8 @@ mod_module1_server <- function(id, input, output, session){
 
 
     loadings_metab <- reactive({
-      req(filedata()$fileInput)
-      data = filedata()$fileInput
+      req(filedata())
+      data = filedata()
 
       selected_variable <- input$phenotypeSelector
       data$missing_count = rowSums(is.na(data))
@@ -605,8 +632,14 @@ mod_module1_server <- function(id, input, output, session){
       cluster_variables_Metab <- cluster_Metab$feature
       cluster_variables_MetabKEGG <- cluster_variables_Metab
       cluster_expression_matrix_Metab <- feature_mat_t_imp_data[, colnames(feature_mat_t_imp_data) %in% cluster_variables_Metab, drop = FALSE]
-      combined_data <- merge(filedata5()$fileInput[,c("Sample", selected_variable)], cluster_expression_matrix_Metab, by.x = "Sample", by.y = "row.names", all.x = TRUE)
+      print(cluster_expression_matrix_Metab)
+
+      combined_data <- merge(metadata()[,c("Sample", selected_variable)], cluster_expression_matrix_Metab, by.x = "Sample", by.y = "row.names", all.x = TRUE)
+      print(combined_data)
+
       heatmap_data_sub_order <- combined_data[order(combined_data[[selected_variable]]), ]
+      print(heatmap_data_sub_order)
+
       data_heat= t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
 
       pca_res <- prcomp(cluster_expression_matrix_Metab)
@@ -620,8 +653,8 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     output$ModuleFeaturesAnnot <- DT::renderDataTable({
-        req(filedata3()$fileInput)
-        AnnoMeta = as.data.frame(filedata3()$fileInput)
+        req(filedata3())
+        AnnoMeta = as.data.frame(filedata3())
         cluster_variables_Metab = loadings_metab()$cluster_variables_MetabKEGG
         cluster_variables_MetabKEGG <- AnnoMeta[AnnoMeta$Feature_ID %in% cluster_variables_Metab, c("Feature_ID", "KEGG")]
       DT::datatable(cluster_variables_MetabKEGG, rownames = FALSE)
@@ -630,12 +663,12 @@ mod_module1_server <- function(id, input, output, session){
     output$Loadings1 <- renderPlot({
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
-        ggplot2::autoplot(loadings_metab()$pca_res, data = filedata5()$fileInput, colour = input$phenotypeSelector, loadings = TRUE)
+        ggplot2::autoplot(loadings_metab()$pca_res, data = metadata(), colour = input$phenotypeSelector, loadings = TRUE)
     })
 
     output$heatmap1 <- renderPlot({
       selected_variable <- input$phenotypeSelector
-      levels_selected_variable <- unique(filedata5()$fileInput[[selected_variable]])
+      levels_selected_variable <- unique(metadata()[[selected_variable]])
 
       if (length(levels_selected_variable) == 2) {
         # Usar una paleta diferente para dos niveles
@@ -666,8 +699,8 @@ mod_module1_server <- function(id, input, output, session){
 
 
     partial_cors2 <- reactive({
-      req(filedata2()$fileInput)
-      data = filedata2()$fileInput
+      req(filedata2())
+      data = filedata2()
       data$missing_count = rowSums(is.na(data))
       feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
       features <- feature_mat[,1]
@@ -708,8 +741,8 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     cluster_assignments_genes1 <- reactive({
-      req(filedata4()$fileInput)
-      Prot_annotation = filedata4()$fileInput
+      req(filedata4())
+      Prot_annotation = filedata4()
       cluster_genes = hierarchical_cluster2()$hcCluster_assignments
       cluster_assignments_Prot = cluster_assignments_genes(cluster_genes = cluster_genes,
                                                            Prot_annotation = Prot_annotation)
@@ -739,9 +772,9 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     # curl::has_internet()
-    # assign("has_internet_via_proxy", TRUE, environment(curl::has_internet))
-    # library(enrichR)
-    # enrichR::listEnrichrSites()
+    assign("has_internet_via_proxy", TRUE, environment(curl::has_internet))
+    library(enrichR)
+    enrichR::listEnrichrSites()
     output$tableClusterAssig3 <- DT::renderDataTable({
       df3 = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
       DT::datatable(df3)
@@ -761,8 +794,8 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     Eigengene2 <- reactive({
-      req(filedata2()$fileInput)
-      data = filedata2()$fileInput
+      req(filedata2())
+      data = filedata2()
       data$missing_count = rowSums(is.na(data))
       feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
       features <- feature_mat[,1]
@@ -779,19 +812,13 @@ mod_module1_server <- function(id, input, output, session){
       DT::datatable(df3)
     })
 
-    filedata6 <- reactive({
-      req(input$metadata)
-      fileInput <- load_file(input$metadata$name, input$metadata$datapath)
-      fileInput <- as.data.frame(fileInput)
-      return(list(fileInput = fileInput))
-    })
     output$table6 <- DT::renderDataTable({
-      df <- filedata6()$fileInput
+      df <- metadata()
       DT::datatable(df)
     })
 
     pheno_variablesPCA2 <- reactive({
-      names(filedata6()$fileInput)
+      names(metadata())
     })
 
     # For metabolites global PCA
@@ -801,7 +828,7 @@ mod_module1_server <- function(id, input, output, session){
 
     Classification_Proteins <- reactive({
       eigengenes_prot = as.data.frame(Eigengene2()$Eigengenes)
-      metadata <- as.data.frame(filedata6()$fileInput)
+      metadata <- as.data.frame(metadata())
       phenotype_variable = input$phenotypeSelector2
       significance_threshold = input$pValueThreshold2
       classification_proteins <- perform_classification( eigengene_data = eigengenes_prot,
@@ -819,7 +846,7 @@ mod_module1_server <- function(id, input, output, session){
 
     output$classification_plot_2_all <- renderPlot({
       selected_variable <- input$phenotypeSelector2
-      levels_selected_variable <- unique(filedata6()$fileInput[[selected_variable]])
+      levels_selected_variable <- unique(metadata()[[selected_variable]])
       if (length(levels_selected_variable) < 3) {
         class_names <- levels_selected_variable
         class_label <- paste(class_names, collapse = " vs ")
@@ -840,8 +867,8 @@ mod_module1_server <- function(id, input, output, session){
 
 
     loadings_Prot <- reactive({
-      req(filedata2()$fileInput)
-      data = filedata2()$fileInput
+      req(filedata2())
+      data = filedata2()
 
       selected_variable <- input$phenotypeSelector2
       data$missing_count = rowSums(is.na(data))
@@ -858,7 +885,7 @@ mod_module1_server <- function(id, input, output, session){
       cluster_variables_ProtSymbol <- cluster_variables_Prot
 
       cluster_expression_matrix_Prot <- feature_mat_t_imp_data[, colnames(feature_mat_t_imp_data) %in% cluster_variables_Prot, drop = FALSE]
-      combined_data <- merge(filedata6()$fileInput[,c("Sample", selected_variable)], cluster_expression_matrix_Prot, by.x = "Sample", by.y = "row.names", all.x = TRUE)
+      combined_data <- merge(metadata()[,c("Sample", selected_variable)], cluster_expression_matrix_Prot, by.x = "Sample", by.y = "row.names", all.x = TRUE)
       heatmap_data_sub_order <- combined_data[order(combined_data[[selected_variable]]), ]
       data_heat= t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
 
@@ -874,8 +901,8 @@ mod_module1_server <- function(id, input, output, session){
     })
 
     output$ModuleFeatures2Annot <- DT::renderDataTable({
-      req(filedata4()$fileInput)
-      AnnoProt = as.data.frame(filedata4()$fileInput)
+      req(filedata4())
+      AnnoProt = as.data.frame(filedata4())
       cluster_variables_Prot = loadings_Prot()$cluster_variables_ProtSymbol
       cluster_variables_ProtSymbol <- AnnoProt[AnnoProt$Feature_ID %in% cluster_variables_Prot, c("Feature_ID", "Symbol")]
       DT::datatable(cluster_variables_ProtSymbol, rownames = FALSE)
@@ -884,12 +911,12 @@ mod_module1_server <- function(id, input, output, session){
     output$Loadings2 <- renderPlot({
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
-      ggplot2::autoplot(loadings_Prot()$pca_res, data = filedata6()$fileInput, colour = input$phenotypeSelector2, loadings = TRUE)
+      ggplot2::autoplot(loadings_Prot()$pca_res, data = metadata(), colour = input$phenotypeSelector2, loadings = TRUE)
     })
 
     output$heatmap2 <- renderPlot({
       selected_variable <- input$phenotypeSelector2
-      levels_selected_variable <- unique(filedata6()$fileInput[[selected_variable]])
+      levels_selected_variable <- unique(metadata()[[selected_variable]])
 
       if (length(levels_selected_variable) == 2) {
         # Usar una paleta diferente para dos niveles
@@ -1023,8 +1050,8 @@ mod_module1_server <- function(id, input, output, session){
       #cluster_assignments_Prot_enrich = cluster_assignments_genes1()$cluster_assignments_Prot
       cluster_assignments_Prot_enrich = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
       cluster_assignments_metab = cluster_assignments_metabolites1()$cluster_assignments_metab
-      Prot_annotation = filedata4()$fileInput
-      metab_annotation = filedata3()$fileInput
+      Prot_annotation = filedata4()
+      metab_annotation = filedata3()
       Prot_t = Eigengene2()$feature_mat_t
       metab_t = Eigengene1()$feature_mat_t
       ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Prot_Metab,
@@ -1034,7 +1061,7 @@ mod_module1_server <- function(id, input, output, session){
                                                      metab_annotation,
                                                      Prot_t,
                                                      metab_t,
-                                                     top_n = 1) #$correlation_matrices_list
+                                                     top_n = 5) #$correlation_matrices_list
       return(list(
         Top_correlations = ImpVar_Prot_Metab$Top_correlations,
         cluster_assignments = ImpVar_Prot_Metab$cluster_assignments,
@@ -1166,6 +1193,7 @@ mod_module1_server <- function(id, input, output, session){
     output$Important_features_2 <- renderText({
       Important_Features()$df5_2
     })
+
 
   })
 }
