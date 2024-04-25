@@ -10,7 +10,7 @@ install.packages("remotes")
 ```
 ### The following console command is to install from github
 ```
-remotes::install_github("iModMix", auth_token = "your GitHub token")
+remotes::install_github("IsisNarvaez/iModmix", auth_token = "your GitHub token")
 ```
 
 ## Example
