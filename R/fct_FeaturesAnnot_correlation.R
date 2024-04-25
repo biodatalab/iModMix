@@ -10,7 +10,7 @@
 #' @param metab_t A feature matrix (e.g. gene expression) with samples in columns and features (e.g. metabolites) in rows Row names must be unique.
 #' @return Important features
 #' @export
-#'
+
 FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, cluster_assignments_metab, Prot_annotation = NULL, metab_annotation = NULL, Prot_t, metab_t, top_n = 5)  {
   # Select the top n correlations
   Top_correlations <- Cor_Prot_Metab[order(-abs(Cor_Prot_Metab$Correlation)), ][1:top_n, ]
@@ -82,7 +82,6 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
     rownames(correlation_matrix) <- correlation_matrix_rows
     print(head(correlation_matrix, c(5,5)))
 
-
     # Replace column names with corresponding values from cluster_assignments_metab$feature_name
     metab_annotation_match <- match(colnames(correlation_matrix), cluster_assignments_metab$feature)
     non_na_KEGG <- !is.na(cluster_assignments_metab$feature_name)
@@ -91,7 +90,6 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
                                       colnames(correlation_matrix))
     colnames(correlation_matrix) <- correlation_matrix_cols
     print(head(correlation_matrix, c(5,5)))
-
 
     #correlation_matrix2
     # Replace row names with corresponding values from cluster_assignments_Prot$feature_name
@@ -131,18 +129,8 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
     cor_Prot_metab_list$Correlation <- round(cor_Prot_metab_list$Correlation, 2)
 
     correlation_List_list[[paste("Correlation_List_Cluster_", i)]] <- cor_Prot_metab_list
-
-    # Visualize the correlation matrix
-    # hist(correlation_matrix, breaks = seq(-1, 1, by = 0.2))
-    # corrplot::corrplot(correlation_matrix, type = "upper",  tl.col = "black")
-
-    # Visualize the correlation matrix 2
-    #hist(correlation_matrix, breaks = seq(-1, 1, by = 0.2))
-    # corrplot::corrplot(correlation_matrix2, type = "upper",  tl.col = "black")
-
   }
 
-  # Return the lists
   return(list(
     Top_correlations = Top_correlations,
     cluster_assignments = cluster_assignments_list,
@@ -152,5 +140,4 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
     Important_features = Important_features_list,
     correlation_List = correlation_List_list
   ))
-
 }

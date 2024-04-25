@@ -9,7 +9,6 @@
 #' @importFrom shiny NS tagList
 #'
 
-
 #mod_module1_ui <- function(id, input, output, session) {
 mod_module1_ui <- function(id) {
   ns <- NS(id)
@@ -74,7 +73,6 @@ mod_module1_ui <- function(id) {
         ns("runDemo"), "Run with Demo Data", icon = icon("play")
       )
     ),
-
 
     mainPanel(
       tabsetPanel(
@@ -141,12 +139,10 @@ mod_module1_ui <- function(id) {
                             ),
                             plotOutput(ns("Loadings1")),
                             plotOutput(ns("heatmap1"))
-
                    )
-
                  )
-
         ),
+
         tabPanel("Proteomics/Genomics",
                  tabsetPanel(
                    type = "tabs",
@@ -222,6 +218,7 @@ mod_module1_ui <- function(id) {
                  )
 
                  ),
+
         tabPanel("Multi-omics Analysis",
                  tabsetPanel(
                    type = "tabs",
@@ -252,8 +249,7 @@ mod_module1_ui <- function(id) {
                                                     "Top_2" = 2,
                                                     "Top_3" = 3,
                                                     "Top_4" = 4,
-                                                    "Top_5" = 5)
-                                        ),
+                                                    "Top_5" = 5)),
                             h4("List of Metabolites"),
                             verbatimTextOutput(ns("Important_features_2")),
 
@@ -339,6 +335,11 @@ mod_module1_server <- function(id){
       filedata2(load_data("Prot_exp.csv"))
       filedata4(load_data("Prot_annot.csv"))
       metadata(load_data("Metadata.csv"))
+      # filedata(load_data("SteMetab_exp_id.csv"))
+      # filedata3(load_data("SteMetab_annot.csv"))
+      # filedata2(load_data("SteProt_exp.csv"))
+      # filedata4(load_data("SteProt_annot.csv"))
+      # metadata(load_data("SteMetadata.csv"))
       demo_loaded(TRUE)
       demo_loaded2(TRUE)
     })
@@ -478,9 +479,9 @@ mod_module1_server <- function(id){
         feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
         colnames(feature_mat_t) <- features
         par_cor1 <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
-        #return(list(par_cor1 = par_cor1))
       } else {
-        par_cor1 <- read.csv("Example_data/FloresData_K_TK/PartialCorMetabolites.csv", header = TRUE, row.names = 1)
+        par_cor1 <- read.csv("Example_data/FloresData_K_TK/PartialCorMetabolites.csv", header = TRUE, row.names = 1,  check.names = FALSE)
+        #par_cor1 <- read.csv("Example_data/FloresData_K_TK/StePartialCorMetabolites.csv", header = TRUE, row.names = 1,  check.names = FALSE)
         par_cor1 = as.matrix(par_cor1)
       }
       list(par_cor1 = par_cor1)
@@ -531,14 +532,12 @@ mod_module1_server <- function(id){
     })
 
     cluster_assignments_metabolites1 <- reactive({
-      #metab_annotation_data = filedata3()
       cluster_metabolites = as.data.frame(hierarchical_cluster1()$hcCluster_assignments2)
       if (is.null(filedata3())) {
         cluster_assignments_metab <- cluster_assignments_metabolites(cluster_metabolites = cluster_metabolites, metab_annotation = NULL)
       } else {
         cluster_assignments_metab <- cluster_assignments_metabolites(cluster_metabolites = cluster_metabolites, metab_annotation = filedata3())
       }
-      #cluster_assignments_metab = cluster_assignments_metabolites(cluster_metabolites = cluster_metabolites, metab_annotation = metab_annotation)
       return(list(cluster_assignments_metab = cluster_assignments_metab))
     })
 
@@ -702,15 +701,13 @@ mod_module1_server <- function(id){
         feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
         colnames(feature_mat_t) <- features
         par_cor <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
-        #return(list(par_cor = par_cor))
       } else {
-        par_cor <- read.csv("Example_data/FloresData_K_TK/PartialCorProt.csv", header = TRUE, row.names = 1)
+        par_cor <- read.csv("Example_data/FloresData_K_TK/PartialCorProt.csv", header = TRUE, row.names = 1,  check.names = FALSE)
+        #par_cor <- read.csv("Example_data/FloresData_K_TK/StePartialCorProt.csv", header = TRUE, row.names = 1,  check.names = FALSE)
         par_cor <-  as.matrix(par_cor)
-        #return(list(par_cor = as.matrix(par_cor)))
       }
       list(par_cor = par_cor)
     })
-
 
     output$matrizTable2 <- renderPrint({
       partial_cors2()$par_cor[1:5,1:5]
@@ -772,7 +769,6 @@ mod_module1_server <- function(id){
 
       cluster_assignments_ProtGenes = cluster_assignments_genes1()$cluster_assignments_Prot
       cluster_assignments_Prot_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
-                                                                 #species = selected_species,
                                                                  database = selected_database)
       return(list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich))
     })
@@ -791,7 +787,6 @@ mod_module1_server <- function(id){
         write.csv(Genes_Prot_enrich()$cluster_assignments_Prot_enrich, file, row.names = TRUE)
       }
     )
-
 
     output$hc_plot2 <- renderPlot({
       hcClu = hierarchical_cluster2()$hclusterTree
@@ -881,7 +876,6 @@ mod_module1_server <- function(id){
     loadings_Prot <- reactive({
       req(filedata2())
       data = filedata2()
-
       selected_variable <- input$phenotypeSelector2
       data$missing_count = rowSums(is.na(data))
       feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
@@ -890,17 +884,14 @@ mod_module1_server <- function(id){
       colnames(feature_mat_t) <- features
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
-
       cluster_Prot <- subset(hierarchical_cluster2()$hcCluster_assignments, col == input$moduleSelector2)
       #cluster_Metab <- subset(cluster_assignments_metabolites1()$cluster_assignments_metab, cluster == "cluster_000011")
       cluster_variables_Prot <- cluster_Prot$feature
       cluster_variables_ProtSymbol <- cluster_variables_Prot
-
       cluster_expression_matrix_Prot <- feature_mat_t_imp_data[, colnames(feature_mat_t_imp_data) %in% cluster_variables_Prot, drop = FALSE]
       combined_data <- merge(metadata()[,c("Sample", selected_variable)], cluster_expression_matrix_Prot, by.x = "Sample", by.y = "row.names", all.x = TRUE)
       heatmap_data_sub_order <- combined_data[order(combined_data[[selected_variable]]), ]
       data_heat= t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
-
       pca_res <- prcomp(cluster_expression_matrix_Prot)
       return(list(pca_res = pca_res, data_heat= data_heat, heatmap_data_sub_order = heatmap_data_sub_order, cluster_variables_ProtSymbol = cluster_variables_ProtSymbol))
     })
@@ -930,7 +921,6 @@ mod_module1_server <- function(id){
       levels_selected_variable <- unique(metadata()[[selected_variable]])
 
       if (length(levels_selected_variable) == 2) {
-        # Usar una paleta diferente para dos niveles
         col_palette <- c("Level1" = "#1B9E77", "Level2" = "#D95F02")
       } else {
         col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
@@ -1004,7 +994,6 @@ mod_module1_server <- function(id){
     #     main = "Modules network"
     #   )
     # })
-
 
     # If annotation data is available
     Cor_Prot_Metab1 <- reactive({

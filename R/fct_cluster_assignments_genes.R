@@ -5,23 +5,6 @@
 #' @return The return value, if any, from executing the function.
 #'
 #' @export
-# cluster_assignments_genes <- function(hierarchical_cluster, Genes_Annotation = NULL) {
-#   if (!is.null(Genes_Annotation)) {
-#     # Crear el nuevo dataframe con la columna 'feature_name'
-#     try_cluster_assigment_Prot <- hierarchical_cluster$cluster_assignments %>%
-#       left_join(Genes_Annotation, by = c("feature" = "Feature_ID")) %>%
-#       dplyr::mutate(feature_name = ifelse(is.na(Symbol) | Symbol == "" , feature, Symbol),
-#                     feature_map = ifelse(is.na(Symbol) | Symbol == "", "", Symbol)) %>%
-#       dplyr::select(feature, cluster, col, feature_name, feature_map)
-#   } else {
-#     # Si 'Genes_Annotation' no está presente, mantener el nombre de 'feature'
-#     try_cluster_assigment_Prot <- hierarchical_cluster$cluster_assignments %>%
-#       dplyr::mutate(feature_name = feature, feature_map = feature) %>%
-#       dplyr::select(feature, cluster, col, feature_name, feature_map)
-#   }
-#   return(try_cluster_assigment_Prot)
-# }
-
 
 cluster_assignments_genes <- function(cluster_genes, Prot_annotation = NULL) {
   if (!is.null(Prot_annotation)) {

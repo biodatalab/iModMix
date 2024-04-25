@@ -47,9 +47,6 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
   # Print the filtered list
   print(Top_cor_Prot_metab[,c('Metab_Module_id',   'Metab_count', "Prot_Module_id", 'Prot_count', 'Correlation', 'Enriched_Term_Genes',   "Enriched_Overlap" ,   "Enriched_Genes",  "Enriched_P.value",  "Enriched_Adjusted.P.value", "Enriched_GO")])
 
-  #print(Top_cor_Prot_metab[,c('Metab_Module_id',   'Metab_count', "Prot_Module_id", 'Prot_count', 'Correlation')])
-
-
   # Create the network graph
   #filtered_cor_Prot_metab_list = Top_cor_Prot_metab[, c("Prot_label0", "Metab_label", "Correlation")]
   filtered_cor_Prot_metab_list = Top_cor_Prot_metab[, c("Prot_label", "Metab_label", "Correlation")]

@@ -5,6 +5,7 @@
 #' @return The return value, if any, from executing the function.
 #'
 #' @export
+#'
 hierarchical_cluster = function(parcor_mat, tom = TRUE, min_module_size = 10) {
   # needed here? do any of our functions use multithreading?
   WGCNA::enableWGCNAThreads()

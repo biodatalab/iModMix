@@ -42,7 +42,6 @@ Assigment_genes_enrichr <- function(cluster_assignments_ProtGenes,
       Genes <- enriched_result[[database]][["Genes"]][1]
       P.value <- enriched_result[[database]][["P.value"]][1]
       Adjusted.P.value <- enriched_result[[database]][["Adjusted.P.value"]][1]
-
       # Split the 'Term' column into 'enriched_Term' and 'enriched_GO'
       term_parts <- strsplit(term, "\\(")[[1]]
       enriched_Term <- term_parts[1]
