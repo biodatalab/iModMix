@@ -10,7 +10,7 @@ install.packages("remotes")
 ```
 ### The following console command is to install from github
 ```
-remotes::install_github(" name_package", auth_token = "your GitHub token")
+remotes::install_github("iModMix", auth_token = "your GitHub token")
 ```
 
 ## Example
@@ -18,6 +18,6 @@ remotes::install_github(" name_package", auth_token = "your GitHub token")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(name_package)
+library(iModMix)
 run_app()
 ```
