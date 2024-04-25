@@ -10,8 +10,8 @@
 #'
 
 
-mod_module1_ui <- function(id, input, output, session) {
-
+#mod_module1_ui <- function(id, input, output, session) {
+mod_module1_ui <- function(id) {
   ns <- NS(id)
 
   tagList(
@@ -73,7 +73,6 @@ mod_module1_ui <- function(id, input, output, session) {
       actionButton(
         ns("runDemo"), "Run with Demo Data", icon = icon("play")
       )
-
     ),
 
 
@@ -177,6 +176,8 @@ mod_module1_ui <- function(id, input, output, session) {
                               label = "Select Library",
                               choices = NULL),
                             DT::DTOutput(ns("tableClusterAssig3")),
+                            downloadButton(ns("downloadEnrichment"),
+                                           "Download Enrichment"),
                             h4("First principal component from each module"),
                             DT::DTOutput(ns("tableEigengene2"))
 
@@ -290,8 +291,8 @@ mod_module1_ui <- function(id, input, output, session) {
 #' module1 Server Functions
 #'
 #' @noRd
-mod_module1_server <- function(id, input, output, session){
-  moduleServer( id, function(input, output, session){
+mod_module1_server <- function(id){
+  moduleServer(id, function(input, output, session){
     ns <- session$ns
 
     filedata <- reactiveVal(NULL)
@@ -299,6 +300,8 @@ mod_module1_server <- function(id, input, output, session){
     filedata2 <- reactiveVal(NULL)
     filedata4 <- reactiveVal(NULL)
     metadata <- reactiveVal(NULL)
+    demo_loaded <- reactiveVal(NULL)
+    demo_loaded2 <- reactiveVal(NULL)
 
     observeEvent(input$DataSet, {
       req(input$DataSet)
@@ -336,6 +339,8 @@ mod_module1_server <- function(id, input, output, session){
       filedata2(load_data("Prot_exp.csv"))
       filedata4(load_data("Prot_annot.csv"))
       metadata(load_data("Metadata.csv"))
+      demo_loaded(TRUE)
+      demo_loaded2(TRUE)
     })
 
     data_info <- reactive({
@@ -431,11 +436,6 @@ mod_module1_server <- function(id, input, output, session){
       DT::datatable(df)
     })
 
-    # filedata5 <- reactive({
-    #   req(input$metadata)
-    #   as.data.frame(load_file(input$metadata$name, input$metadata$datapath))
-    # })
-
     output$table5 <- DT::renderDataTable({
       df <- metadata()
       DT::datatable(df)
@@ -468,17 +468,22 @@ mod_module1_server <- function(id, input, output, session){
       updateSelectInput(session, "phenotypeSelector2", choices = pheno_variables2())
     })
 
-
     partial_cors1 <- reactive({
-      req(filedata())
-      data = filedata()
-      data$missing_count = rowSums(is.na(data))
-      feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
-      features <- feature_mat[,1]
-      feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
-      colnames(feature_mat_t) <- features
-      par_cor1=partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
-      return(list(par_cor1 = par_cor1))
+      if (is.null(demo_loaded())) {
+        req(filedata())
+        data <- filedata()
+        data$missing_count <- rowSums(is.na(data))
+        feature_mat <- subset(data, missing_count <= 0.1 * (ncol(data) - 2))
+        features <- feature_mat[, 1]
+        feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
+        colnames(feature_mat_t) <- features
+        par_cor1 <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
+        #return(list(par_cor1 = par_cor1))
+      } else {
+        par_cor1 <- read.csv("Example_data/FloresData_K_TK/PartialCorMetabolites.csv", header = TRUE, row.names = 1)
+        par_cor1 = as.matrix(par_cor1)
+      }
+      list(par_cor1 = par_cor1)
     })
 
     output$matrizTable <- renderPrint({
@@ -613,11 +618,9 @@ mod_module1_server <- function(id, input, output, session){
       }
     })
 
-
     loadings_metab <- reactive({
       req(filedata())
       data = filedata()
-
       selected_variable <- input$phenotypeSelector
       data$missing_count = rowSums(is.na(data))
       feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
@@ -626,22 +629,14 @@ mod_module1_server <- function(id, input, output, session){
       colnames(feature_mat_t) <- features
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
-
       cluster_Metab <- subset(hierarchical_cluster1()$hcCluster_assignments2, col == input$moduleSelector)
       #cluster_Metab <- subset(cluster_assignments_metabolites1()$cluster_assignments_metab, cluster == "cluster_000011")
       cluster_variables_Metab <- cluster_Metab$feature
       cluster_variables_MetabKEGG <- cluster_variables_Metab
       cluster_expression_matrix_Metab <- feature_mat_t_imp_data[, colnames(feature_mat_t_imp_data) %in% cluster_variables_Metab, drop = FALSE]
-      print(cluster_expression_matrix_Metab)
-
       combined_data <- merge(metadata()[,c("Sample", selected_variable)], cluster_expression_matrix_Metab, by.x = "Sample", by.y = "row.names", all.x = TRUE)
-      print(combined_data)
-
       heatmap_data_sub_order <- combined_data[order(combined_data[[selected_variable]]), ]
-      print(heatmap_data_sub_order)
-
       data_heat= t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
-
       pca_res <- prcomp(cluster_expression_matrix_Metab)
       return(list(pca_res = pca_res, data_heat= data_heat, heatmap_data_sub_order = heatmap_data_sub_order, cluster_variables_MetabKEGG = cluster_variables_MetabKEGG))
     })
@@ -697,18 +692,25 @@ mod_module1_server <- function(id, input, output, session){
                            annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
     })
 
-
     partial_cors2 <- reactive({
-      req(filedata2())
-      data = filedata2()
-      data$missing_count = rowSums(is.na(data))
-      feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
-      features <- feature_mat[,1]
-      feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
-      colnames(feature_mat_t) <- features
-      par_cor=partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
-      return(list(par_cor = par_cor))
+      if (is.null(demo_loaded2())) {
+        req(filedata2())
+        data <- filedata2()
+        data$missing_count <- rowSums(is.na(data))
+        feature_mat <- subset(data, missing_count <= 0.1 * (ncol(data) - 2))
+        features <- feature_mat[, 1]
+        feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
+        colnames(feature_mat_t) <- features
+        par_cor <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
+        #return(list(par_cor = par_cor))
+      } else {
+        par_cor <- read.csv("Example_data/FloresData_K_TK/PartialCorProt.csv", header = TRUE, row.names = 1)
+        par_cor <-  as.matrix(par_cor)
+        #return(list(par_cor = as.matrix(par_cor)))
+      }
+      list(par_cor = par_cor)
     })
+
 
     output$matrizTable2 <- renderPrint({
       partial_cors2()$par_cor[1:5,1:5]
@@ -751,7 +753,7 @@ mod_module1_server <- function(id, input, output, session){
 
     databaseSelectorList <- reactive({
       gene_set_library = readxl::read_excel("example_data/Gene_set_Library.xlsx", col_names = FALSE)
-      choices <- gene_set_library[[1]]  # Tomar la primera columna como opciones
+      choices <- gene_set_library[[1]]
       data.frame(choices = choices)
     })
 
@@ -759,6 +761,10 @@ mod_module1_server <- function(id, input, output, session){
       updateSelectInput(session, "databaseSelector", choices = databaseSelectorList()$choices)
     })
 
+    # curl::has_internet()
+    assign("has_internet_via_proxy", TRUE, environment(curl::has_internet))
+    library(enrichR)
+    enrichR::listEnrichrSites()
 
     Genes_Prot_enrich <- reactive({
       req(input$databaseSelector)
@@ -771,14 +777,21 @@ mod_module1_server <- function(id, input, output, session){
       return(list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich))
     })
 
-    # curl::has_internet()
-    assign("has_internet_via_proxy", TRUE, environment(curl::has_internet))
-    library(enrichR)
-    enrichR::listEnrichrSites()
     output$tableClusterAssig3 <- DT::renderDataTable({
       df3 = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
       DT::datatable(df3)
     })
+
+    # Render the download handler
+    output$downloadEnrichment <- downloadHandler(
+      filename = function() {
+        "EnrichmentbyModules.csv"
+      },
+      content = function(file) {
+        write.csv(Genes_Prot_enrich()$cluster_assignments_Prot_enrich, file, row.names = TRUE)
+      }
+    )
+
 
     output$hc_plot2 <- renderPlot({
       hcClu = hierarchical_cluster2()$hclusterTree
@@ -865,7 +878,6 @@ mod_module1_server <- function(id, input, output, session){
       }
     })
 
-
     loadings_Prot <- reactive({
       req(filedata2())
       data = filedata2()
@@ -892,7 +904,6 @@ mod_module1_server <- function(id, input, output, session){
       pca_res <- prcomp(cluster_expression_matrix_Prot)
       return(list(pca_res = pca_res, data_heat= data_heat, heatmap_data_sub_order = heatmap_data_sub_order, cluster_variables_ProtSymbol = cluster_variables_ProtSymbol))
     })
-
 
     output$ModuleFeatures2 <- DT::renderDataTable({
       df2 = as.data.frame(loadings_Prot()$cluster_variables_ProtSymbol)
@@ -1073,8 +1084,6 @@ mod_module1_server <- function(id, input, output, session){
       ))
     })
 
-
-
     Important_Features <- reactive({
       custom_palette <-colorRampPalette(c(RColorBrewer::brewer.pal(11, "RdYlBu")[11], "white", RColorBrewer::brewer.pal(11, "RdYlBu")[1]))(n = 100)
 
@@ -1171,13 +1180,6 @@ mod_module1_server <- function(id, input, output, session){
       DT::datatable(df4)
     })
 
-
-    # output$Correlation_plotImp <- renderPlot({
-    #   hist = Important_Features()$df4_1
-    #   cor = Important_Features()$df4_2
-    #   gridExtra::grid.arrange(hist, cor, ncol = 2)
-    # })
-
     output$cluster_assignments_1 <- DT::renderDataTable({
       Important_Features()$df1_1
     })
@@ -1193,7 +1195,6 @@ mod_module1_server <- function(id, input, output, session){
     output$Important_features_2 <- renderText({
       Important_Features()$df5_2
     })
-
 
   })
 }

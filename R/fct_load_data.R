@@ -7,5 +7,6 @@
 load_data <- function(file_name) {
   demo_data_path <- "Example_data/FloresData_K_TK"
   file_path <- file.path(demo_data_path, file_name)
+  #read.csv(file_path, header = TRUE, row.names = 1)
   read.csv(file_path)
 }
