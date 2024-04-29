@@ -298,6 +298,7 @@ mod_module1_server <- function(id){
     metadata <- reactiveVal(NULL)
     demo_loaded <- reactiveVal(NULL)
     demo_loaded2 <- reactiveVal(NULL)
+    enrich_loaded <- reactiveVal(NULL)
 
     observeEvent(input$DataSet, {
       req(input$DataSet)
@@ -335,13 +336,10 @@ mod_module1_server <- function(id){
       filedata2(load_data("Prot_exp.csv"))
       filedata4(load_data("Prot_annot.csv"))
       metadata(load_data("Metadata.csv"))
-      # filedata(load_data("SteMetab_exp_id.csv"))
-      # filedata3(load_data("SteMetab_annot.csv"))
-      # filedata2(load_data("SteProt_exp.csv"))
-      # filedata4(load_data("SteProt_annot.csv"))
-      # metadata(load_data("SteMetadata.csv"))
       demo_loaded(TRUE)
       demo_loaded2(TRUE)
+      enrich_loaded(TRUE)
+      updateSelectInput(session, "databaseSelector", selected = "KEGG_2019_Mouse")
     })
 
     data_info <- reactive({
@@ -455,7 +453,6 @@ mod_module1_server <- function(id){
       names(metadata())
     })
 
-    # for modules loading plot
     observe({
       updateSelectInput(session, "phenotypeSelector", choices = pheno_variables())
     })
@@ -464,7 +461,6 @@ mod_module1_server <- function(id){
       names(metadata())
     })
 
-    # for modules loading plot
     observe({
       updateSelectInput(session, "phenotypeSelector2", choices = pheno_variables2())
     })
@@ -764,14 +760,21 @@ mod_module1_server <- function(id){
     enrichR::listEnrichrSites()
 
     Genes_Prot_enrich <- reactive({
+      if (is.null(enrich_loaded())) {
       req(input$databaseSelector)
       selected_database <- input$databaseSelector
 
       cluster_assignments_ProtGenes = cluster_assignments_genes1()$cluster_assignments_Prot
       cluster_assignments_Prot_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
                                                                  database = selected_database)
-      return(list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich))
+      list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich)
+      } else {
+        cluster_assignments_Prot_enrich <- read.csv("Example_data/FloresData_K_TK/EnrichmentMouse.csv", header = TRUE, row.names = 1,  check.names = FALSE)
+        #cluster_assignments_Prot_enrich <- read.csv("Example_data/FloresData_K_TK/SteEnrichment.csv", header = TRUE, row.names = 1,  check.names = FALSE)
+      }
+      list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich)
     })
+
 
     output$tableClusterAssig3 <- DT::renderDataTable({
       df3 = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
