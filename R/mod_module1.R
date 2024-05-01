@@ -227,8 +227,9 @@ mod_module1_ui <- function(id) {
                                         label = "Select Correlation Threshold",
                                         min = 0,
                                         max = 1,
-                                        step = 0.05,
+                                        step = 0.0001,
                                         value = 0.5),
+
                             h4("Correlation: Metabolites and Proteins/Genes"),
                             #DT::DTOutput(ns("tableCorrelation_AnnoNull")),
                             DT::DTOutput(ns("tableCorrelation")),
@@ -238,7 +239,10 @@ mod_module1_ui <- function(id) {
 
                             h4("Module Network of Metabolites and Proteins/Genes"),
                             #plotOutput(ns("Network_plot_AnnoNull")),
-                            plotOutput(ns("Network_plot"))
+                            actionButton(
+                              ns("zoomButton"), "Zoom", icon = icon("zoom-in")),
+                            plotOutput(ns("Network_plot")),
+
                    ),
                    tabPanel("Important features",
                             DT::DTOutput(ns("ImportantVariables")),
@@ -259,14 +263,14 @@ mod_module1_ui <- function(id) {
                             # h4("Modules correlation: Metabolites and Proteins/Genes"),
                             # plotOutput(ns("Correlation_plotImp")),
 
-                            #h4("Corrplot: Metabolites and Proteins/Genes"),
-                            #plotOutput(ns("CorplotImp")),
+                            h4("Corrplot: Metabolites and Proteins/Genes"),
+                            plotOutput(ns("CorplotImp")),
 
-                            fluidRow(
-                              splitLayout(cellWidths = c("50%", "50%"),
-                                          plotOutput(ns("Correlation_plotImp")),
-                                         plotOutput(ns("CorplotImp")))
-                            ),
+                            # fluidRow(
+                            #   splitLayout(cellWidths = c("50%", "50%"),
+                            #               plotOutput(ns("Correlation_plotImp")),
+                            #              plotOutput(ns("CorplotImp")))
+                            # ),
 
                             h4("Modules correlation: Metabolites and Proteins/Genes"),
                             DT::DTOutput(ns("Correlation_mod")),
@@ -340,6 +344,7 @@ mod_module1_server <- function(id){
       demo_loaded2(TRUE)
       enrich_loaded(TRUE)
       updateSelectInput(session, "databaseSelector", selected = "KEGG_2019_Mouse")
+      updateSliderInput(session, "pValueThreshold3", value = 0.9172)
     })
 
     data_info <- reactive({
@@ -646,7 +651,7 @@ mod_module1_server <- function(id){
         req(filedata3())
         AnnoMeta = as.data.frame(filedata3())
         cluster_variables_Metab = loadings_metab()$cluster_variables_MetabKEGG
-        cluster_variables_MetabKEGG <- AnnoMeta[AnnoMeta$Feature_ID %in% cluster_variables_Metab, c("Feature_ID", "KEGG")]
+        cluster_variables_MetabKEGG <- AnnoMeta[AnnoMeta$Feature_ID %in% cluster_variables_Metab, c("Feature_ID", "KEGG", "Metabolite")]
       DT::datatable(cluster_variables_MetabKEGG, rownames = FALSE)
     })
 
@@ -1031,9 +1036,9 @@ mod_module1_server <- function(id){
       network <- igraph::graph_from_data_frame(filtered_cor_Prot_metab_list, directed = FALSE)
       igraph::E(network)$label <- filtered_cor_Prot_metab_list$Correlation
       # Conditions for node type and color
-      condicion_tipo <- ifelse(grepl("Gene", igraph::V(network)$name), "lightgreen", "#E69F00")
-      color_text <- ifelse(grepl("Gene", igraph::V(network)$name), "darkgreen", "orange")
-
+      condicion_tipo <- ifelse(grepl("genes", igraph::V(network)$name), "lightgreen", "#E69F00")
+      color_text <- ifelse(grepl("genes", igraph::V(network)$name), "darkgreen", "orange")
+      legend_labels <- c("Genes", "Metabolites")
       plot(
         network,
         edge.label = igraph::E(network)$label,
@@ -1046,7 +1051,32 @@ mod_module1_server <- function(id){
         edge.color = "gray",
         main = "Modules network"
       )
+      legend("topright", legend = legend_labels, pch = 21, pt.bg = c("lightgreen", "orange"),
+             pt.cex = 1.5, cex = 0.8, col = c("darkgreen", "black"), bty = "n")
      })
+
+    observeEvent(input$zoomButton, {
+      tmp_file <- tempfile(fileext = ".png")
+      ggplot2::ggsave(tmp_file, plot = output$Network_plot, device = "png", width = 10, height = 8, limitsize = FALSE)
+      browseURL(tmp_file)
+    })
+
+
+    # library(visNetwork)
+    # output$Network_plot <- renderVisNetwork({
+    #    filtered_cor_Prot_metab_list <- as.data.frame(Cor_Prot_Metab1()$filtered_cor_Prot_metab_list)
+    #    colnames(filtered_cor_Prot_metab_list) = c("from", "to", "Correlation")
+    #    nodes <- unique(c(filtered_cor_Prot_metab_list$from, filtered_cor_Prot_metab_list$to))
+    #    nodes_df <- data.frame(id = nodes, label = nodes)
+    #
+    #    visNetwork::visNetwork(
+    #      nodes = nodes_df,
+    #      edges = filtered_cor_Prot_metab_list,
+    #      main = "Protein-Metabolite Network"
+    #    )
+    #    #) %>%
+    #     # visNetwork::visLayout(randomSeed = 123)
+    #  })
 
     ImpVar_Prot_Metab1 <- reactive({
       Cor_Prot_Metab = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)

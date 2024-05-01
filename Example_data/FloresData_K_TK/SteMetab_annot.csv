@@ -1,4 +1,4 @@
-Feature_ID,row m/z,row retention time,row identity (all IDs),Identity Mapped,FormulaMapped,KEGG,HMDB,PubChem,row number of detected peaks,Number of non-zero peaks,Percent pre-gap peaks,Percent non-zero peaks,Heavy-labeled flag,Identified flag,Non-heavy identified flag
+Feature_ID,row m/z,row retention time,Metabolite,Identity Mapped,FormulaMapped,KEGG,HMDB,PubChem,row number of detected peaks,Number of non-zero peaks,Percent pre-gap peaks,Percent non-zero peaks,Heavy-labeled flag,Identified flag,Non-heavy identified flag
 neg_00001,161.0023814,2.382045041,,,,,,,88,88,100,100,0,0,0
 neg_00002,309.1006581,2.374388772,,,,,,,88,88,100,100,0,0,0
 neg_00003,134.8944595,4.067281302,,,,,,,19,88,21.59090909,100,0,0,0

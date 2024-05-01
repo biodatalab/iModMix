@@ -31,8 +31,8 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
 
   Top_cor_Prot_metab$Prot_count <- paste(Count_Prot[Top_cor_Prot_metab$Prot_module], "genes", sep = " ")
   Top_cor_Prot_metab$Metab_count <- paste(Count_Metab[Top_cor_Prot_metab$Metab_module], "metabolites", sep = " ")
-  Top_cor_Prot_metab$Prot_Module_id <- paste("Gene Module", as.numeric(factor(Top_cor_Prot_metab$Prot_module)), sep = " ")
-  Top_cor_Prot_metab$Metab_Module_id <- paste("Metabolite Module", as.numeric(factor(Top_cor_Prot_metab$Metab_module)), sep = " ")
+  Top_cor_Prot_metab$Prot_Module_id <- paste("Module", as.numeric(factor(Top_cor_Prot_metab$Prot_module)), sep = " ")
+  Top_cor_Prot_metab$Metab_Module_id <- paste("Module", as.numeric(factor(Top_cor_Prot_metab$Metab_module)), sep = " ")
   Top_cor_Prot_metab$Prot_label0 <- paste(Top_cor_Prot_metab$Prot_Module_id, Top_cor_Prot_metab$Prot_count, sep = "\n")
   Top_cor_Prot_metab$Metab_label <- paste(Top_cor_Prot_metab$Metab_Module_id, Top_cor_Prot_metab$Metab_count, sep = "\n")
   Top_cor_Prot_metab$Enriched_Term_Genes <- cluster_assignments_Prot$enriched_Term[match(Top_cor_Prot_metab$Prot_module, cluster_assignments_Prot$col)]
@@ -45,7 +45,7 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
   Top_cor_Prot_metab$Enriched_GO <- cluster_assignments_Prot$enriched_GO[match(Top_cor_Prot_metab$Prot_module, cluster_assignments_Prot$col)]
 
   # Print the filtered list
-  print(Top_cor_Prot_metab[,c('Metab_Module_id',   'Metab_count', "Prot_Module_id", 'Prot_count', 'Correlation', 'Enriched_Term_Genes',   "Enriched_Overlap" ,   "Enriched_Genes",  "Enriched_P.value",  "Enriched_Adjusted.P.value", "Enriched_GO")])
+  #print(Top_cor_Prot_metab[,c('Metab_Module_id',   'Metab_count', "Prot_Module_id", 'Prot_count', 'Correlation', 'Enriched_Term_Genes',   "Enriched_Overlap" ,   "Enriched_Genes",  "Enriched_P.value",  "Enriched_Adjusted.P.value", "Enriched_GO")])
 
   # Create the network graph
   #filtered_cor_Prot_metab_list = Top_cor_Prot_metab[, c("Prot_label0", "Metab_label", "Correlation")]
@@ -58,18 +58,18 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
   color_text <- ifelse(grepl("Gene", igraph::V(network)$name), "darkgreen", "orange")
 
   # Plot the network graph
-  plot(
-    network,
-    edge.label = igraph::E(network)$label,
-    vertex.size = 2,
-    vertex.color = condicion_tipo,
-    vertex.label.color = color_text,
-    edge.label.cex = 0.8,
-    edge.label.color = "black",
-    edge.width = 2,
-    edge.color = "gray",
-    main = "Modules Correlation"
-  )
+  # plot(
+  #   network,
+  #   edge.label = igraph::E(network)$label,
+  #   vertex.size = 2,
+  #   vertex.color = condicion_tipo,
+  #   vertex.label.color = color_text,
+  #   edge.label.cex = 0.8,
+  #   edge.label.color = "black",
+  #   edge.width = 2,
+  #   edge.color = "gray",
+  #   main = "Modules Correlation"
+  # )
 
   # Return the Top_cor_Prot_metab data frame
   Top_cor_Prot_metab = Top_cor_Prot_metab[,c("Metab_Module_id" ,  "Metab_module", "Metab_count",   "Prot_Module_id",  "Prot_module", "Prot_count",   "Correlation",  'Enriched_Term_Genes',   "Enriched_Overlap" ,   "Enriched_Genes",  "Enriched_P.value",  "Enriched_Adjusted.P.value", "Enriched_GO")]

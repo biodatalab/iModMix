@@ -19,7 +19,9 @@ cluster_assignments_metabolites <- function(cluster_metabolites, metab_annotatio
     try_cluster_assigment_metab <- merge(cluster_metabolites, metab_annotation, by.x = "feature", by.y = "Feature_ID", all.x = TRUE)
     try_cluster_assigment_metab$feature_name <- ifelse(is.na(try_cluster_assigment_metab$KEGG) | try_cluster_assigment_metab$KEGG == "", try_cluster_assigment_metab$feature, try_cluster_assigment_metab$KEGG)
     try_cluster_assigment_metab$feature_map <- ifelse(is.na(try_cluster_assigment_metab$KEGG) | try_cluster_assigment_metab$KEGG == "", "", try_cluster_assigment_metab$KEGG)
-    try_cluster_assigment_metab <- try_cluster_assigment_metab[, c("feature", "cluster", "col", "feature_name", "feature_map")]
+    try_cluster_assigment_metab$feature_Mapped <- ifelse(is.na(try_cluster_assigment_metab$KEGG) | try_cluster_assigment_metab$KEGG == "", "", try_cluster_assigment_metab$KEGG)
+    try_cluster_assigment_metab <- try_cluster_assigment_metab[, c("feature", "cluster", "col", "feature_name", "feature_map", "Metabolite")]
+
   }
   return(try_cluster_assigment_metab)
 }

@@ -16,7 +16,7 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
   Top_correlations <- Cor_Prot_Metab[order(-abs(Cor_Prot_Metab$Correlation)), ][1:top_n, ]
 
   # Print the Top_correlations
-  print(Top_correlations[,c("Prot_module", 'Metab_module', 'Correlation', 'Prot_count', 'Metab_count' )])
+  #print(Top_correlations[,c("Prot_module", 'Metab_module', 'Correlation', 'Prot_count', 'Metab_count' )])
 
   # Initialize lists to store cluster assignments, annotation matrices, and expression matrices
   cluster_assignments_list <- list()
@@ -69,7 +69,7 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
 
     # Calculate and store the correlation matrix between Prot and Metab expression matrices
     correlation_matrix <- cor(cluster_expression_matrix_Prot, cluster_expression_matrix_Metab, method = 'spearman', use = "pairwise.complete.obs")
-    print(head(correlation_matrix, c(5,5)))
+
     correlation_matrix2 <- cor(cluster_expression_matrix_Prot, cluster_expression_matrix_Metab, method = 'spearman', use = "pairwise.complete.obs")
 
     #correlation_matrix
@@ -80,7 +80,7 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
                                       cluster_assignments_Prot$feature_name[prot_annotation_match],
                                       rownames(correlation_matrix))
     rownames(correlation_matrix) <- correlation_matrix_rows
-    print(head(correlation_matrix, c(5,5)))
+
 
     # Replace column names with corresponding values from cluster_assignments_metab$feature_name
     metab_annotation_match <- match(colnames(correlation_matrix), cluster_assignments_metab$feature)
@@ -89,7 +89,6 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
                                       cluster_assignments_metab$feature_name[metab_annotation_match],
                                       colnames(correlation_matrix))
     colnames(correlation_matrix) <- correlation_matrix_cols
-    print(head(correlation_matrix, c(5,5)))
 
     #correlation_matrix2
     # Replace row names with corresponding values from cluster_assignments_Prot$feature_name
@@ -116,10 +115,6 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
     # Extract column names omitting NA values and empty strings
     Important_features_Metab <- na.omit(colnames(correlation_matrix2))
     Important_features_list[[paste("Important_features_Cluster_Metab_", i)]] <- Important_features_Metab[Important_features_Metab != ""]
-
-
-    # Store the correlation matrix
-    print(head(correlation_matrix, c(5,5)))
 
     correlation_matrices_list[[paste("Correlation_Matrix_Cluster_", i)]] <- correlation_matrix
 

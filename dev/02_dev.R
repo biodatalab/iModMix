@@ -36,7 +36,7 @@ usethis::use_package("ggfortify")
 usethis::use_package("RColorBrewer")
 usethis::use_package("cowplot")
 usethis::use_package("grid")
-usethis::use_package("FELLA")
+usethis::use_package("visNetwork")
 
 ## install.packages('attachment') # if needed.
 attachment::att_amend_desc()

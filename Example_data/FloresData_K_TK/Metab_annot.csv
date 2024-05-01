@@ -1,4 +1,4 @@
-Feature_ID,row m/z,row retention time,row identity (all IDs),Identity Mapped,Mapping Type,FormulaMapped,KEGG,HMDB,PubChem,row number of detected peaks,Number of non-zero peaks,Percent pre-gap peaks,Percent non-zero peaks,Heavy-labeled flag,Identified flag,Non-heavy identified flag
+Feature_ID,row m/z,row retention time,row identity (all IDs),Metabolite,Mapping Type,FormulaMapped,KEGG,HMDB,PubChem,row number of detected peaks,Number of non-zero peaks,Percent pre-gap peaks,Percent non-zero peaks,Heavy-labeled flag,Identified flag,Non-heavy identified flag
 neg_00001,112.98532199859619,1.308005,,,,,,,,20,20,100,100,0,0,0
 neg_00002,116.0350736618042,1.3062325000000001,,,,,,,,20,20,100,100,0,0,0
 neg_00003,283.26370391845705,1.0809875,Stearate,Stearate,1A,C18H36O2,C01530,HMDB0000827,3033836,20,20,100,100,0,1,1
