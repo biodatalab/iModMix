@@ -100,7 +100,6 @@ mod_module1_ui <- function(id) {
                             h4("Herarchical clustering"),
                             plotOutput(ns("hc_plot")),
                             h4("Cluster Assignments"),
-                            DT::DTOutput(ns("tableClusterAssig2")),
                             DT::DTOutput(ns("tableClusterAssig")),
                             h4("First principal component from each module"),
                             DT::DTOutput(ns("tableEigengene"))
@@ -167,6 +166,7 @@ mod_module1_ui <- function(id) {
                             plotOutput(ns("hc_plot2")),
                             h4("Cluster Assignments"),
                             DT::DTOutput(ns("tableClusterAssig4")),
+                            h4("Cluster Assignments Enriched"),
                             selectInput(
                               ns("databaseSelector"),
                               label = "Select Library",
@@ -176,7 +176,6 @@ mod_module1_ui <- function(id) {
                                            "Download Enrichment"),
                             h4("First principal component from each module"),
                             DT::DTOutput(ns("tableEigengene2"))
-
                    ),
                    tabPanel("Phenotype",
                             h4("Phenotype data"),
@@ -198,7 +197,6 @@ mod_module1_ui <- function(id) {
                               )
                             ),
                             h4("Classification"),
-                            #plotOutput(ns("classification_plot_2_1")),
                             plotOutput(ns("classification_plot_2_all")),
                             DT::DTOutput(ns("classification_results2")),
                             h4("Module: Screening"),
@@ -213,7 +211,6 @@ mod_module1_ui <- function(id) {
                             ),
                             plotOutput(ns("Loadings2")),
                             plotOutput(ns("heatmap2"))
-
                    )
                  )
 
@@ -231,14 +228,11 @@ mod_module1_ui <- function(id) {
                                         value = 0.5),
 
                             h4("Correlation: Metabolites and Proteins/Genes"),
-                            #DT::DTOutput(ns("tableCorrelation_AnnoNull")),
                             DT::DTOutput(ns("tableCorrelation")),
 
-                            #plotOutput(ns("Correlation_plot_AnnoNull")),
                             plotOutput(ns("Correlation_plot")),
 
                             h4("Module Network of Metabolites and Proteins/Genes"),
-                            #plotOutput(ns("Network_plot_AnnoNull")),
                             actionButton(
                               ns("zoomButton"), "Zoom", icon = icon("zoom-in")),
                             plotOutput(ns("Network_plot")),
@@ -265,12 +259,6 @@ mod_module1_ui <- function(id) {
 
                             h4("Corrplot: Metabolites and Proteins/Genes"),
                             plotOutput(ns("CorplotImp")),
-
-                            # fluidRow(
-                            #   splitLayout(cellWidths = c("50%", "50%"),
-                            #               plotOutput(ns("Correlation_plotImp")),
-                            #              plotOutput(ns("CorplotImp")))
-                            # ),
 
                             h4("Modules correlation: Metabolites and Proteins/Genes"),
                             DT::DTOutput(ns("Correlation_mod")),
@@ -311,19 +299,19 @@ mod_module1_server <- function(id){
     })
 
     observeEvent(input$DataSet3, {
-      req(input$DataSet)
+      req(input$DataSet3)
       filedata_value <- read.csv(input$DataSet3$datapath)
       filedata3(filedata_value)
     })
 
     observeEvent(input$DataSet2, {
-      req(input$DataSet)
+      req(input$DataSet2)
       filedata_value <- read.csv(input$DataSet2$datapath)
       filedata2(filedata_value)
     })
 
     observeEvent(input$DataSet4, {
-      req(input$DataSet)
+      req(input$DataSet4)
       filedata_value <- read.csv(input$DataSet4$datapath)
       filedata4(filedata_value)
     })
@@ -401,6 +389,7 @@ mod_module1_server <- function(id){
       df <- data_info2()$SummaryData
       DT::datatable(df)
     })
+
     output$table2 <- DT::renderDataTable({
       df <- filedata2()
       DT::datatable(df)
@@ -509,11 +498,6 @@ mod_module1_server <- function(id){
       hcDynMods2 = hc2$dynamicMods_numeric
       hcCluster_assignments2 = hc2$cluster_assignments
       return(list(hclusterTree2 = hclusterTree2, hcDynMods2 = hcDynMods2, hcCluster_assignments2 = hcCluster_assignments2 ))
-    })
-
-    output$tableClusterAssig2 <- DT::renderDataTable({
-      df1 = hierarchical_cluster1()$hcCluster_assignments2
-      DT::datatable(df1)
     })
 
     unique_variables <- reactive({
@@ -735,19 +719,21 @@ mod_module1_server <- function(id){
                   hcCluster_assignments = hcCluster_assignments ))
     })
 
+    cluster_assignments_genes1 <- reactive({
+      cluster_genes = as.data.frame(hierarchical_cluster2()$hcCluster_assignments)
+      if (is.null(filedata4())) {
+        cluster_assignments_Prot <- cluster_assignments_genes(cluster_genes = cluster_genes, Prot_annotation = NULL)
+      } else {
+        cluster_assignments_Prot <- cluster_assignments_genes(cluster_genes = cluster_genes, Prot_annotation = filedata4())
+      }
+      return(list(cluster_assignments_Prot = cluster_assignments_Prot))
+    })
+
     output$tableClusterAssig4 <- DT::renderDataTable({
-      df1 = hierarchical_cluster2()$hcCluster_assignments
+      df1 = cluster_assignments_genes1()$cluster_assignments_Prot
       DT::datatable(df1)
     })
 
-    cluster_assignments_genes1 <- reactive({
-      req(filedata4())
-      Prot_annotation = filedata4()
-      cluster_genes = hierarchical_cluster2()$hcCluster_assignments
-      cluster_assignments_Prot = cluster_assignments_genes(cluster_genes = cluster_genes,
-                                                           Prot_annotation = Prot_annotation)
-      return(list(cluster_assignments_Prot = cluster_assignments_Prot))
-    })
 
     databaseSelectorList <- reactive({
       gene_set_library = readxl::read_excel("example_data/Gene_set_Library.xlsx", col_names = FALSE)
@@ -954,69 +940,35 @@ mod_module1_server <- function(id){
                            annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
     })
 
-    #If annotation is NULL
-    # Cor_Prot_Metab_AnnoNull <- reactive({
-    #   threshold = input$pValueThreshold3
-    #   eigengenes_Prot = Eigengene2()$Eigengenes
-    #   eigengenes_metab = Eigengene1()$Eigengenes
-    #   cor_Prot_metab_WGCNA <- cor(eigengenes_Prot, eigengenes_metab, method = 'spearman', use = "pairwise.complete.obs")
-    #   cor_Prot_metab_list <- reshape2::melt(cor_Prot_metab_WGCNA, id.var = "Correlation")
-    #   colnames(cor_Prot_metab_list) <- c("Prot_module", "Metab_module", "Correlation")
-    #   # Filter the correlation list
-    #   Top_cor_Prot_metab <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
-    #   Top_cor_Prot_metab$Correlation <- round(Top_cor_Prot_metab$Correlation, 2)
-    #   return(list(Top_cor_Prot_metab = Cor_Prot_Metab_AnnoNull()$Top_cor_Prot_metab,
-    #               cor_Prot_metab_WGCNA = Cor_Prot_Metab_AnnoNull()$cor_Prot_metab_WGCNA))
-    # })
-    #
-    # output$tableCorrelation_AnnoNull <- DT::renderDataTable({
-    #   df4 = as.data.frame(Cor_Prot_Metab_AnnoNull()$Top_cor_Prot_metab)
-    #   DT::datatable(df4)
-    # })
-    #
-    # # Create a histogram of correlation
-    # output$Correlation_plot_AnnoNull <- renderPlot({
-    #   cor_Prot_metab_WGCNA = Cor_Prot_Metab_AnnoNull()$cor_Prot_metab_WGCNA
-    #   hist(cor_Prot_metab_WGCNA, main = "Histogram of Correlation")
-    # })
-    #
-    # output$Network_plot_AnnoNull <- renderPlot({
-    #   filtered_cor_Prot_metab_list = as.data.frame(Cor_Prot_Metab_AnnoNull()$Top_cor_Prot_metab)
-    #   # Create the network graph
-    #   network <- igraph::graph_from_data_frame(filtered_cor_Prot_metab_list, directed = FALSE)
-    #   igraph::E(network)$label <- filtered_cor_Prot_metab_list$Correlation
-    #   # Conditions for node type and color
-    #   condicion_tipo <- ifelse(grepl("Gene", igraph::V(network)$name), "lightgreen", "#E69F00")
-    #   color_text <- ifelse(grepl("Gene", igraph::V(network)$name), "darkgreen", "orange")
-    #
-    #   plot(
-    #     network,
-    #     edge.label = igraph::E(network)$label,
-    #     vertex.size = 2,
-    #     vertex.color = condicion_tipo,
-    #     vertex.label.color = color_text,
-    #     edge.label.cex = 0.8,
-    #     edge.label.color = "black",
-    #     edge.width = 2,
-    #     edge.color = "gray",
-    #     main = "Modules network"
-    #   )
-    # })
-
-    # If annotation data is available
     Cor_Prot_Metab1 <- reactive({
-      eigengenes_Prot = Eigengene2()$Eigengenes
-      eigengenes_metab = Eigengene1()$Eigengenes
-      cluster_assignments_metab = cluster_assignments_metabolites1()$cluster_assignments_metab
-      #cluster_assignments_Prot_enrich = cluster_assignments_genes1()$cluster_assignments_Prot
-      cluster_assignments_Prot_enrich = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
-      threshold = input$pValueThreshold3
-      Cor_Prot_Metab = Modules_correlation(eigengenes_Prot, eigengenes_metab,
-                                           cluster_assignments_Prot_enrich,
-                                           cluster_assignments_metab, threshold = threshold)
-      return(list(Top_cor_Prot_metab = Cor_Prot_Metab$Top_cor_Prot_metab,
-                  filtered_cor_Prot_metab_list = Cor_Prot_Metab$filtered_cor_Prot_metab_list,
-                  cor_Prot_metab_WGCNA = Cor_Prot_Metab$cor_Prot_metab_WGCNA))
+      threshold <- input$pValueThreshold3
+      eigengenes_Prot <- Eigengene2()$Eigengenes
+      eigengenes_metab <- Eigengene1()$Eigengenes
+      if (is.null(filedata4())) {
+        # Si filedata4 es NULL, calcular la correlación usando cor() directamente
+        cor_Prot_metab_WGCNA <- cor(eigengenes_Prot, eigengenes_metab, method = 'spearman', use = "pairwise.complete.obs")
+        cor_Prot_metab_list <- reshape2::melt(cor_Prot_metab_WGCNA, varnames = c("Prot_module", "Metab_module"))
+        colnames(cor_Prot_metab_list) <- c("Prot_module", "Metab_module", "Correlation")
+        Top_cor_Prot_metab <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
+        Top_cor_Prot_metab$Correlation <- round(Top_cor_Prot_metab$Correlation, 2)
+        filtered_cor_Prot_metab_list <- as.data.frame(Top_cor_Prot_metab)
+      } else {
+        # Si filedata4 no es NULL, realizar el cálculo utilizando tus funciones existentes
+        cluster_assignments_metab <- cluster_assignments_metabolites1()$cluster_assignments_metab
+        cluster_assignments_Prot_enrich <- Genes_Prot_enrich()$cluster_assignments_Prot_enrich
+
+        Cor_Prot_Metab <- Modules_correlation(eigengenes_Prot, eigengenes_metab,
+                                              cluster_assignments_Prot_enrich,
+                                              cluster_assignments_metab, threshold = threshold)
+
+        Top_cor_Prot_metab <- Cor_Prot_Metab$Top_cor_Prot_metab
+        filtered_cor_Prot_metab_list <- Cor_Prot_Metab$filtered_cor_Prot_metab_list
+        cor_Prot_metab_WGCNA <- Cor_Prot_Metab$cor_Prot_metab_WGCNA
+      }
+
+      list(Top_cor_Prot_metab = Top_cor_Prot_metab,
+           filtered_cor_Prot_metab_list = filtered_cor_Prot_metab_list,
+           cor_Prot_metab_WGCNA = cor_Prot_metab_WGCNA)
     })
 
     output$tableCorrelation <- DT::renderDataTable({
@@ -1061,7 +1013,6 @@ mod_module1_server <- function(id){
       browseURL(tmp_file)
     })
 
-
     # library(visNetwork)
     # output$Network_plot <- renderVisNetwork({
     #    filtered_cor_Prot_metab_list <- as.data.frame(Cor_Prot_Metab1()$filtered_cor_Prot_metab_list)
@@ -1080,26 +1031,25 @@ mod_module1_server <- function(id){
 
     ImpVar_Prot_Metab1 <- reactive({
       Cor_Prot_Metab = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
-      #cluster_assignments_Prot_enrich = cluster_assignments_genes1()$cluster_assignments_Prot
-      cluster_assignments_Prot_enrich = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
       cluster_assignments_metab = cluster_assignments_metabolites1()$cluster_assignments_metab
-      Prot_annotation = filedata4()
-      metab_annotation = filedata3()
       Prot_t = Eigengene2()$feature_mat_t
       metab_t = Eigengene1()$feature_mat_t
-      ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Prot_Metab,
-                                                     cluster_assignments_Prot_enrich,
-                                                     cluster_assignments_metab,
-                                                     Prot_annotation,
-                                                     metab_annotation,
-                                                     Prot_t,
-                                                     metab_t,
+      if (is.null(filedata4())) {
+        cluster_assignments_Prot = as.data.frame(cluster_assignments_genes1()$cluster_assignments_Prot)
+        str(cluster_assignments_Prot)
+        print(cluster_assignments_Prot)
+      } else{
+        cluster_assignments_Prot = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
+      }
+      ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Prot_Metab = Cor_Prot_Metab,
+                                                     cluster_assignments_Prot = cluster_assignments_Prot,
+                                                     cluster_assignments_metab = cluster_assignments_metab,
+                                                     Prot_t = Prot_t,
+                                                     metab_t = metab_t,
                                                      top_n = 5) #$correlation_matrices_list
       return(list(
         Top_correlations = ImpVar_Prot_Metab$Top_correlations,
         cluster_assignments = ImpVar_Prot_Metab$cluster_assignments,
-        annotation_matrices = ImpVar_Prot_Metab$annotation_matrices,
-        expression_matrices = ImpVar_Prot_Metab$expression_matrices,
         correlation_matrices = ImpVar_Prot_Metab$correlation_matrices,
         Important_features = ImpVar_Prot_Metab$Important_features,
         correlation_List = ImpVar_Prot_Metab$correlation_List
@@ -1112,10 +1062,6 @@ mod_module1_server <- function(id){
       if(input$visualization_list == 1){
         df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[1]])
         df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[2]])
-        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$annotation_matrices[[1]])
-        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$annotation_matrices[[2]])
-        df3_1 = ImpVar_Prot_Metab1()$expression_matrices[[1]]
-        df3_2 = ImpVar_Prot_Metab1()$expression_matrices[[2]]
         df4   = ImpVar_Prot_Metab1()$correlation_List[[1]]
         df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[1]], main = "Top 1 Modules Correlation")
         df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[1]], type = "upper",  tl.col = "black", col = custom_palette)
@@ -1126,10 +1072,6 @@ mod_module1_server <- function(id){
       if(input$visualization_list == 2){
         df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[3]])
         df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[4]])
-        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$annotation_matrices[[3]])
-        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$annotation_matrices[[4]])
-        df3_1 = ImpVar_Prot_Metab1()$expression_matrices[[3]]
-        df3_2 = ImpVar_Prot_Metab1()$expression_matrices[[4]]
         df4   = ImpVar_Prot_Metab1()$correlation_List[[2]]
         df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[2]], main = "Top 2 Modules Correlation")
         df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[2]], type = "upper",  tl.col = "black", col = custom_palette)
@@ -1140,10 +1082,6 @@ mod_module1_server <- function(id){
       if(input$visualization_list == 3){
         df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[5]])
         df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[6]])
-        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$annotation_matrices[[5]])
-        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$annotation_matrices[[6]])
-        df3_1 = ImpVar_Prot_Metab1()$expression_matrices[[5]]
-        df3_2 = ImpVar_Prot_Metab1()$expression_matrices[[6]]
         df4   = ImpVar_Prot_Metab1()$correlation_List[[3]]
         df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[3]], main = "Top 3 Modules Correlation")
         df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[3]], type = "upper",  tl.col = "black", col = custom_palette)
@@ -1154,10 +1092,6 @@ mod_module1_server <- function(id){
       if(input$visualization_list == 4){
         df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[7]])
         df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[8]])
-        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$annotation_matrices[[7]])
-        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$annotation_matrices[[8]])
-        df3_1 = ImpVar_Prot_Metab1()$expression_matrices[[7]]
-        df3_2 = ImpVar_Prot_Metab1()$expression_matrices[[8]]
         df4   = ImpVar_Prot_Metab1()$correlation_List[[4]]
         df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[4]], main = "Top 2 Modules Correlation")
         df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[4]], type = "upper",  tl.col = "black", col = custom_palette)
@@ -1168,10 +1102,6 @@ mod_module1_server <- function(id){
       if(input$visualization_list == 5){
         df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[9]])
         df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[10]])
-        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$annotation_matrices[[9]])
-        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$annotation_matrices[[10]])
-        df3_1 = ImpVar_Prot_Metab1()$expression_matrices[[9]]
-        df3_2 = ImpVar_Prot_Metab1()$expression_matrices[[10]]
         df4   = ImpVar_Prot_Metab1()$correlation_List[[5]]
         df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[5]], main = "Top 3 Modules Correlation")
         df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[5]], type = "upper",  tl.col = "black", col = custom_palette)
@@ -1180,8 +1110,6 @@ mod_module1_server <- function(id){
       }
 
       return(list(df1_1 = df1_1, df1_2=df1_2, df5_1 = df5_1, df5_2=df5_2, df4=df4, df4_1=df4_1, df4_2=df4_2))
-
-      #return(list(df1=df1, df2_1=df2_1, df2_2=df2_2, df3_1=df3_1, df3_2=df3_2, df4=df4, df5_1=df5_1, df5_2=df5_2 ))
     })
 
     output$ImportantVariables <- DT::renderDataTable({

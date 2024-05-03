@@ -44,9 +44,6 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
   Top_cor_Prot_metab$Enriched_Adjusted.P.value <- cluster_assignments_Prot$enriched_Adjusted.P.value[match(Top_cor_Prot_metab$Prot_module, cluster_assignments_Prot$col)]
   Top_cor_Prot_metab$Enriched_GO <- cluster_assignments_Prot$enriched_GO[match(Top_cor_Prot_metab$Prot_module, cluster_assignments_Prot$col)]
 
-  # Print the filtered list
-  #print(Top_cor_Prot_metab[,c('Metab_Module_id',   'Metab_count', "Prot_Module_id", 'Prot_count', 'Correlation', 'Enriched_Term_Genes',   "Enriched_Overlap" ,   "Enriched_Genes",  "Enriched_P.value",  "Enriched_Adjusted.P.value", "Enriched_GO")])
-
   # Create the network graph
   #filtered_cor_Prot_metab_list = Top_cor_Prot_metab[, c("Prot_label0", "Metab_label", "Correlation")]
   filtered_cor_Prot_metab_list = Top_cor_Prot_metab[, c("Prot_label", "Metab_label", "Correlation")]
@@ -56,20 +53,6 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
   # Conditions for node type and color
   condicion_tipo <- ifelse(grepl("Gene", igraph::V(network)$name), "lightgreen", "#E69F00")
   color_text <- ifelse(grepl("Gene", igraph::V(network)$name), "darkgreen", "orange")
-
-  # Plot the network graph
-  # plot(
-  #   network,
-  #   edge.label = igraph::E(network)$label,
-  #   vertex.size = 2,
-  #   vertex.color = condicion_tipo,
-  #   vertex.label.color = color_text,
-  #   edge.label.cex = 0.8,
-  #   edge.label.color = "black",
-  #   edge.width = 2,
-  #   edge.color = "gray",
-  #   main = "Modules Correlation"
-  # )
 
   # Return the Top_cor_Prot_metab data frame
   Top_cor_Prot_metab = Top_cor_Prot_metab[,c("Metab_Module_id" ,  "Metab_module", "Metab_count",   "Prot_Module_id",  "Prot_module", "Prot_count",   "Correlation",  'Enriched_Term_Genes',   "Enriched_Overlap" ,   "Enriched_Genes",  "Enriched_P.value",  "Enriched_Adjusted.P.value", "Enriched_GO")]

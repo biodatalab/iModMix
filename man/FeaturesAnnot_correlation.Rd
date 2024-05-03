@@ -8,8 +8,6 @@ FeaturesAnnot_correlation(
   Cor_Prot_Metab,
   cluster_assignments_Prot,
   cluster_assignments_metab,
-  Prot_annotation = NULL,
-  metab_annotation = NULL,
   Prot_t,
   metab_t,
   top_n = 5
