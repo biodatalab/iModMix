@@ -12,6 +12,8 @@
 #mod_module1_ui <- function(id, input, output, session) {
 mod_module1_ui <- function(id) {
   ns <- NS(id)
+  library(plotly)
+  library(visNetwork)
 
   tagList(
 
@@ -71,6 +73,15 @@ mod_module1_ui <- function(id) {
 
       actionButton(
         ns("runDemo"), "Run with Demo Data", icon = icon("play")
+      ),
+
+      div(id = "progress-wrapper",
+          style = "margin-top: 20px;",
+          tags$div(id = "progress-text", "0% complete"),
+          tags$div(class = "progress",
+                   tags$div(id = "progress-bar", class = "progress-bar", role = "progressbar",
+                            style = "width: 0%;", "0%")
+          )
       )
     ),
 
@@ -101,6 +112,8 @@ mod_module1_ui <- function(id) {
                             plotOutput(ns("hc_plot")),
                             h4("Cluster Assignments"),
                             DT::DTOutput(ns("tableClusterAssig")),
+                            downloadButton(ns("downloadClusterAssig"),
+                                           "Download Metabolites Cluster Assigment"),
                             h4("First principal component from each module"),
                             DT::DTOutput(ns("tableEigengene"))
                    ),
@@ -166,6 +179,8 @@ mod_module1_ui <- function(id) {
                             plotOutput(ns("hc_plot2")),
                             h4("Cluster Assignments"),
                             DT::DTOutput(ns("tableClusterAssig4")),
+                            downloadButton(ns("downloadClusterAssig2"),
+                                           "Download Proteins/Genes Cluster Assigment"),
                             h4("Cluster Assignments Enriched"),
                             selectInput(
                               ns("databaseSelector"),
@@ -229,13 +244,13 @@ mod_module1_ui <- function(id) {
 
                             h4("Correlation: Metabolites and Proteins/Genes"),
                             DT::DTOutput(ns("tableCorrelation")),
-
+                            downloadButton(ns("downloadOmicsCorrelation"),
+                                           "Download Omics Correlation"),
                             plotOutput(ns("Correlation_plot")),
 
                             h4("Module Network of Metabolites and Proteins/Genes"),
-                            actionButton(
-                              ns("zoomButton"), "Zoom", icon = icon("zoom-in")),
-                            plotOutput(ns("Network_plot")),
+                            #plotOutput(ns("Network_plot")),
+                            visNetworkOutput(ns("visNetwork_plot"))
 
                    ),
                    tabPanel("Important features",
@@ -262,6 +277,8 @@ mod_module1_ui <- function(id) {
 
                             h4("Modules correlation: Metabolites and Proteins/Genes"),
                             DT::DTOutput(ns("Correlation_mod")),
+                            downloadButton(ns("downloadModCorrelation"),
+                                           "Download Modules Correlation"),
 
                             h4("Metabolites"),
                             DT::DTOutput(ns("cluster_assignments_2")),
@@ -531,6 +548,16 @@ mod_module1_server <- function(id){
       DT::datatable(df1)
     })
 
+    # Render the download handler
+    output$downloadClusterAssig <- downloadHandler(
+      filename = function() {
+        "ClusterAssigMetabolites.csv"
+      },
+      content = function(file) {
+        write.csv(cluster_assignments_metabolites1()$cluster_assignments_metab, file, row.names = TRUE)
+      }
+    )
+
     output$hc_plot <- renderPlot({
       hcClu = hierarchical_cluster1()$hclusterTree2
       hcMod = hierarchical_cluster1()$hcDynMods2
@@ -734,6 +761,15 @@ mod_module1_server <- function(id){
       DT::datatable(df1)
     })
 
+    # Render the download handler
+    output$downloadClusterAssig2 <- downloadHandler(
+      filename = function() {
+        "ClusterAssigGenes/Proteins.csv"
+      },
+      content = function(file) {
+        write.csv(cluster_assignments_genes1()$cluster_assignments_Prot, file, row.names = TRUE)
+      }
+    )
 
     databaseSelectorList <- reactive({
       gene_set_library = readxl::read_excel("example_data/Gene_set_Library.xlsx", col_names = FALSE)
@@ -944,6 +980,13 @@ mod_module1_server <- function(id){
       threshold <- input$pValueThreshold3
       eigengenes_Prot <- Eigengene2()$Eigengenes
       eigengenes_metab <- Eigengene1()$Eigengenes
+
+      cluster_assignments_metab <- hierarchical_cluster1()$hcCluster_assignments2
+      Count_Metab <- table(cluster_assignments_metab$col)
+
+      cluster_assignments_ProtGenes <- hierarchical_cluster2()$hcCluster_assignments
+      Count_Prot <- table(cluster_assignments_ProtGenes$col)
+
       if (is.null(filedata4())) {
         # Si filedata4 es NULL, calcular la correlación usando cor() directamente
         cor_Prot_metab_WGCNA <- cor(eigengenes_Prot, eigengenes_metab, method = 'spearman', use = "pairwise.complete.obs")
@@ -952,8 +995,52 @@ mod_module1_server <- function(id){
         Top_cor_Prot_metab <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
         Top_cor_Prot_metab$Correlation <- round(Top_cor_Prot_metab$Correlation, 2)
         filtered_cor_Prot_metab_list <- as.data.frame(Top_cor_Prot_metab)
+        #nodes <- as.data.frame(Top_cor_Prot_metab)
+        #edges <- as.data.frame(Top_cor_Prot_metab)
+
+        # Edges to funcion visnetwork
+        edges <- Top_cor_Prot_metab[1:min(nrow(Top_cor_Prot_metab), 30), ]
+        edges$label <-as.character(edges$Correlation)
+        #edges$length = (1-abs(edges$Correlation))*10000 #
+        edges$dashes = ifelse(abs(edges$Correlation) < 0.50, TRUE, FALSE)
+        edges$title <-as.character(edges$Correlation)
+        edges$smooth = ifelse(abs(edges$Correlation) < 0.50, TRUE, FALSE)
+        edges$shadow = TRUE
+        edges <- subset(edges, select = -c(Correlation))
+        #colnames(edges) <- c("Prot_module" = "from", "Metab_module" = "to", "label", "length", "dashes", "title", "smooth", "shadow")
+        colnames(edges) <- c("Prot_module" = "from", "Metab_module" = "to", "label", "dashes", "title", "smooth", "shadow")
+
+        unique_from <- unique(edges$from)
+        label_from <- paste0("Module", seq_along(unique_from))
+        value_from <- Count_Prot[match(unique_from, names(Count_Prot))]
+        shape_from <- "triangle"
+        title_from0 = paste(value_from, "genes", sep = " ")
+        color_from <- "darkgreen"
+
+        unique_to <- unique(edges$to)
+        label_to <- paste0("Module", seq_along(unique_to))
+        value_to <- Count_Metab[match(unique_to, names(Count_Metab))]
+        shape_to <- "diamond"
+        title_to = paste(value_to, "metabolites", sep = " ")
+        color_to <- "orange"
+
+        #nodes to function Visnetwork
+        nodes <- data.frame(id = c(unique_from, unique_to),
+                            label = c(label_from, label_to),
+                            value = c(value_from, value_to),
+                            shape = c(rep(shape_from, length(unique_from)), rep(shape_to, length(unique_to))),
+                            title = c(title_from0, title_to),
+                            color = c(rep(color_from, length(unique_from)), rep(color_to, length(unique_to))),
+                            shadow = TRUE)
+        nodes <- nodes[,c("id", "label", "value", "shape", "title", "color", "shadow")]
+
+        edges[["from"]] <- sub("^#", "", edges[["from"]])
+        edges[["to"]] <- sub("^#", "", edges[["to"]])
+
+        rownames(nodes) <- NULL
+        nodes[["id"]] <- sub("^#", "", nodes[["id"]])
+
       } else {
-        # Si filedata4 no es NULL, realizar el cálculo utilizando tus funciones existentes
         cluster_assignments_metab <- cluster_assignments_metabolites1()$cluster_assignments_metab
         cluster_assignments_Prot_enrich <- Genes_Prot_enrich()$cluster_assignments_Prot_enrich
 
@@ -964,17 +1051,31 @@ mod_module1_server <- function(id){
         Top_cor_Prot_metab <- Cor_Prot_Metab$Top_cor_Prot_metab
         filtered_cor_Prot_metab_list <- Cor_Prot_Metab$filtered_cor_Prot_metab_list
         cor_Prot_metab_WGCNA <- Cor_Prot_Metab$cor_Prot_metab_WGCNA
+        edges <- Cor_Prot_Metab$edges
+        nodes <- Cor_Prot_Metab$nodes
       }
 
       list(Top_cor_Prot_metab = Top_cor_Prot_metab,
            filtered_cor_Prot_metab_list = filtered_cor_Prot_metab_list,
-           cor_Prot_metab_WGCNA = cor_Prot_metab_WGCNA)
+           cor_Prot_metab_WGCNA = cor_Prot_metab_WGCNA,
+           edges = edges,
+           nodes = nodes)
     })
 
     output$tableCorrelation <- DT::renderDataTable({
       df4 = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
       DT::datatable(df4)
     })
+
+    # Render the download handler
+    output$downloadOmicsCorrelation <- downloadHandler(
+      filename = function() {
+        "OmicsCorrelation.csv"
+      },
+      content = function(file) {
+        write.csv(Cor_Prot_Metab1()$Top_cor_Prot_metab, file, row.names = TRUE)
+      }
+    )
 
     # Create a histogram of correlation
     output$Correlation_plot <- renderPlot({
@@ -1007,27 +1108,32 @@ mod_module1_server <- function(id){
              pt.cex = 1.5, cex = 0.8, col = c("darkgreen", "black"), bty = "n")
      })
 
-    observeEvent(input$zoomButton, {
-      tmp_file <- tempfile(fileext = ".png")
-      ggplot2::ggsave(tmp_file, plot = output$Network_plot, device = "png", width = 10, height = 8, limitsize = FALSE)
-      browseURL(tmp_file)
-    })
+    library(visNetwork)
+    output$visNetwork_plot <- renderVisNetwork({
+      dfnodes <- as.data.frame(Cor_Prot_Metab1()$nodes)
+      dfedges <- as.data.frame(Cor_Prot_Metab1()$edges)
 
-    # library(visNetwork)
-    # output$Network_plot <- renderVisNetwork({
-    #    filtered_cor_Prot_metab_list <- as.data.frame(Cor_Prot_Metab1()$filtered_cor_Prot_metab_list)
-    #    colnames(filtered_cor_Prot_metab_list) = c("from", "to", "Correlation")
-    #    nodes <- unique(c(filtered_cor_Prot_metab_list$from, filtered_cor_Prot_metab_list$to))
-    #    nodes_df <- data.frame(id = nodes, label = nodes)
-    #
-    #    visNetwork::visNetwork(
-    #      nodes = nodes_df,
-    #      edges = filtered_cor_Prot_metab_list,
-    #      main = "Protein-Metabolite Network"
-    #    )
-    #    #) %>%
-    #     # visNetwork::visLayout(randomSeed = 123)
-    #  })
+      visNetwork::visNetwork(
+        nodes = dfnodes,
+        edges = dfedges,
+        #main = "Protein-Metabolite Network",
+        width = "100%",
+        height = "800px"
+      ) %>%
+        visLegend(
+          useGroups = FALSE,
+          addNodes = data.frame(
+          label = c("Genes Modules", "Metabolites Modules"),
+          shape = c("triangle", "diamond"),
+          color = c("darkgreen", "orange")),
+          addEdges = data.frame(
+            label = "Correlation",
+            shape = "line",
+            length = 200,
+            color = "darkgreen")
+        ) %>%
+        visInteraction(navigationButtons = TRUE)
+    })
 
     ImpVar_Prot_Metab1 <- reactive({
       Cor_Prot_Metab = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
@@ -1037,7 +1143,6 @@ mod_module1_server <- function(id){
       if (is.null(filedata4())) {
         cluster_assignments_Prot = as.data.frame(cluster_assignments_genes1()$cluster_assignments_Prot)
         str(cluster_assignments_Prot)
-        print(cluster_assignments_Prot)
       } else{
         cluster_assignments_Prot = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
       }
@@ -1129,6 +1234,15 @@ mod_module1_server <- function(id){
       df4 = data.frame(Important_Features()$df4)
       DT::datatable(df4)
     })
+    # Render the download handler
+    output$downloadModCorrelation <- downloadHandler(
+      filename = function() {
+        "ModulesCorrelation.csv"
+      },
+      content = function(file) {
+        write.csv(Important_Features()$df4, file, row.names = TRUE)
+      }
+    )
 
     output$cluster_assignments_1 <- DT::renderDataTable({
       Important_Features()$df1_1
