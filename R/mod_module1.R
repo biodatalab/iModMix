@@ -74,15 +74,6 @@ mod_module1_ui <- function(id) {
 
       actionButton(
         ns("runDemo"), "Run with Demo Data", icon = icon("play")
-      ),
-
-      div(id = "progress-wrapper",
-          style = "margin-top: 20px;",
-          tags$div(id = "progress-text", "0% complete"),
-          tags$div(class = "progress",
-                   tags$div(id = "progress-bar", class = "progress-bar", role = "progressbar",
-                            style = "width: 0%;", "0%")
-          )
       )
     ),
 
@@ -343,16 +334,35 @@ mod_module1_server <- function(id){
     })
 
     observeEvent(input$runDemo, {
-      filedata(load_data("Metab_exp.csv"))
-      filedata3(load_data("Metab_annot.csv"))
-      filedata2(load_data("Prot_exp.csv"))
-      filedata4(load_data("Prot_annot.csv"))
-      metadata(load_data("Metadata.csv"))
-      demo_loaded(TRUE)
-      demo_loaded2(TRUE)
-      enrich_loaded(TRUE)
-      updateSelectInput(session, "databaseSelector", selected = "KEGG_2019_Mouse")
-      updateSliderInput(session, "pValueThreshold3", value = 0.9172)
+      withProgress(message = 'Loading data...', value = 0, {
+        incProgress(0, detail = 'Loading Metab_exp.csv')
+        filedata(load_data("Metab_exp.csv"))
+        Sys.sleep(3)
+
+        incProgress(10, detail = 'Loading Metab_annot.csv')
+        filedata3(load_data("Metab_annot.csv"))
+        Sys.sleep(3)
+
+        incProgress(20, detail = 'Loading Prot_exp.csv')
+        filedata2(load_data("Prot_exp.csv"))
+        Sys.sleep(3)
+
+        incProgress(30, detail = 'Loading Prot_annot.csv')
+        filedata4(load_data("Prot_annot.csv"))
+        Sys.sleep(3)
+
+        incProgress(50, detail = 'Loading Metadata.csv...')
+        metadata(load_data("Metadata.csv"))
+        Sys.sleep(2)
+
+        demo_loaded(TRUE)
+        demo_loaded2(TRUE)
+        enrich_loaded(TRUE)
+        updateSelectInput(session, "databaseSelector", selected = "KEGG_2019_Mouse")
+        updateSliderInput(session, "pValueThreshold3", value = 0.9172)
+
+        incProgress(100, detail = 'Complete!')
+      })
     })
 
     data_info <- reactive({
@@ -480,21 +490,25 @@ mod_module1_server <- function(id){
     })
 
     partial_cors1 <- reactive({
-      if (is.null(demo_loaded())) {
-        req(filedata())
-        data <- filedata()
-        data$missing_count <- rowSums(is.na(data))
-        feature_mat <- subset(data, missing_count <= 0.1 * (ncol(data) - 2))
-        features <- feature_mat[, 1]
-        feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
-        colnames(feature_mat_t) <- features
-        par_cor1 <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
-      } else {
-        par_cor1 <- read.csv("Example_data/FloresData_K_TK/PartialCorMetabolites.csv", header = TRUE, row.names = 1,  check.names = FALSE)
-        #par_cor1 <- read.csv("Example_data/FloresData_K_TK/StePartialCorMetabolites.csv", header = TRUE, row.names = 1,  check.names = FALSE)
-        par_cor1 = as.matrix(par_cor1)
-      }
-      list(par_cor1 = par_cor1)
+      withProgress(message = 'Calculating partial correlations (Metabolites)...', value = 0, {
+        if (is.null(demo_loaded())) {
+          req(filedata())
+          data <- filedata()
+          data$missing_count <- rowSums(is.na(data))
+          feature_mat <- subset(data, missing_count <= 0.1 * (ncol(data) - 2))
+          features <- feature_mat[, 1]
+          feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
+          Sys.sleep(1)  #
+          par_cor1 <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
+        } else {
+          Sys.sleep(1)
+          par_cor1 <- read.csv("Example_data/FloresData_K_TK/PartialCorMetabolites.csv",
+                               header = TRUE, row.names = 1, check.names = FALSE)
+          par_cor1 <- as.matrix(par_cor1)
+        }
+        incProgress(100, detail = 'Complete!')
+        list(par_cor1 = par_cor1)
+      })
     })
 
     output$matrizTable <- renderPrint({
@@ -707,21 +721,27 @@ mod_module1_server <- function(id){
     })
 
     partial_cors2 <- reactive({
-      if (is.null(demo_loaded2())) {
-        req(filedata2())
-        data <- filedata2()
-        data$missing_count <- rowSums(is.na(data))
-        feature_mat <- subset(data, missing_count <= 0.1 * (ncol(data) - 2))
-        features <- feature_mat[, 1]
-        feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
-        colnames(feature_mat_t) <- features
-        par_cor <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
-      } else {
-        par_cor <- read.csv("Example_data/FloresData_K_TK/PartialCorProt.csv", header = TRUE, row.names = 1,  check.names = FALSE)
-        #par_cor <- read.csv("Example_data/FloresData_K_TK/StePartialCorProt.csv", header = TRUE, row.names = 1,  check.names = FALSE)
-        par_cor <-  as.matrix(par_cor)
-      }
-      list(par_cor = par_cor)
+      withProgress(message = 'Calculating partial correlations (Proteins/Genes)...', value = 0, {
+        if (is.null(demo_loaded2())) {
+          req(filedata2())
+          data <- filedata2()
+          data$missing_count <- rowSums(is.na(data))
+          feature_mat <- subset(data, missing_count <= 0.1 * (ncol(data) - 2))
+          features <- feature_mat[, 1]
+          feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
+          colnames(feature_mat_t) <- features
+          Sys.sleep(1)  #
+
+          par_cor <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
+        } else {
+          Sys.sleep(1)
+          par_cor <- read.csv("Example_data/FloresData_K_TK/PartialCorProt.csv",
+                              header = TRUE, row.names = 1, check.names = FALSE)
+          par_cor <- as.matrix(par_cor)
+        }
+        incProgress(100, detail = 'Complete!')
+        list(par_cor = par_cor)
+      })
     })
 
     output$matrizTable2 <- renderPrint({
@@ -790,19 +810,22 @@ mod_module1_server <- function(id){
     enrichR::listEnrichrSites()
 
     Genes_Prot_enrich <- reactive({
-      if (is.null(enrich_loaded())) {
-      req(input$databaseSelector)
-      selected_database <- input$databaseSelector
-
-      cluster_assignments_ProtGenes = cluster_assignments_genes1()$cluster_assignments_Prot
-      cluster_assignments_Prot_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
-                                                                 database = selected_database)
-      list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich)
-      } else {
-        cluster_assignments_Prot_enrich <- read.csv("Example_data/FloresData_K_TK/EnrichmentMouse.csv", header = TRUE, row.names = 1,  check.names = FALSE)
-        #cluster_assignments_Prot_enrich <- read.csv("Example_data/FloresData_K_TK/SteEnrichment.csv", header = TRUE, row.names = 1,  check.names = FALSE)
-      }
-      list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich)
+      withProgress(message = 'Performing enrichment analysis...', value = 0, {
+        if (is.null(enrich_loaded())) {
+          req(input$databaseSelector)
+          selected_database <- input$databaseSelector
+          cluster_assignments_ProtGenes <- cluster_assignments_genes1()$cluster_assignments_Prot
+          cluster_assignments_Prot_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
+                                                                     database = selected_database)
+          Sys.sleep(1)
+        } else {
+          Sys.sleep(1)
+          cluster_assignments_Prot_enrich <- read.csv("Example_data/FloresData_K_TK/EnrichmentMouse.csv",
+                                                      header = TRUE, row.names = 1, check.names = FALSE)
+        }
+        incProgress(100, detail = 'Complete!')
+        list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich)
+      })
     })
 
 
@@ -1148,45 +1171,6 @@ mod_module1_server <- function(id){
         mynetwork() %>% visSave(con)
       }
     )
-
-    # library(visNetwork)
-    # output$visNetwork_plot <- renderVisNetwork({
-    #   dfnodes <- as.data.frame(Cor_Prot_Metab1()$nodes)
-    #   dfedges <- as.data.frame(Cor_Prot_Metab1()$edges)
-    #
-    #   visNetwork::visNetwork(
-    #     nodes = dfnodes,
-    #     edges = dfedges,
-    #     #main = "Protein-Metabolite Network",
-    #     width = "100%",
-    #     height = "800px"
-    #   ) %>%
-    #     visLegend(
-    #       useGroups = FALSE,
-    #       addNodes = data.frame(
-    #       label = c("Genes Modules", "Metabolites Modules"),
-    #       shape = c("triangle", "diamond"),
-    #       color = c("darkgreen", "orange")),
-    #       addEdges = data.frame(
-    #         label = "Correlation",
-    #         shape = "line",
-    #         length = 200,
-    #         color = "darkgreen")
-    #     ) %>%
-    #     visInteraction(navigationButtons = TRUE)
-    # })
-    #
-    # output$downloadVisNetwork <- downloadHandler(
-    #   filename = function() {
-    #     "visNetwork_graph.html"
-    #   },
-    #   content = function(file) {
-    #     visGraph <- visNetwork::visNetworkProxy("visNetwork_plot")
-    #     visNetwork::visSave(visGraph, file = file)
-    #   }
-    # )
-
-
 
     ImpVar_Prot_Metab1 <- reactive({
       Cor_Prot_Metab = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
