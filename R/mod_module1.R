@@ -14,6 +14,7 @@ mod_module1_ui <- function(id) {
   ns <- NS(id)
   library(plotly)
   library(visNetwork)
+  library(shinyWidgets)
 
   tagList(
 
@@ -250,7 +251,9 @@ mod_module1_ui <- function(id) {
 
                             h4("Module Network of Metabolites and Proteins/Genes"),
                             #plotOutput(ns("Network_plot")),
-                            visNetworkOutput(ns("visNetwork_plot"))
+                            visNetworkOutput(ns("network")),
+                            downloadLink(ns("downloadNetwork"),
+                                           "Download Network as .html")
 
                    ),
                    tabPanel("Important features",
@@ -1108,8 +1111,7 @@ mod_module1_server <- function(id){
              pt.cex = 1.5, cex = 0.8, col = c("darkgreen", "black"), bty = "n")
      })
 
-    library(visNetwork)
-    output$visNetwork_plot <- renderVisNetwork({
+    mynetwork <- reactive({
       dfnodes <- as.data.frame(Cor_Prot_Metab1()$nodes)
       dfedges <- as.data.frame(Cor_Prot_Metab1()$edges)
 
@@ -1123,9 +1125,9 @@ mod_module1_server <- function(id){
         visLegend(
           useGroups = FALSE,
           addNodes = data.frame(
-          label = c("Genes Modules", "Metabolites Modules"),
-          shape = c("triangle", "diamond"),
-          color = c("darkgreen", "orange")),
+            label = c("Genes Modules", "Metabolites Modules"),
+            shape = c("triangle", "diamond"),
+            color = c("darkgreen", "orange")),
           addEdges = data.frame(
             label = "Correlation",
             shape = "line",
@@ -1134,6 +1136,57 @@ mod_module1_server <- function(id){
         ) %>%
         visInteraction(navigationButtons = TRUE)
     })
+    output$network <- renderVisNetwork({
+      mynetwork()
+    })
+
+    output$downloadNetwork <- downloadHandler(
+      filename = function() {
+        paste('network-', Sys.Date(), '.html', sep='')
+      },
+      content = function(con) {
+        mynetwork() %>% visSave(con)
+      }
+    )
+
+    # library(visNetwork)
+    # output$visNetwork_plot <- renderVisNetwork({
+    #   dfnodes <- as.data.frame(Cor_Prot_Metab1()$nodes)
+    #   dfedges <- as.data.frame(Cor_Prot_Metab1()$edges)
+    #
+    #   visNetwork::visNetwork(
+    #     nodes = dfnodes,
+    #     edges = dfedges,
+    #     #main = "Protein-Metabolite Network",
+    #     width = "100%",
+    #     height = "800px"
+    #   ) %>%
+    #     visLegend(
+    #       useGroups = FALSE,
+    #       addNodes = data.frame(
+    #       label = c("Genes Modules", "Metabolites Modules"),
+    #       shape = c("triangle", "diamond"),
+    #       color = c("darkgreen", "orange")),
+    #       addEdges = data.frame(
+    #         label = "Correlation",
+    #         shape = "line",
+    #         length = 200,
+    #         color = "darkgreen")
+    #     ) %>%
+    #     visInteraction(navigationButtons = TRUE)
+    # })
+    #
+    # output$downloadVisNetwork <- downloadHandler(
+    #   filename = function() {
+    #     "visNetwork_graph.html"
+    #   },
+    #   content = function(file) {
+    #     visGraph <- visNetwork::visNetworkProxy("visNetwork_plot")
+    #     visNetwork::visSave(visGraph, file = file)
+    #   }
+    # )
+
+
 
     ImpVar_Prot_Metab1 <- reactive({
       Cor_Prot_Metab = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
