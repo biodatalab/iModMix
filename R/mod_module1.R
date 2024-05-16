@@ -27,7 +27,7 @@ mod_module1_ui <- function(id) {
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Metabolomics data")
+        label = h5("Metabolomics Expression data")
       ),
 
       fileInput(
@@ -36,7 +36,7 @@ mod_module1_ui <- function(id) {
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Annotation Metabolomics data")
+        label = h5("Metabolomics Annotation data")
       ),
 
       div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
@@ -47,7 +47,7 @@ mod_module1_ui <- function(id) {
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Proteomics/Genomics data")
+        label = h5("Proteomics/Genomics Expression data")
       ),
 
       fileInput(
@@ -56,7 +56,7 @@ mod_module1_ui <- function(id) {
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Annotation Proteomics data")
+        label = h5("Proteomics/Genomics Annotation data")
       ),
 
       div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
@@ -102,6 +102,9 @@ mod_module1_ui <- function(id) {
                                            "Download Partial Correlation"),
                             h4("Herarchical clustering"),
                             plotOutput(ns("hc_plot")),
+                            helpText(
+                              "Note: This is a help text that accompanies the widgets above.",
+                              "It provides additional information or instructions for users."),
                             h4("Cluster Assignments"),
                             DT::DTOutput(ns("tableClusterAssig")),
                             downloadButton(ns("downloadClusterAssig"),
@@ -227,19 +230,17 @@ mod_module1_ui <- function(id) {
                  tabsetPanel(
                    type = "tabs",
                    tabPanel("Modules correlation",
+                            h4("Correlation: Metabolites and Proteins/Genes"),
+                            plotOutput(ns("Correlation_plot")),
                             sliderInput(ns("pValueThreshold3"),
                                         label = "Select Correlation Threshold",
                                         min = 0,
                                         max = 1,
                                         step = 0.0001,
                                         value = 0.5),
-
-                            h4("Correlation: Metabolites and Proteins/Genes"),
                             DT::DTOutput(ns("tableCorrelation")),
                             downloadButton(ns("downloadOmicsCorrelation"),
                                            "Download Omics Correlation"),
-                            plotOutput(ns("Correlation_plot")),
-
                             h4("Module Network of Metabolites and Proteins/Genes"),
                             #plotOutput(ns("Network_plot")),
                             visNetworkOutput(ns("network")),
@@ -498,6 +499,7 @@ mod_module1_server <- function(id){
           feature_mat <- subset(data, missing_count <= 0.1 * (ncol(data) - 2))
           features <- feature_mat[, 1]
           feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
+          colnames(feature_mat_t) <- features
           Sys.sleep(1)  #
           par_cor1 <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
         } else {
@@ -1052,10 +1054,12 @@ mod_module1_server <- function(id){
 
         #nodes to function Visnetwork
         nodes <- data.frame(id = c(unique_from, unique_to),
-                            label = c(label_from, label_to),
+                            #label = c(label_from, label_to),
+                            label = c(title_from0, title_to),
                             value = c(value_from, value_to),
                             shape = c(rep(shape_from, length(unique_from)), rep(shape_to, length(unique_to))),
-                            title = c(title_from0, title_to),
+                            #title = c(title_from0, title_to),
+                            title = c(label_from, label_to),
                             color = c(rep(color_from, length(unique_from)), rep(color_to, length(unique_to))),
                             shadow = TRUE)
         nodes <- nodes[,c("id", "label", "value", "shape", "title", "color", "shadow")]

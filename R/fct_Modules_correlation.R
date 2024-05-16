@@ -50,7 +50,10 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
   color_from <- "darkgreen"
 
   Enriched_Term_net <- cluster_assignments_Prot$enriched_Term[match(unique_from, cluster_assignments_Prot$col)]
-  title_from <- paste(title_from0, Enriched_Term_net, sep = "<br>")
+  Enriched_Term_net <- ifelse(nchar(Enriched_Term_net) > 15, paste0(substring(Enriched_Term_net, 1, 15), "..."), Enriched_Term_net)
+  title_from <- paste(title_from0, Enriched_Term_net, sep = "\n")
+
+
 
   unique_to <- unique(edges$to)
   label_to <- paste0("Module", seq_along(unique_to))
@@ -61,10 +64,12 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
 
   #nodes to function Visnetwork
   nodes <- data.frame(id = c(unique_from, unique_to),
-                      label = c(label_from, label_to),
+                      #label = c(label_from, label_to),
+                      label = c(title_from, title_to),
                       value = c(value_from, value_to),
                       shape = c(rep(shape_from, length(unique_from)), rep(shape_to, length(unique_to))),
-                      title = c(title_from, title_to),
+                      #title = c(title_from, title_to),
+                      title = c(label_from, label_to),
                       color = c(rep(color_from, length(unique_from)), rep(color_to, length(unique_to))),
                       shadow = TRUE)
   nodes <- nodes[,c("id", "label", "value", "shape", "title", "color", "shadow")]

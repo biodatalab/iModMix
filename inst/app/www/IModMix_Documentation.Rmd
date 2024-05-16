@@ -31,7 +31,7 @@ generate a network of modules beetween metabolomics ans proteomics/genomics data
 ## Data input 
 
 In the first section you can upload one or two omics tables
-the metabolite,proteins and genes must be identified in, `Feture ID` which contains a unique ID for each row. *See Figure 1 for an example of the mass spec data input format.* 
+the metabolite,proteins and genes must be identified in, `Feature_ID` which contains a unique ID for each row. *See Figure 1 for an example of the mass spec data input format.* 
 
 
 ```{r data-example, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Figure 1: Example expression data that can be uploaded in the 'Metabolomics data' and 'Proteomics/Genomics data' tabs."}
