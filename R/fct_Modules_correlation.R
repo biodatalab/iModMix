@@ -22,7 +22,16 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
 
   # Filter the correlation list
   Top_cor_Prot_metab <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
-  Top_cor_Prot_metab$Correlation <- round(Top_cor_Prot_metab$Correlation, 2)
+
+  cor_Prot_metab_list1 <- cor_Prot_metab_list[order(abs(cor_Prot_metab_list$Correlation), decreasing = TRUE), ][1:5, ]
+  cor_Prot_metab_list2 <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
+  Top_cor_Prot_metab <- if (nrow(cor_Prot_metab_list1) >= nrow(cor_Prot_metab_list2)) {
+    cor_Prot_metab_list1
+  } else {
+    cor_Prot_metab_list2
+  }
+
+  #Top_cor_Prot_metab$Correlation <- round(Top_cor_Prot_metab$Correlation, 2)
 
   # Remove the "ME" prefix from Prot_module and Metab_module columns
   Top_cor_Prot_metab[c("Prot_module", "Metab_module")] <- lapply(Top_cor_Prot_metab[c("Prot_module", "Metab_module")], function(x) sub("^ME", "", x))

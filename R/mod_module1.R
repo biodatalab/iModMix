@@ -102,9 +102,6 @@ mod_module1_ui <- function(id) {
                                            "Download Partial Correlation"),
                             h4("Herarchical clustering"),
                             plotOutput(ns("hc_plot")),
-                            helpText(
-                              "Note: This is a help text that accompanies the widgets above.",
-                              "It provides additional information or instructions for users."),
                             h4("Cluster Assignments"),
                             DT::DTOutput(ns("tableClusterAssig")),
                             downloadButton(ns("downloadClusterAssig"),
@@ -114,6 +111,8 @@ mod_module1_ui <- function(id) {
                    ),
                    tabPanel("Phenotype",
                             h4("Phenotype data"),
+                            helpText(
+                              "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table5")),
                             fluidRow(
                               column(6,
@@ -177,6 +176,8 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadClusterAssig2"),
                                            "Download Proteins/Genes Cluster Assigment"),
                             h4("Cluster Assignments Enriched"),
+                            helpText(
+                              "Note: Upload the Annotation data to be able to run enrichment analysis."),
                             selectInput(
                               ns("databaseSelector"),
                               label = "Select Library",
@@ -189,6 +190,8 @@ mod_module1_ui <- function(id) {
                    ),
                    tabPanel("Phenotype",
                             h4("Phenotype data"),
+                            helpText(
+                              "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table6")),
                             fluidRow(
                               column(6,
@@ -466,7 +469,7 @@ mod_module1_server <- function(id){
     })
 
     pheno_variablesPCA <- reactive({
-      names(metadata())
+      names(metadata())[-which(names(metadata()) == "Sample")]
     })
 
     # For metabolites global PCA
@@ -475,7 +478,7 @@ mod_module1_server <- function(id){
     })
 
     pheno_variables <- reactive({
-      names(metadata())
+      names(metadata())[-which(names(metadata()) == "Sample")]
     })
 
     observe({
@@ -483,7 +486,7 @@ mod_module1_server <- function(id){
     })
 
     pheno_variables2 <- reactive({
-      names(metadata())
+      names(metadata())[-which(names(metadata()) == "Sample")]
     })
 
     observe({
@@ -884,7 +887,7 @@ mod_module1_server <- function(id){
     })
 
     pheno_variablesPCA2 <- reactive({
-      names(metadata())
+      names(metadata())[-which(names(metadata()) == "Sample")]
     })
 
     # For metabolites global PCA
@@ -1020,11 +1023,20 @@ mod_module1_server <- function(id){
         cor_Prot_metab_WGCNA <- cor(eigengenes_Prot, eigengenes_metab, method = 'spearman', use = "pairwise.complete.obs")
         cor_Prot_metab_list <- reshape2::melt(cor_Prot_metab_WGCNA, varnames = c("Prot_module", "Metab_module"))
         colnames(cor_Prot_metab_list) <- c("Prot_module", "Metab_module", "Correlation")
-        Top_cor_Prot_metab <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
+        #Top_cor_Prot_metab <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
+
+        cor_Prot_metab_list1 <- cor_Prot_metab_list[order(abs(cor_Prot_metab_list$Correlation), decreasing = TRUE), ][1:5, ]
+
+        cor_Prot_metab_list2 <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
+
+        Top_cor_Prot_metab <- if (nrow(cor_Prot_metab_list1) >= nrow(cor_Prot_metab_list2)) {
+          cor_Prot_metab_list1
+        } else {
+          cor_Prot_metab_list2
+        }
+
         Top_cor_Prot_metab$Correlation <- round(Top_cor_Prot_metab$Correlation, 2)
         filtered_cor_Prot_metab_list <- as.data.frame(Top_cor_Prot_metab)
-        #nodes <- as.data.frame(Top_cor_Prot_metab)
-        #edges <- as.data.frame(Top_cor_Prot_metab)
 
         # Edges to funcion visnetwork
         edges <- Top_cor_Prot_metab[1:min(nrow(Top_cor_Prot_metab), 30), ]
