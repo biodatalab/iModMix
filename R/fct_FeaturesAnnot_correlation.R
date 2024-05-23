@@ -96,7 +96,8 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
     Important_features_list[[paste("Important_features_Cluster_Prot_", i)]] <- Important_features_Prot[Important_features_Prot != ""]
 
     # Extract column names omitting NA values and empty strings
-    Important_features_Metab <- na.omit(colnames(correlation_matrix2))
+    Important_features_Metab <- na.omit(colnames(correlation_matrix))
+    #Important_features_Metab <- na.omit(colnames(correlation_matrix2))
     Important_features_list[[paste("Important_features_Cluster_Metab_", i)]] <- Important_features_Metab[Important_features_Metab != ""]
 
     correlation_matrices_list[[paste("Correlation_Matrix_Cluster_", i)]] <- correlation_matrix

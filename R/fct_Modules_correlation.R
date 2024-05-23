@@ -31,7 +31,7 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
     cor_Prot_metab_list2
   }
 
-  #Top_cor_Prot_metab$Correlation <- round(Top_cor_Prot_metab$Correlation, 2)
+  Top_cor_Prot_metab$Correlation <- round(Top_cor_Prot_metab$Correlation, 2)
 
   # Remove the "ME" prefix from Prot_module and Metab_module columns
   Top_cor_Prot_metab[c("Prot_module", "Metab_module")] <- lapply(Top_cor_Prot_metab[c("Prot_module", "Metab_module")], function(x) sub("^ME", "", x))
@@ -59,7 +59,7 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
   color_from <- "darkgreen"
 
   Enriched_Term_net <- cluster_assignments_Prot$enriched_Term[match(unique_from, cluster_assignments_Prot$col)]
-  Enriched_Term_net <- ifelse(nchar(Enriched_Term_net) > 15, paste0(substring(Enriched_Term_net, 1, 15), "..."), Enriched_Term_net)
+  Enriched_Term_net <- ifelse(nchar(Enriched_Term_net) > 20, paste0(substring(Enriched_Term_net, 1, 20), "..."), Enriched_Term_net)
   title_from <- paste(title_from0, Enriched_Term_net, sep = "\n")
 
 

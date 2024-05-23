@@ -70,6 +70,12 @@ mod_module1_ui <- function(id) {
         label = h5("Metadata")
       ),
 
+      # div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
+      #
+      # actionButton(
+      #   ns("run"), "Run", icon = icon("play")
+      # ),
+
       div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
 
       actionButton(
@@ -100,7 +106,7 @@ mod_module1_ui <- function(id) {
                             verbatimTextOutput(ns("matrizTable")),
                             downloadButton(ns("downloadParCor"),
                                            "Download Partial Correlation"),
-                            h4("Herarchical clustering"),
+                            h4("Hierarchical clustering"),
                             plotOutput(ns("hc_plot")),
                             h4("Cluster Assignments"),
                             DT::DTOutput(ns("tableClusterAssig")),
@@ -169,7 +175,7 @@ mod_module1_ui <- function(id) {
                             verbatimTextOutput(ns("matrizTable2")),
                             downloadButton(ns("downloadParCor2"),
                                            "Download Partial Correlation"),
-                            h4("Herarchical clustering"),
+                            h4("Hierarchical clustering"),
                             plotOutput(ns("hc_plot2")),
                             h4("Cluster Assignments"),
                             DT::DTOutput(ns("tableClusterAssig4")),
@@ -185,7 +191,7 @@ mod_module1_ui <- function(id) {
                             DT::DTOutput(ns("tableClusterAssig3")),
                             downloadButton(ns("downloadEnrichment"),
                                            "Download Enrichment"),
-                            h4("First principal component from each module"),
+                            h4("First principal component from each module (Eigenfeatures)"),
                             DT::DTOutput(ns("tableEigengene2"))
                    ),
                    tabPanel("Phenotype",
@@ -507,8 +513,12 @@ mod_module1_server <- function(id){
           par_cor1 <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
         } else {
           Sys.sleep(1)
-          par_cor1 <- read.csv("Example_data/FloresData_K_TK/PartialCorMetabolites.csv",
-                               header = TRUE, row.names = 1, check.names = FALSE)
+
+          unzip("Example_data/FloresData_K_TK/PartialCorMetabolites.csv.zip", exdir = tempdir())
+          csv_file <- file.path(tempdir(), "PartialCorMetabolites.csv")
+          par_cor1 <- read.csv(csv_file, header = TRUE, row.names = 1, check.names = FALSE)
+          file.remove(csv_file)
+          #par_cor1 <- read.csv("Example_data/FloresData_K_TK/PartialCorMetabolites.csv", header = TRUE, row.names = 1, check.names = FALSE)
           par_cor1 <- as.matrix(par_cor1)
         }
         incProgress(100, detail = 'Complete!')
@@ -740,8 +750,12 @@ mod_module1_server <- function(id){
           par_cor <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
         } else {
           Sys.sleep(1)
-          par_cor <- read.csv("Example_data/FloresData_K_TK/PartialCorProt.csv",
-                              header = TRUE, row.names = 1, check.names = FALSE)
+
+          unzip("Example_data/FloresData_K_TK/PartialCorProt.csv.zip", exdir = tempdir())
+          csv_file2 <- file.path(tempdir(), "PartialCorProt.csv")
+          par_cor <- read.csv(csv_file2, header = TRUE, row.names = 1, check.names = FALSE)
+          file.remove(csv_file2)
+          #par_cor <- read.csv("Example_data/FloresData_K_TK/PartialCorProt.csv", header = TRUE, row.names = 1, check.names = FALSE)
           par_cor <- as.matrix(par_cor)
         }
         incProgress(100, detail = 'Complete!')
@@ -1024,9 +1038,7 @@ mod_module1_server <- function(id){
         cor_Prot_metab_list <- reshape2::melt(cor_Prot_metab_WGCNA, varnames = c("Prot_module", "Metab_module"))
         colnames(cor_Prot_metab_list) <- c("Prot_module", "Metab_module", "Correlation")
         #Top_cor_Prot_metab <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
-
         cor_Prot_metab_list1 <- cor_Prot_metab_list[order(abs(cor_Prot_metab_list$Correlation), decreasing = TRUE), ][1:5, ]
-
         cor_Prot_metab_list2 <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
 
         Top_cor_Prot_metab <- if (nrow(cor_Prot_metab_list1) >= nrow(cor_Prot_metab_list2)) {
@@ -1037,6 +1049,10 @@ mod_module1_server <- function(id){
 
         Top_cor_Prot_metab$Correlation <- round(Top_cor_Prot_metab$Correlation, 2)
         filtered_cor_Prot_metab_list <- as.data.frame(Top_cor_Prot_metab)
+
+        # Remove the "ME" prefix from Prot_module and Metab_module columns
+        Top_cor_Prot_metab[c("Prot_module", "Metab_module")] <- lapply(Top_cor_Prot_metab[c("Prot_module", "Metab_module")], function(x) sub("^ME", "", x))
+
 
         # Edges to funcion visnetwork
         edges <- Top_cor_Prot_metab[1:min(nrow(Top_cor_Prot_metab), 30), ]
