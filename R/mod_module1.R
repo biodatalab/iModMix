@@ -113,7 +113,8 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadClusterAssig"),
                                            "Download Metabolites Cluster Assigment"),
                             h4("First principal component from each module"),
-                            DT::DTOutput(ns("tableEigengene"))
+                            DT::DTOutput(ns("tableEigengene")),
+                            plotOutput(ns("heatmapEigenMetab"))
                    ),
                    tabPanel("Phenotype",
                             h4("Phenotype data"),
@@ -192,7 +193,8 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadEnrichment"),
                                            "Download Enrichment"),
                             h4("First principal component from each module (Eigenfeatures)"),
-                            DT::DTOutput(ns("tableEigengene2"))
+                            DT::DTOutput(ns("tableEigengene2")),
+                            plotOutput(ns("heatmapEigenProt"))
                    ),
                    tabPanel("Phenotype",
                             h4("Phenotype data"),
@@ -407,6 +409,7 @@ mod_module1_server <- function(id){
     })
 
     output$PCA1 <- renderPlot({
+      library(ggfortify)
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
       if(is.null(metadata())){
@@ -450,6 +453,7 @@ mod_module1_server <- function(id){
     })
 
     output$PCA2 <- renderPlot({
+      library(ggfortify)
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
       if(is.null(metadata())){
@@ -503,17 +507,11 @@ mod_module1_server <- function(id){
       withProgress(message = 'Calculating partial correlations (Metabolites)...', value = 0, {
         if (is.null(demo_loaded())) {
           req(filedata())
-          data <- filedata()
-          data$missing_count <- rowSums(is.na(data))
-          feature_mat <- subset(data, missing_count <= 0.1 * (ncol(data) - 2))
-          features <- feature_mat[, 1]
-          feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
-          colnames(feature_mat_t) <- features
+          Expression_mat <- filedata()
           Sys.sleep(1)  #
-          par_cor1 <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
+          par_cor1 <- partial_cors(Expression_mat = Expression_mat)
         } else {
           Sys.sleep(1)
-
           unzip("Example_data/FloresData_K_TK/PartialCorMetabolites.csv.zip", exdir = tempdir())
           csv_file <- file.path(tempdir(), "PartialCorMetabolites.csv")
           par_cor1 <- read.csv(csv_file, header = TRUE, row.names = 1, check.names = FALSE)
@@ -605,21 +603,57 @@ mod_module1_server <- function(id){
 
     Eigengene1 <- reactive({
       req(filedata())
-      data = filedata()
-      data$missing_count = rowSums(is.na(data))
-      feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
-      features <- feature_mat[,1]
-      feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
-      colnames(feature_mat_t) <- features
+      Expression_mat = filedata()
       Cluster_assignments = hierarchical_cluster1()$hcCluster_assignments2[,3]
-      Eigengenes = Eigengenes(feature_mat_t = feature_mat_t, cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
-      return(list(Eigengenes = Eigengenes, feature_mat_t = feature_mat_t))
+      Eigengenes = Eigengenes(Expression_mat = Expression_mat, cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
+      return(list(Eigengenes = Eigengenes))
     })
 
     output$tableEigengene <- DT::renderDataTable({
       df2 = as.data.frame(Eigengene1()$Eigengenes)
       DT::datatable(df2)
     })
+
+    output$heatmapEigenMetab <- renderPlot({
+      # #selected_variable <- input$phenotypeSelector
+      # selected_variable <- "Subtype"
+      # levels_selected_variable <- unique(metadata()[[selected_variable]])
+      #
+      # if (length(levels_selected_variable) == 2) {
+      #   # Usar una paleta diferente para dos niveles
+      #   col_palette <- c("Level1" = "#1B9E77", "Level2" = "#D95F02")
+      # } else {
+      #   col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
+      # }
+      #
+      # eigengenes_metab = as.data.frame(Eigengene1()$Eigengenes)
+      # metadata <- as.data.frame(metadata())
+      #
+      # combined_data <- merge(metadata()[,c("Sample", selected_variable)], eigengenes_metab, by.x = "Sample", by.y = "row.names", all.x = TRUE)
+      # heatmap_data_sub_order <- combined_data[order(combined_data[[selected_variable]]), ]
+      # data_heat= t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
+      #
+      # # Column annotation
+      # column_anno = ComplexHeatmap::HeatmapAnnotation(
+      #   selected_variable = as.factor(heatmap_data_sub_order[[selected_variable]]),
+      #   col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
+      #   annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
+      # )
+
+      metab_heatmap_plot = ComplexHeatmap::Heatmap(
+        #data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
+        as.data.frame(t(Eigengene1()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
+        row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
+        heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
+        show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
+        #show_column_names = FALSE,  top_annotation = column_anno
+        show_column_names = TRUE
+      )
+
+      ComplexHeatmap::draw(metab_heatmap_plot, heatmap_legend_side = "right",
+                           annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
+    })
+
 
     Classification_Metabolites <- reactive({
       eigengenes_metab = as.data.frame(Eigengene1()$Eigengenes)
@@ -699,6 +733,7 @@ mod_module1_server <- function(id){
     })
 
     output$Loadings1 <- renderPlot({
+      library(ggfortify)
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
         ggplot2::autoplot(loadings_metab()$pca_res, data = metadata(), colour = input$phenotypeSelector, loadings = TRUE)
@@ -739,18 +774,11 @@ mod_module1_server <- function(id){
       withProgress(message = 'Calculating partial correlations (Proteins/Genes)...', value = 0, {
         if (is.null(demo_loaded2())) {
           req(filedata2())
-          data <- filedata2()
-          data$missing_count <- rowSums(is.na(data))
-          feature_mat <- subset(data, missing_count <= 0.1 * (ncol(data) - 2))
-          features <- feature_mat[, 1]
-          feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
-          colnames(feature_mat_t) <- features
+          Expression_mat <- filedata2()
           Sys.sleep(1)  #
-
-          par_cor <- partial_cors(feature_mat_t = feature_mat_t)$partial_cor_mat
+          par_cor <- partial_cors(Expression_mat = Expression_mat)
         } else {
           Sys.sleep(1)
-
           unzip("Example_data/FloresData_K_TK/PartialCorProt.csv.zip", exdir = tempdir())
           csv_file2 <- file.path(tempdir(), "PartialCorProt.csv")
           par_cor <- read.csv(csv_file2, header = TRUE, row.names = 1, check.names = FALSE)
@@ -878,22 +906,31 @@ mod_module1_server <- function(id){
 
     Eigengene2 <- reactive({
       req(filedata2())
-      data = filedata2()
-      data$missing_count = rowSums(is.na(data))
-      feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
-      features <- feature_mat[,1]
-      feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
-      colnames(feature_mat_t) <- features
+      Expression_mat = filedata2()
       Cluster_assignments = hierarchical_cluster2()$hcCluster_assignments[,3]
-      Eigengenes = Eigengenes(feature_mat_t = feature_mat_t,
+      Eigengenes = Eigengenes(Expression_mat = Expression_mat,
                               cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
-      return(list(Eigengenes = Eigengenes, feature_mat_t = feature_mat_t))
+      return(list(Eigengenes = Eigengenes))
     })
 
     output$tableEigengene2 <- DT::renderDataTable({
       df3 = as.data.frame(Eigengene2()$Eigengenes)
       DT::datatable(df3)
     })
+
+    output$heatmapEigenProt <- renderPlot({
+      metab_heatmap_plot = ComplexHeatmap::Heatmap(
+        as.data.frame(t(Eigengene2()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
+        row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
+        heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
+        show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
+        show_column_names = TRUE
+      )
+
+      ComplexHeatmap::draw(metab_heatmap_plot, heatmap_legend_side = "right",
+                           annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
+    })
+
 
     output$table6 <- DT::renderDataTable({
       df <- metadata()
@@ -986,6 +1023,7 @@ mod_module1_server <- function(id){
     })
 
     output$Loadings2 <- renderPlot({
+      library(ggfortify)
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
       ggplot2::autoplot(loadings_Prot()$pca_res, data = metadata(), colour = input$phenotypeSelector2, loadings = TRUE)
@@ -1207,8 +1245,10 @@ mod_module1_server <- function(id){
     ImpVar_Prot_Metab1 <- reactive({
       Cor_Prot_Metab = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
       cluster_assignments_metab = cluster_assignments_metabolites1()$cluster_assignments_metab
-      Prot_t = Eigengene2()$feature_mat_t
-      metab_t = Eigengene1()$feature_mat_t
+      req(filedata())
+      ExpressionMetab_mat = filedata()
+      req(filedata2())
+      ExpressionProt_mat = filedata2()
       if (is.null(filedata4())) {
         cluster_assignments_Prot = as.data.frame(cluster_assignments_genes1()$cluster_assignments_Prot)
         str(cluster_assignments_Prot)
@@ -1218,8 +1258,8 @@ mod_module1_server <- function(id){
       ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Prot_Metab = Cor_Prot_Metab,
                                                      cluster_assignments_Prot = cluster_assignments_Prot,
                                                      cluster_assignments_metab = cluster_assignments_metab,
-                                                     Prot_t = Prot_t,
-                                                     metab_t = metab_t,
+                                                     ExpressionProt_mat = ExpressionProt_mat,
+                                                     ExpressionMetab_mat = ExpressionMetab_mat,
                                                      top_n = 5) #$correlation_matrices_list
       return(list(
         Top_correlations = ImpVar_Prot_Metab$Top_correlations,

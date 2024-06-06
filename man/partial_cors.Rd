@@ -4,7 +4,7 @@
 \alias{partial_cors}
 \title{partial_cors}
 \usage{
-partial_cors(feature_mat_t)
+partial_cors(Expression_mat)
 }
 \value{
 The return value, if any, from executing the function.

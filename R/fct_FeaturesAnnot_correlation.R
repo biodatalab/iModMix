@@ -13,7 +13,7 @@
 
 FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, cluster_assignments_metab,
                                       #Prot_annotation = NULL, metab_annotation = NULL,
-                                      Prot_t, metab_t, top_n = 5)  {
+                                      ExpressionProt_mat = ExpressionProt_mat, ExpressionMetab_mat = ExpressionMetab_mat, top_n = 5)  {
   # Select the top n correlations
   Top_correlations <- Cor_Prot_Metab[order(-abs(Cor_Prot_Metab$Correlation)), ][1:top_n, ]
 
@@ -47,6 +47,20 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
     cluster_variables_Metab <- cluster_top_Metab$feature
 
     # Filter expression matrices based on column names
+    ExpressionMetab_mat = ExpressionMetab_mat
+    ExpressionMetab_mat$missing_count <- rowSums(is.na(ExpressionMetab_mat))
+    featureMetab_mat <- subset(ExpressionMetab_mat, missing_count <= 0.1 * (ncol(ExpressionMetab_mat) - 2))
+    featuresMetab <- featureMetab_mat$Feature_ID
+    metab_t <- as.matrix(scale(t(featureMetab_mat[, -c(1, ncol(featureMetab_mat))])))
+    colnames(metab_t) <- featuresMetab
+
+    ExpressionProt_mat = ExpressionProt_mat
+    ExpressionProt_mat$missing_count <- rowSums(is.na(ExpressionProt_mat))
+    featureProt_mat <- subset(ExpressionProt_mat, missing_count <= 0.1 * (ncol(ExpressionProt_mat) - 2))
+    featuresProt <- featureProt_mat$Feature_ID
+    Prot_t <- as.matrix(scale(t(featureProt_mat[, -c(1, ncol(featureProt_mat))])))
+    colnames(Prot_t) <- featuresProt
+
     cluster_expression_matrix_Prot <- Prot_t[, colnames(Prot_t) %in% cluster_variables_Prot, drop = FALSE]
     cluster_expression_matrix_Metab <- metab_t[, colnames(metab_t) %in% cluster_variables_Metab, drop = FALSE]
 

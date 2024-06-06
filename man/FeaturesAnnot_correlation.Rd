@@ -8,8 +8,8 @@ FeaturesAnnot_correlation(
   Cor_Prot_Metab,
   cluster_assignments_Prot,
   cluster_assignments_metab,
-  Prot_t,
-  metab_t,
+  ExpressionProt_mat = ExpressionProt_mat,
+  ExpressionMetab_mat = ExpressionMetab_mat,
   top_n = 5
 )
 }
@@ -20,11 +20,11 @@ FeaturesAnnot_correlation(
 
 \item{cluster_assignments_metab}{data frame containing cluster_assignments}
 
+\item{Metabolites_annotation}{(data frame with de annotation names of the metabolites: Should have a column called KEGG)}
+
 \item{Prot_t}{A feature matrix (e.g. gene expression) with samples in columns and features (e.g. genes) in rows Row names must be unique.}
 
 \item{metab_t}{A feature matrix (e.g. gene expression) with samples in columns and features (e.g. metabolites) in rows Row names must be unique.}
-
-\item{Metabolites_annotation}{(data frame with de annotation names of the metabolites: Should have a column called KEGG)}
 }
 \value{
 Important features

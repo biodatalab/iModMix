@@ -5,7 +5,7 @@
 \title{Eigengenes}
 \usage{
 Eigengenes(
-  feature_mat_t = feature_mat_t,
+  Expression_mat = Expression_mat,
   cluster_assignments = cluster_assignments
 )
 }

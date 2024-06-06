@@ -5,10 +5,14 @@
 #' @return The return value, if any, from executing the function.
 #'
 #' @export
-partial_cors = function(feature_mat_t) {
+partial_cors = function(Expression_mat) {
+  Expression_mat = Expression_mat
+  Expression_mat$missing_count <- rowSums(is.na(Expression_mat))
+  feature_mat <- subset(Expression_mat, missing_count <= 0.1 * (ncol(Expression_mat) - 2))
+  features <- feature_mat$Feature_ID
+  feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
+  colnames(feature_mat_t) <- features
   # generate covariance matrix
-  #feature_mat = as.matrix(feature_mat[,-1])
-  feature_mat_t = as.matrix(feature_mat_t)
   cov_mat = cov(feature_mat_t, use = "pairwise.complete.obs")
   # calculate partial correlations
   glassoFast_result = glassoFast::glassoFast(cov_mat, .25, thr = 1e-04,
@@ -22,6 +26,6 @@ partial_cors = function(feature_mat_t) {
   rownames(partial_cor_mat) = colnames(feature_mat_t)
   colnames(partial_cor_mat) = colnames(feature_mat_t)
   # return the resulting partial correlations
-  #return(partial_cor_mat)
-  return(list(partial_cor_mat=partial_cor_mat))
+  return(partial_cor_mat)
+  #return(list(partial_cor_mat=partial_cor_mat))
 }
