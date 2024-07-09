@@ -15,6 +15,7 @@ mod_module1_ui <- function(id) {
   library(plotly)
   library(visNetwork)
   library(shinyWidgets)
+  library(shinyBS)
 
   tagList(
 
@@ -91,6 +92,7 @@ mod_module1_ui <- function(id) {
                    type = "tabs",
                    tabPanel("Data Input",
                             h4("Expression matrix: Metabolites"),
+
                             DT::DTOutput(ns("infotable")),
                             DT::DTOutput(ns("table")),
                             selectInput(ns("phenotypeSelectorPCA"),
@@ -102,7 +104,10 @@ mod_module1_ui <- function(id) {
                             DT::DTOutput(ns("table3"))
                    ),
                    tabPanel("Module Assignments",
-                            h4("Sparse partial correlations: Metabolites"),
+                            h4("Sparse partial correlations: Metabolites", bsButton("surf-info", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info", title = "More information",
+                              content = HTML(paste0("Sparse partial correlations with Glasso for Metabolomics data")),
+                              placement = "right", trigger = "hover", options = list(container = "body")),
                             verbatimTextOutput(ns("matrizTable")),
                             downloadButton(ns("downloadParCor"),
                                            "Download Partial Correlation"),
@@ -256,7 +261,7 @@ mod_module1_ui <- function(id) {
                             #plotOutput(ns("Network_plot")),
                             visNetworkOutput(ns("network")),
                             downloadLink(ns("downloadNetwork"),
-                                           "Download Network as .html")
+                                         "Download Network as .html")
 
                    ),
                    tabPanel("Important features",
@@ -1241,6 +1246,7 @@ mod_module1_server <- function(id){
         mynetwork() %>% visSave(con)
       }
     )
+
 
     ImpVar_Prot_Metab1 <- reactive({
       Cor_Prot_Metab = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)

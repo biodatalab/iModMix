@@ -39,6 +39,8 @@ usethis::use_package("grid")
 usethis::use_package("plotly")
 usethis::use_package("visNetwork")
 usethis::use_package("shinyWidgets")
+usethis::use_package("shinyBS")
+
 
 
 ## install.packages('attachment') # if needed.
