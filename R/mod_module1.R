@@ -71,12 +71,6 @@ mod_module1_ui <- function(id) {
         label = h5("Metadata")
       ),
 
-      # div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
-      #
-      # actionButton(
-      #   ns("run"), "Run", icon = icon("play")
-      # ),
-
       div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
 
       actionButton(
@@ -353,23 +347,23 @@ mod_module1_server <- function(id){
     observeEvent(input$runDemo, {
       withProgress(message = 'Loading data...', value = 0, {
         incProgress(0, detail = 'Loading Metab_exp.csv')
-        filedata(load_data("Metab_exp.csv"))
-        Sys.sleep(3)
+        filedata(load_metab_exp())
+        Sys.sleep(1)
 
         incProgress(10, detail = 'Loading Metab_annot.csv')
-        filedata3(load_data("Metab_annot.csv"))
-        Sys.sleep(3)
+        filedata3(load_metab_annot())
+        Sys.sleep(1)
 
         incProgress(20, detail = 'Loading Prot_exp.csv')
-        filedata2(load_data("Prot_exp.csv"))
-        Sys.sleep(3)
+        filedata2(load_prot_exp())
+        Sys.sleep(1)
 
         incProgress(30, detail = 'Loading Prot_annot.csv')
-        filedata4(load_data("Prot_annot.csv"))
-        Sys.sleep(3)
+        filedata4(load_prot_annot())
+        Sys.sleep(1)
 
         incProgress(50, detail = 'Loading Metadata.csv...')
-        metadata(load_data("Metadata.csv"))
+        metadata(load_metadata())
         Sys.sleep(2)
 
         demo_loaded(TRUE)
@@ -517,12 +511,7 @@ mod_module1_server <- function(id){
           par_cor1 <- partial_cors(Expression_mat = Expression_mat)
         } else {
           Sys.sleep(1)
-          unzip("Example_data/FloresData_K_TK/PartialCorMetabolites.csv.zip", exdir = tempdir())
-          csv_file <- file.path(tempdir(), "PartialCorMetabolites.csv")
-          par_cor1 <- read.csv(csv_file, header = TRUE, row.names = 1, check.names = FALSE)
-          file.remove(csv_file)
-          #par_cor1 <- read.csv("Example_data/FloresData_K_TK/PartialCorMetabolites.csv", header = TRUE, row.names = 1, check.names = FALSE)
-          par_cor1 <- as.matrix(par_cor1)
+          par_cor1 <- load_partial_cor_metab()
         }
         incProgress(100, detail = 'Complete!')
         list(par_cor1 = par_cor1)
@@ -620,38 +609,11 @@ mod_module1_server <- function(id){
     })
 
     output$heatmapEigenMetab <- renderPlot({
-      # #selected_variable <- input$phenotypeSelector
-      # selected_variable <- "Subtype"
-      # levels_selected_variable <- unique(metadata()[[selected_variable]])
-      #
-      # if (length(levels_selected_variable) == 2) {
-      #   # Usar una paleta diferente para dos niveles
-      #   col_palette <- c("Level1" = "#1B9E77", "Level2" = "#D95F02")
-      # } else {
-      #   col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
-      # }
-      #
-      # eigengenes_metab = as.data.frame(Eigengene1()$Eigengenes)
-      # metadata <- as.data.frame(metadata())
-      #
-      # combined_data <- merge(metadata()[,c("Sample", selected_variable)], eigengenes_metab, by.x = "Sample", by.y = "row.names", all.x = TRUE)
-      # heatmap_data_sub_order <- combined_data[order(combined_data[[selected_variable]]), ]
-      # data_heat= t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
-      #
-      # # Column annotation
-      # column_anno = ComplexHeatmap::HeatmapAnnotation(
-      #   selected_variable = as.factor(heatmap_data_sub_order[[selected_variable]]),
-      #   col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
-      #   annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
-      # )
-
       metab_heatmap_plot = ComplexHeatmap::Heatmap(
-        #data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
         as.data.frame(t(Eigengene1()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
         row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
         heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
         show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
-        #show_column_names = FALSE,  top_annotation = column_anno
         show_column_names = TRUE
       )
 
@@ -784,12 +746,7 @@ mod_module1_server <- function(id){
           par_cor <- partial_cors(Expression_mat = Expression_mat)
         } else {
           Sys.sleep(1)
-          unzip("Example_data/FloresData_K_TK/PartialCorProt.csv.zip", exdir = tempdir())
-          csv_file2 <- file.path(tempdir(), "PartialCorProt.csv")
-          par_cor <- read.csv(csv_file2, header = TRUE, row.names = 1, check.names = FALSE)
-          file.remove(csv_file2)
-          #par_cor <- read.csv("Example_data/FloresData_K_TK/PartialCorProt.csv", header = TRUE, row.names = 1, check.names = FALSE)
-          par_cor <- as.matrix(par_cor)
+          par_cor <- load_partial_cor_prot()
         }
         incProgress(100, detail = 'Complete!')
         list(par_cor = par_cor)
@@ -872,8 +829,7 @@ mod_module1_server <- function(id){
           Sys.sleep(1)
         } else {
           Sys.sleep(1)
-          cluster_assignments_Prot_enrich <- read.csv("Example_data/FloresData_K_TK/EnrichmentMouse.csv",
-                                                      header = TRUE, row.names = 1, check.names = FALSE)
+          cluster_assignments_Prot_enrich <- load_enrichment_mouse()
         }
         incProgress(100, detail = 'Complete!')
         list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich)
