@@ -1,8 +1,8 @@
 #' partial_cors
 #'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
+#' @description Calculates partial correlations based on graphical lasso (https://www.rdocumentation.org/packages/glassoFast/versions/1.0/topics/glassoFast).
+#' @param feature_mat_t A feature matrix (e.g. gene expression) with samples in rows and features (e.g. genes) in columns. Row names must be unique.
+#' @return partial_cor_mat A partial correlation matrix with NA's in the diagonal.
 #'
 #' @export
 partial_cors = function(Expression_mat) {

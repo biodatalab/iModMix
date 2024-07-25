@@ -1,8 +1,7 @@
 #' Eigengenes
 #'
-#' @description A Eigengenes function
-#'
-#' @return The return value matrix.
+#' @description moduleEigengenes function by WGCNA
+#' @return A feature matrix with the first principal component of each metabolomic/protein cluster
 #'
 #' @export
 

@@ -4,7 +4,7 @@
 #' @param Cor_Prot_Metab A feature matrix with the first principal component of each protein cluster
 #' @param cluster_assignments_Prot data frame containing cluster_assignments and Enrichr terms
 #' @param cluster_assignments_metab data frame containing cluster_assignments
-#' @param Prot_annotation
+#' @param Prot_annotation data frame with de annotation names of the proteins: Should have a column called Symbol
 #' @param Metabolites_annotation (data frame with de annotation names of the metabolites: Should have a column called KEGG)
 #' @param Prot_t A feature matrix (e.g. gene expression) with samples in columns and features (e.g. genes) in rows Row names must be unique.
 #' @param metab_t A feature matrix (e.g. gene expression) with samples in columns and features (e.g. metabolites) in rows Row names must be unique.

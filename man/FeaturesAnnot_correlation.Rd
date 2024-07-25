@@ -20,6 +20,8 @@ FeaturesAnnot_correlation(
 
 \item{cluster_assignments_metab}{data frame containing cluster_assignments}
 
+\item{Prot_annotation}{data frame with de annotation names of the proteins: Should have a column called Symbol}
+
 \item{Metabolites_annotation}{(data frame with de annotation names of the metabolites: Should have a column called KEGG)}
 
 \item{Prot_t}{A feature matrix (e.g. gene expression) with samples in columns and features (e.g. genes) in rows Row names must be unique.}

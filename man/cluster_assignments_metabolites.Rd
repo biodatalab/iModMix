@@ -6,9 +6,14 @@
 \usage{
 cluster_assignments_metabolites(cluster_metabolites, metab_annotation = NULL)
 }
+\arguments{
+\item{hclustTree}{(hierarchical clustering object)}
+
+\item{Metabolites_annotation}{(data frame with de annotation names of the metabolites: Should have a column called HMDB)}
+}
 \value{
-The return value, if any, from executing the function.
+result_list data frame containing cluster_assignments and HMDB/Symbol
 }
 \description{
-A fct function
+cluster Assignments for metabolites
 }

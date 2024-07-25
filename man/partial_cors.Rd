@@ -6,9 +6,12 @@
 \usage{
 partial_cors(Expression_mat)
 }
+\arguments{
+\item{feature_mat_t}{A feature matrix (e.g. gene expression) with samples in rows and features (e.g. genes) in columns. Row names must be unique.}
+}
 \value{
-The return value, if any, from executing the function.
+partial_cor_mat A partial correlation matrix with NA's in the diagonal.
 }
 \description{
-A fct function
+Calculates partial correlations based on graphical lasso (https://www.rdocumentation.org/packages/glassoFast/versions/1.0/topics/glassoFast).
 }

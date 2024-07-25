@@ -9,9 +9,12 @@ Assigment_genes_enrichr(
   database = "GO_Biological_Process_2023"
 )
 }
+\arguments{
+\item{cluster_assignments_genes}{(data frame containing cluster_assignments and HMDB/Symbol)}
+}
 \value{
-The return value, if any, from executing the function.
+result_list data frame containing cluster_assignments and Enrichr terms
 }
 \description{
-A fct function
+Enrichr terms for genes (Proteins and transcriptomics)
 }

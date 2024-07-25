@@ -6,9 +6,16 @@
 \usage{
 hierarchical_cluster(parcor_mat, tom = TRUE, min_module_size = 10)
 }
+\arguments{
+\item{parcor_mat}{A partial correlation matrix from glassoFast$wi: Estimated inverse covariance matrix}
+
+\item{min_module_size}{Smallest modules to be generated; default is 10}
+
+\item{TOM}{TRUE: topological overlap measure; FALSE: partial correlation matrix; default is TRUE.}
+}
 \value{
-The return value, if any, from executing the function.
+result_list List containing TOM_diss (TOM dissimilarity; NA if argument TOM = FALSE), hclustTree (hierarchical clustering object), dynamicMods (index of module membership for features), and mod_count (number of modules).
 }
 \description{
-A fct function
+Perform hierarchical clustering of a partial correlation matrix. By default uses the topological overlap measure (TOM)
 }

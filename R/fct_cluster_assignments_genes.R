@@ -1,11 +1,11 @@
 #' cluster_assignments_genes
 #'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
+#' @description cluster Assignments for proteins and genes
+#' @param hclustTree (hierarchical clustering object)
+#' @param Genes_Annotation (data frame with de symbol genes of the Proteins or RNAseq: Should have a column called Feature_ID
+#' @return result_list data frame containing cluster_assignments and HMDB/Symbol
 #'
 #' @export
-
 cluster_assignments_genes <- function(cluster_genes, Prot_annotation = NULL) {
   if (!is.null(Prot_annotation)) {
     # Create the new dataframe with the 'feature_name' column

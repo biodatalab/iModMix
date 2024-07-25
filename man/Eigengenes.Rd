@@ -10,8 +10,8 @@ Eigengenes(
 )
 }
 \value{
-The return value matrix.
+A feature matrix with the first principal component of each metabolomic/protein cluster
 }
 \description{
-A Eigengenes function
+moduleEigengenes function by WGCNA
 }

@@ -1,12 +1,11 @@
 #' Assigment_genes_enrichr
 #'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
+#' @description Enrichr terms for genes (Proteins and transcriptomics)
+#' @param cluster_assignments_genes (data frame containing cluster_assignments and HMDB/Symbol)
+#' @return result_list data frame containing cluster_assignments and Enrichr terms
 #'
 #' @export
 #'
-
 Assigment_genes_enrichr <- function(cluster_assignments_ProtGenes,
                                     database = "GO_Biological_Process_2023" ) {
   websiteLive <- getOption("enrichR.live")

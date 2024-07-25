@@ -1,11 +1,11 @@
 #' cluster_assignments_metabolites
 #'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
+#' @description cluster Assignments for metabolites
+#' @param hclustTree (hierarchical clustering object)
+#' @param Metabolites_annotation (data frame with de annotation names of the metabolites: Should have a column called HMDB)
+#' @return result_list data frame containing cluster_assignments and HMDB/Symbol
 #'
 #' @export
-
 cluster_assignments_metabolites <- function(cluster_metabolites, metab_annotation = NULL) {
   if (is.null(metab_annotation)) {
     # If 'Metabolites_annotation' is not present, keep the 'feature' name and leave 'feature_map' blank

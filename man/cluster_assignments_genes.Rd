@@ -6,9 +6,14 @@
 \usage{
 cluster_assignments_genes(cluster_genes, Prot_annotation = NULL)
 }
+\arguments{
+\item{hclustTree}{(hierarchical clustering object)}
+
+\item{Genes_Annotation}{(data frame with de symbol genes of the Proteins or RNAseq: Should have a column called Feature_ID}
+}
 \value{
-The return value, if any, from executing the function.
+result_list data frame containing cluster_assignments and HMDB/Symbol
 }
 \description{
-A fct function
+cluster Assignments for proteins and genes
 }

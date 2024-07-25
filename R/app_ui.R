@@ -10,19 +10,17 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic
     fluidPage(navbarPage("iModMix",
-                         tabPanel("Home", icon = icon("home", lib = "glyphicon"),
+                        tabPanel("Home", icon = icon("home", lib = "glyphicon"),
                                   tags$iframe(src = "www/IModMix_Documentation.html", height = "900px", width = "100%")
-                                ),
+                         ),
                          tabPanel("Modules & Integration",icon = icon("tasks", lib = "glyphicon"),
-                                  navbarMenu(" ",
-                                             tabPanel(" ",
-                                                      mod_module1_ui("module1_1")
+                                  navbarMenu(" ", tabPanel(" ", mod_module1_ui("module1_1")
                                              )
-                                             )
+                                  )
 
                          )
-                         )
-      #h1("iModmix")
+    ), style = "background-color: #DEEBF7"
+    #h1("iModmix")
     )
   )
 }
