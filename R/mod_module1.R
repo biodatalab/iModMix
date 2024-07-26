@@ -28,7 +28,7 @@ mod_module1_ui <- function(id) {
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Metabolomics Expression data")
+        label = h5("Upload Metabolomics Expression data")
       ),
 
       fileInput(
@@ -37,7 +37,7 @@ mod_module1_ui <- function(id) {
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Metabolomics Annotation data")
+        label = h5("Upload Metabolomics Annotation data")
       ),
 
       div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
@@ -48,7 +48,7 @@ mod_module1_ui <- function(id) {
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Proteomics/Genomics Expression data")
+        label = h5("Upload Proteomics/Genomics Expression data")
       ),
 
       fileInput(
@@ -57,7 +57,7 @@ mod_module1_ui <- function(id) {
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Proteomics/Genomics Annotation data")
+        label = h5("Upload Proteomics/Genomics Annotation data")
       ),
 
       div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
@@ -68,15 +68,20 @@ mod_module1_ui <- function(id) {
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Metadata")
+        label = h5("Upload Metadata")
       ),
 
       div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
 
+      helpText(
+        "Example data is available to help you get started with iModMix. You can use this data to run the application and explore its features."),
+
       actionButton(
-        ns("runDemo"), "Run with Demo Data", icon = icon("play")
+        ns("runDemo"), "Run with example datasets", icon = icon("play")
       )
     ),
+
+
 
     mainPanel(
       tabsetPanel(
@@ -345,7 +350,7 @@ mod_module1_server <- function(id){
     })
 
     observeEvent(input$runDemo, {
-      withProgress(message = 'Loading data...', value = 0, {
+      withProgress(message = 'Loading example data...', value = 0, {
         incProgress(0, detail = 'Loading Metab_exp.csv')
         filedata(load_metab_exp())
         Sys.sleep(1)

@@ -14,10 +14,10 @@ app_ui <- function(request) {
                                   tags$iframe(src = "www/IModMix_Documentation.html", height = "900px", width = "100%")
                          ),
                          tabPanel("Modules & Integration",icon = icon("tasks", lib = "glyphicon"),
-                                  navbarMenu(" ", tabPanel(" ", mod_module1_ui("module1_1")
-                                             )
+                                  navbarMenu( " ",
+                                             "Upload dataset",
+                                             tabPanel(" ", mod_module1_ui("module1_1"))
                                   )
-
                          )
     ), style = "background-color: #DEEBF7"
     #h1("iModmix")
