@@ -9,18 +9,24 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    fluidPage(navbarPage("iModMix",
-                        tabPanel("Home", icon = icon("home", lib = "glyphicon"),
-                                  tags$iframe(src = "www/IModMix_Documentation.html", height = "900px", width = "100%")
-                         ),
-                         tabPanel("Modules & Integration",icon = icon("tasks", lib = "glyphicon"),
-                                  navbarMenu( " ",
-                                             "Upload dataset",
-                                             tabPanel(" ", mod_module1_ui("module1_1"))
-                                  )
-                         )
-    ), style = "background-color: #DEEBF7"
-    #h1("iModmix")
+    fluidPage(
+      tags$style(HTML("
+        body {background-color: #DEEBF7 !important;}
+        .tab-content {background-color: #DEEBF7 !important;}
+      ")),
+      navbarPage("iModMix",
+                 tabPanel("Home", icon = icon("home", lib = "glyphicon"),
+                          tags$iframe(src = "www/IModMix_Documentation.html", height = "900px", width = "100%")
+                 ),
+                 tabPanel("Modules & Integration", icon = icon("tasks", lib = "glyphicon"),
+                          div(style = "background-color: #DEEBF7; width: 100%;",
+                              navbarMenu(" ",
+                                         "Upload dataset",
+                                         tabPanel(" ", mod_module1_ui("module1_1"))
+                              )
+                          )
+                 )
+      )
     )
   )
 }

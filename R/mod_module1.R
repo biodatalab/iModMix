@@ -28,7 +28,7 @@ mod_module1_ui <- function(id) {
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Upload Metabolomics Expression data")
+        label = h5("Upload Metabolomics Abundance Data")
       ),
 
       fileInput(
@@ -37,7 +37,7 @@ mod_module1_ui <- function(id) {
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Upload Metabolomics Annotation data")
+        label = h5("Upload Metabolomics Annotation Data")
       ),
 
       div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
@@ -48,7 +48,7 @@ mod_module1_ui <- function(id) {
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Upload Proteomics/Genomics Expression data")
+        label = h5("Upload Proteomics/Genomics Expression Data")
       ),
 
       fileInput(
@@ -90,34 +90,41 @@ mod_module1_ui <- function(id) {
                  tabsetPanel(
                    type = "tabs",
                    tabPanel("Data Input",
-                            h4("Expression matrix: Metabolites"),
+                            h4("Metabolomics abundance matrix"),
 
                             DT::DTOutput(ns("infotable")),
                             DT::DTOutput(ns("table")),
+                            h4("Principal component analysis for each phenotype"),
                             selectInput(ns("phenotypeSelectorPCA"),
                                         label = "Select the phenotype of interest",
                                         choices = NULL,
                                         selected = NULL),
                             plotOutput(ns("PCA1")),
-                            h4("Annotation: Metabolites"),
+                            downloadButton(ns("downloadPCA"),
+                                           "Principal component analysis"),
+                            h4("Metabolomics annotation data"),
                             DT::DTOutput(ns("table3"))
                    ),
                    tabPanel("Module Assignments",
-                            h4("Sparse partial correlations: Metabolites", bsButton("surf-info", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info", title = "More information",
-                              content = HTML(paste0("Sparse partial correlations with Glasso for Metabolomics data")),
+                            h4("Sparse partial correlations: Metabolites", bsButton("surfInfoPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surfInfoPC", title = "More information",
+                              content = HTML("</p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimated the partial correlation and capture only direct associations.</p> </p>Preview of the sparse partial correlation of the first five metabolomic features. The full .csv file of sparse partial correlation calculations for all the metabolomic features can be downloaded at the bottom of the table.</p>"),
                               placement = "right", trigger = "hover", options = list(container = "body")),
                             verbatimTextOutput(ns("matrizTable")),
                             downloadButton(ns("downloadParCor"),
-                                           "Download Partial Correlation"),
-                            h4("Hierarchical clustering"),
+                                           "Partial correlation"),
+                            h4("Hierarchical clustering", bsButton("surfInfoHC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surfInfoHC", title = "More information",
+                                      content = HTML("Hierarchical clustering is used to identify common neighbors between the metabolomic features. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram. Axes: The vertical axis (y-axis) represents the dissimilarity between genes or modules, while the horizontal axis (x-axis) shows the genes or modules. Branches: Each line in the dendrogram represents a gene or module. Genes that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles."),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
                             plotOutput(ns("hc_plot")),
-                            h4("Cluster Assignments"),
+                            h4("Cluster assignments"),
                             DT::DTOutput(ns("tableClusterAssig")),
                             downloadButton(ns("downloadClusterAssig"),
-                                           "Download Metabolites Cluster Assigment"),
-                            h4("First principal component from each module"),
+                                           "Metabolites cluster assigment"),
+                            h4("First principal component from each module (Eigenfeatures)"),
                             DT::DTOutput(ns("tableEigengene")),
+                            h4("Eigenfeatures heatmap"),
                             plotOutput(ns("heatmapEigenMetab"))
                    ),
                    tabPanel("Phenotype",
@@ -125,6 +132,7 @@ mod_module1_ui <- function(id) {
                             helpText(
                               "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table5")),
+                            h4("Classification between phenotypes by eigenfeatures"),
                             fluidRow(
                               column(6,
                             selectInput(ns("phenotypeSelector"),
@@ -133,7 +141,7 @@ mod_module1_ui <- function(id) {
                                         selected = NULL)
                               ),
                             column(6,
-                            sliderInput(ns("pValueThreshold"),
+                              numericInput(ns("pValueThreshold"),
                               label = "Select p-value Threshold",
                               min = 0,
                               max = 1,
@@ -141,10 +149,17 @@ mod_module1_ui <- function(id) {
                               value = 0.05)
                             )
                             ),
-                            h4("Classification"),
-                            plotOutput(ns("classification_plot_1_all")),
                             DT::DTOutput(ns("classification_results")),
-                            h4("Module: Screening"),
+                            plotOutput(ns("classification_plot_1_all")),
+                            column(6,
+                                   downloadButton(ns("downloadClassification_results"),
+                                                  "Classification table")
+                            ),
+                            column(6,
+                                   downloadButton(ns("downloadClassification_plot_1_all"),
+                                                  "Boxplot classification")
+                            ),
+                            h4("Module screening"),
                             selectInput(ns("moduleSelector"),
                                         label = "Select the module of interest",
                                         choices = NULL,
@@ -154,7 +169,9 @@ mod_module1_ui <- function(id) {
                                           DT::DTOutput(ns("ModuleFeatures")),
                                           DT::DTOutput(ns("ModuleFeaturesAnnot")))
                             ),
+                            h4("PCA loading by module"),
                             plotOutput(ns("Loadings1")),
+                            h4("Heatmap by module"),
                             plotOutput(ns("heatmap1"))
                    )
                  )
@@ -164,29 +181,32 @@ mod_module1_ui <- function(id) {
                  tabsetPanel(
                    type = "tabs",
                    tabPanel("Data Input",
-                            h4("Expression matrix: Proteins/Genes"),
+                            h4("Proteomics/Genomics expression matrix"),
                             DT::DTOutput(ns("infotable2")),
                             DT::DTOutput(ns("table2")),
+                            h4("Principal component analysis for each phenotype"),
                             selectInput(ns("phenotypeSelectorPCA2"),
                                         label = "Select the phenotype of interest",
                                         choices = NULL,
                                         selected = NULL),
                             plotOutput(ns("PCA2")),
-                            h4("Annotation: Proteins/Genes"),
+                            downloadButton(ns("downloadPCA2"),
+                                           "Principal component analysis"),
+                            h4("Proteomics/Genomics annotation data"),
                             DT::DTOutput(ns("table4"))
                    ),
                    tabPanel("Module Assignments",
                             h4("Sparse partial correlations: Proteins/Genes"),
                             verbatimTextOutput(ns("matrizTable2")),
                             downloadButton(ns("downloadParCor2"),
-                                           "Download Partial Correlation"),
+                                           "Partial correlation"),
                             h4("Hierarchical clustering"),
                             plotOutput(ns("hc_plot2")),
-                            h4("Cluster Assignments"),
+                            h4("Cluster assignments"),
                             DT::DTOutput(ns("tableClusterAssig4")),
                             downloadButton(ns("downloadClusterAssig2"),
-                                           "Download Proteins/Genes Cluster Assigment"),
-                            h4("Cluster Assignments Enriched"),
+                                           "Proteins/Genes cluster assigment"),
+                            h4("Cluster assignments enriched"),
                             helpText(
                               "Note: Upload the Annotation data to be able to run enrichment analysis."),
                             selectInput(
@@ -195,8 +215,9 @@ mod_module1_ui <- function(id) {
                               choices = NULL),
                             DT::DTOutput(ns("tableClusterAssig3")),
                             downloadButton(ns("downloadEnrichment"),
-                                           "Download Enrichment"),
+                                           "Enrichment analysis"),
                             h4("First principal component from each module (Eigenfeatures)"),
+                            h4("Eigenfeatures heatmap"),
                             DT::DTOutput(ns("tableEigengene2")),
                             plotOutput(ns("heatmapEigenProt"))
                    ),
@@ -205,6 +226,7 @@ mod_module1_ui <- function(id) {
                             helpText(
                               "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table6")),
+                            h4("Classification between phenotypes by eigenfeatures"),
                             fluidRow(
                               column(6,
                                      selectInput(ns("phenotypeSelector2"),
@@ -213,7 +235,7 @@ mod_module1_ui <- function(id) {
                                                  selected = NULL)
                               ),
                               column(6,
-                                     sliderInput(ns("pValueThreshold2"),
+                                     numericInput(ns("pValueThreshold2"),
                                                  label = "Select p-value Threshold",
                                                  min = 0,
                                                  max = 1,
@@ -221,10 +243,19 @@ mod_module1_ui <- function(id) {
                                                  value = 0.05)
                               )
                             ),
-                            h4("Classification"),
-                            plotOutput(ns("classification_plot_2_all")),
                             DT::DTOutput(ns("classification_results2")),
-                            h4("Module: Screening"),
+                            plotOutput(ns("classification_plot_2_all")),
+                            fluidRow(
+                              column(6,
+                                     downloadButton(ns("downloadClassification_results2"),
+                                                    "Classification table")
+                              ),
+                              column(6,
+                                     downloadButton(ns("downloadClassification_plot_2_all"),
+                                                    "Boxplot classification")
+                              )
+                            ),
+                            h4("Module screening"),
                             selectInput(ns("moduleSelector2"),
                                         label = "Select the module of interest",
                                         choices = NULL,
@@ -234,11 +265,12 @@ mod_module1_ui <- function(id) {
                                           DT::DTOutput(ns("ModuleFeatures2")),
                                           DT::DTOutput(ns("ModuleFeatures2Annot")))
                             ),
+                            h4("PCA loading by module"),
                             plotOutput(ns("Loadings2")),
+                            h4("Heatmap by module"),
                             plotOutput(ns("heatmap2"))
                    )
                  )
-
                  ),
 
         tabPanel("Multi-omics Analysis",
@@ -255,12 +287,12 @@ mod_module1_ui <- function(id) {
                                         value = 0.5),
                             DT::DTOutput(ns("tableCorrelation")),
                             downloadButton(ns("downloadOmicsCorrelation"),
-                                           "Download Omics Correlation"),
+                                           "Omics correlation"),
                             h4("Module Network of Metabolites and Proteins/Genes"),
                             #plotOutput(ns("Network_plot")),
                             visNetworkOutput(ns("network")),
                             downloadLink(ns("downloadNetwork"),
-                                         "Download Network as .html")
+                                         "Network as .html")
 
                    ),
                    tabPanel("Important features",
@@ -288,7 +320,7 @@ mod_module1_ui <- function(id) {
                             h4("Modules correlation: Metabolites and Proteins/Genes"),
                             DT::DTOutput(ns("Correlation_mod")),
                             downloadButton(ns("downloadModCorrelation"),
-                                           "Download Modules Correlation"),
+                                           "Modules correlation"),
 
                             h4("Metabolites"),
                             DT::DTOutput(ns("cluster_assignments_2")),
@@ -318,6 +350,8 @@ mod_module1_server <- function(id){
     demo_loaded <- reactiveVal(NULL)
     demo_loaded2 <- reactiveVal(NULL)
     enrich_loaded <- reactiveVal(NULL)
+    classification_plot <- reactiveVal()
+    classification_plot2 <- reactiveVal()
 
     observeEvent(input$DataSet, {
       req(input$DataSet)
@@ -424,6 +458,22 @@ mod_module1_server <- function(id){
       }
     })
 
+    # Render the download handler
+    output$downloadPCA <- downloadHandler(
+      filename = function() {
+        "PCA_Metabolites.png"
+      },
+      content = function(file) {
+        if (is.null(metadata())) {
+          p <- ggplot2::autoplot(pca1()$pca_res)
+        } else {
+          req(metadata())
+          p <- ggplot2::autoplot(pca1()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA)
+        }
+        ggplot2::ggsave(file, plot = p, device = "png")
+      }
+    )
+
     data_info2 <- reactive({
       req(filedata2())
       Nobservations <- nrow(filedata2())
@@ -466,6 +516,22 @@ mod_module1_server <- function(id){
         ggplot2::autoplot(pca2()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA2)
       }
     })
+
+    # Render the download handler
+    output$downloadPCA2 <- downloadHandler(
+      filename = function() {
+        "PCA_Proteins/Genes.png"
+      },
+      content = function(file) {
+        if (is.null(metadata())) {
+          p <- ggplot2::autoplot(pca2()$pca_res)
+        } else {
+          req(metadata())
+          p <- ggplot2::autoplot(pca2()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA2)
+        }
+        ggplot2::ggsave(file, plot = p, device = "png")
+      }
+    )
 
     output$table3 <- DT::renderDataTable({
       df <- filedata3()
@@ -626,7 +692,6 @@ mod_module1_server <- function(id){
                            annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
     })
 
-
     Classification_Metabolites <- reactive({
       eigengenes_metab = as.data.frame(Eigengene1()$Eigengenes)
       metadata <- as.data.frame(metadata())
@@ -646,6 +711,16 @@ mod_module1_server <- function(id){
       Classification_Metabolites()$result
     })
 
+    # Render the download handler
+    output$downloadClassification_results <- downloadHandler(
+      filename = function() {
+        "ClassByEigenfeatures_Metabolites.csv"
+      },
+      content = function(file) {
+        write.csv(Classification_Metabolites()$result, file, row.names = TRUE)
+      }
+    )
+
     output$classification_plot_1_all <- renderPlot({
       selected_variable <- input$phenotypeSelector
       levels_selected_variable <- unique(metadata()[[selected_variable]])
@@ -656,16 +731,32 @@ mod_module1_server <- function(id){
         plot <- plot +
           ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
                x = "Variables",
-               y = "Class")
+               y = "Class") +
+          ggplot2::theme(
+            axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
+          )
+        classification_plot(plot)
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
         plots_list <- lapply(1:length(levels_selected_variable), function(i) {
           Classification_Metabolites()$plots[[i]]
         })
-        cowplot::plot_grid(plotlist = plots_list)
+        plot <- cowplot::plot_grid(plotlist = plots_list)
+        classification_plot(plot)  # Store the plot in the reactive variable
+        return(plot)
       }
     })
+
+    # Render the download handler
+    output$downloadClassification_plot_1_all <- downloadHandler(
+      filename = function() {
+        "Boxplot_classMetabolites.png"
+      },
+      content = function(file) {
+        ggplot2::ggsave(file, plot = classification_plot(), device = "png")
+      }
+    )
 
     loadings_metab <- reactive({
       req(filedata())
@@ -765,7 +856,7 @@ mod_module1_server <- function(id){
     # Render the download handler
     output$downloadParCor2 <- downloadHandler(
       filename = function() {
-        "PartialCorProtGenes.csv"
+        "PartialCorProteins/Genes.csv"
       },
       content = function(file) {
         write.csv(partial_cors2()$par_cor, file, row.names = TRUE)
@@ -930,6 +1021,16 @@ mod_module1_server <- function(id){
       Classification_Proteins()$result
     })
 
+    # Render the download handler
+    output$downloadClassification_results2 <- downloadHandler(
+      filename = function() {
+        "ClassByEigenfeatures_Proteins/Genes.csv"
+      },
+      content = function(file) {
+        write.csv(Classification_Proteins()$result, file, row.names = TRUE)
+      }
+    )
+
     output$classification_plot_2_all <- renderPlot({
       selected_variable <- input$phenotypeSelector2
       levels_selected_variable <- unique(metadata()[[selected_variable]])
@@ -940,16 +1041,32 @@ mod_module1_server <- function(id){
         plot <- plot +
           ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
                         x = "Variables",
-                        y = "Class")
+                        y = "Class") +
+      ggplot2::theme(
+        axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
+      )
+        classification_plot2(plot)
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
         plots_list <- lapply(1:length(levels_selected_variable), function(i) {
           Classification_Proteins()$plots[[i]]
         })
-        cowplot::plot_grid(plotlist = plots_list)
+        plot <- cowplot::plot_grid(plotlist = plots_list)
+        classification_plot2(plot)  # Store the plot in the reactive variable
+        return(plot)
       }
     })
+
+    output$downloadClassification_plot_2_all <- downloadHandler(
+      filename = function() {
+        "Boxplot_classificationProteins/Genes.png"
+      },
+      content = function(file) {
+        # Save the plot stored in the reactive variable
+        ggplot2::ggsave(file, plot = classification_plot2(), device = "png")
+      }
+    )
 
     loadings_Prot <- reactive({
       req(filedata2())
