@@ -112,20 +112,26 @@ mod_module1_ui <- function(id) {
                               placement = "right", trigger = "hover", options = list(container = "body")),
                             verbatimTextOutput(ns("matrizTable")),
                             downloadButton(ns("downloadParCor"),
-                                           "Partial correlation"),
+                                           "Partial correlation matrix"),
                             h4("Hierarchical clustering", bsButton("surfInfoHC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surfInfoHC", title = "More information",
                                       content = HTML("Hierarchical clustering is used to identify common neighbors between the metabolomic features. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram. Axes: The vertical axis (y-axis) represents the dissimilarity between genes or modules, while the horizontal axis (x-axis) shows the genes or modules. Branches: Each line in the dendrogram represents a gene or module. Genes that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles."),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             plotOutput(ns("hc_plot")),
+                            downloadButton(ns("downloadhc_plot"),
+                                           "Hierarchical clustering"),
                             h4("Cluster assignments"),
                             DT::DTOutput(ns("tableClusterAssig")),
                             downloadButton(ns("downloadClusterAssig"),
-                                           "Metabolites cluster assigment"),
+                                           "Cluster assigment table"),
                             h4("First principal component from each module (Eigenfeatures)"),
                             DT::DTOutput(ns("tableEigengene")),
+                            downloadButton(ns("downloadtableEigengene"),
+                                           "Eigenfeatures table"),
                             h4("Eigenfeatures heatmap"),
-                            plotOutput(ns("heatmapEigenMetab"))
+                            plotOutput(ns("heatmapEigenMetab")),
+                            downloadButton(ns("downloadheatmapEigenMetab"),
+                                           "Eigenfeatures heatmap")
                    ),
                    tabPanel("Phenotype",
                             h4("Phenotype data"),
@@ -164,13 +170,13 @@ mod_module1_ui <- function(id) {
                                         label = "Select the module of interest",
                                         choices = NULL,
                                         selected = NULL),
-                            fluidRow(
-                              splitLayout(cellWidths = c("50%", "50%"),
-                                          DT::DTOutput(ns("ModuleFeatures")),
-                                          DT::DTOutput(ns("ModuleFeaturesAnnot")))
-                            ),
+                            DT::DTOutput(ns("ModuleFeaturesAnnot")),
+                            downloadButton(ns("downloadModuleFeaturesAnnot"),
+                                           "Module Features"),
                             h4("PCA loading by module"),
                             plotOutput(ns("Loadings1")),
+                            downloadButton(ns("downloadLoadings1"),
+                                           "PCA_Loadings"),
                             h4("Heatmap by module"),
                             plotOutput(ns("heatmap1"))
                    )
@@ -202,10 +208,12 @@ mod_module1_ui <- function(id) {
                                            "Partial correlation"),
                             h4("Hierarchical clustering"),
                             plotOutput(ns("hc_plot2")),
+                            downloadButton(ns("downloadhc_plot2"),
+                                           "Hierarchical clustering"),
                             h4("Cluster assignments"),
                             DT::DTOutput(ns("tableClusterAssig4")),
                             downloadButton(ns("downloadClusterAssig2"),
-                                           "Proteins/Genes cluster assigment"),
+                                           "Cluster assigment"),
                             h4("Cluster assignments enriched"),
                             helpText(
                               "Note: Upload the Annotation data to be able to run enrichment analysis."),
@@ -217,9 +225,13 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadEnrichment"),
                                            "Enrichment analysis"),
                             h4("First principal component from each module (Eigenfeatures)"),
-                            h4("Eigenfeatures heatmap"),
                             DT::DTOutput(ns("tableEigengene2")),
-                            plotOutput(ns("heatmapEigenProt"))
+                            downloadButton(ns("downloadtableEigengene2"),
+                                           "Eigenfeatures table"),
+                            h4("Eigenfeatures heatmap"),
+                            plotOutput(ns("heatmapEigenProt")),
+                            downloadButton(ns("downloadheatmapEigenProt"),
+                                           "Eigenfeatures heatmap")
                    ),
                    tabPanel("Phenotype",
                             h4("Phenotype data"),
@@ -260,13 +272,13 @@ mod_module1_ui <- function(id) {
                                         label = "Select the module of interest",
                                         choices = NULL,
                                         selected = NULL),
-                            fluidRow(
-                              splitLayout(cellWidths = c("50%", "50%"),
-                                          DT::DTOutput(ns("ModuleFeatures2")),
-                                          DT::DTOutput(ns("ModuleFeatures2Annot")))
-                            ),
+                            DT::DTOutput(ns("ModuleFeatures2Annot")),
+                            downloadButton(ns("downloadModuleFeatures2Annot"),
+                                           "Module Features"),
                             h4("PCA loading by module"),
                             plotOutput(ns("Loadings2")),
+                            downloadButton(ns("downloadLoadings2"),
+                                           "PCA_Loadings"),
                             h4("Heatmap by module"),
                             plotOutput(ns("heatmap2"))
                    )
@@ -296,8 +308,9 @@ mod_module1_ui <- function(id) {
 
                    ),
                    tabPanel("Important features",
+                            h4("Top 5 Multi-omics modules correlations"),
                             DT::DTOutput(ns("ImportantVariables")),
-                            # DT::DTOutput(ns("matrizTableImp")),
+                            h4("Top module correlation details"),
                             selectInput(ns("visualization_list"),
                                         label = "Select Lists to Visualize",
                                         choices = c("Top_1" = 1,
@@ -322,11 +335,19 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadModCorrelation"),
                                            "Modules correlation"),
 
-                            h4("Metabolites"),
-                            DT::DTOutput(ns("cluster_assignments_2")),
+                            h4("Metabolites from top module"),
+                            # DT::DTOutput(ns("cluster_assignments_2")),
+                            DT::DTOutput(ns("cluster_assignments_summary2")),
+                            DT::DTOutput(ns("cluster_assignments_features2")),
+                            downloadButton(ns("downloadcluster_assignments_2"),
+                                           "Metabolites_TopModule"),
 
-                            h4("Proteins/Genes"),
-                            DT::DTOutput(ns("cluster_assignments_1"))
+                            h4("Proteins/Genes from top module"),
+                            #DT::DTOutput(ns("cluster_assignments_1")),
+                            DT::DTOutput(ns("cluster_assignments_summary")),
+                            DT::DTOutput(ns("cluster_assignments_features")),
+                            downloadButton(ns("downloadcluster_assignments_1"),
+                                           "Proteins_Genes_TopModule")
                  )
           )
         )
@@ -628,6 +649,40 @@ mod_module1_server <- function(id){
       updateSelectInput(session, "moduleSelector2", choices = unique_variables2())
     })
 
+    output$hc_plot <- renderPlot({
+      hcClu = hierarchical_cluster1()$hclusterTree2
+      hcMod = hierarchical_cluster1()$hcDynMods2
+      WGCNA::plotDendroAndColors(dendro = hcClu,
+                                 colors = hcMod,
+                                 dendroLabels = FALSE,
+                                 hang = 0.03,
+                                 addGuide = TRUE,
+                                 guideHang = 0.05,
+                                 groupLabels = "Modules",
+                                 main = "Feature dendrogram and module assignments")
+    })
+
+    # Render the download handler
+    output$downloadhc_plot <- downloadHandler(
+      filename = function() {
+        "Hierarchical_clusterMetabolites.png"
+      },
+      content = function(file) {
+        png(file)
+        hcClu = hierarchical_cluster1()$hclusterTree2
+        hcMod = hierarchical_cluster1()$hcDynMods2
+        WGCNA::plotDendroAndColors(dendro = hcClu,
+                                   colors = hcMod,
+                                   dendroLabels = FALSE,
+                                   hang = 0.03,
+                                   addGuide = TRUE,
+                                   guideHang = 0.05,
+                                   groupLabels = "Modules",
+                                   main = "Feature dendrogram and module assignments")
+        dev.off()
+      }
+    )
+
     cluster_assignments_metabolites1 <- reactive({
       cluster_metabolites = as.data.frame(hierarchical_cluster1()$hcCluster_assignments2)
       if (is.null(filedata3())) {
@@ -653,19 +708,6 @@ mod_module1_server <- function(id){
       }
     )
 
-    output$hc_plot <- renderPlot({
-      hcClu = hierarchical_cluster1()$hclusterTree2
-      hcMod = hierarchical_cluster1()$hcDynMods2
-      WGCNA::plotDendroAndColors(dendro = hcClu,
-                                    colors = hcMod,
-                                    dendroLabels = FALSE,
-                                    hang = 0.03,
-                                    addGuide = TRUE,
-                                    guideHang = 0.05,
-                                    groupLabels = "Modules",
-                                    main = "Feature dendrogram and module assignments")
-    })
-
     Eigengene1 <- reactive({
       req(filedata())
       Expression_mat = filedata()
@@ -679,6 +721,16 @@ mod_module1_server <- function(id){
       DT::datatable(df2)
     })
 
+    # Render the download handler
+    output$downloadtableEigengene <- downloadHandler(
+      filename = function() {
+        "EigenfeaturesMetabolites.csv"
+      },
+      content = function(file) {
+        write.csv(Eigengene1()$Eigengenes, file, row.names = TRUE)
+      }
+    )
+
     output$heatmapEigenMetab <- renderPlot({
       metab_heatmap_plot = ComplexHeatmap::Heatmap(
         as.data.frame(t(Eigengene1()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
@@ -691,6 +743,25 @@ mod_module1_server <- function(id){
       ComplexHeatmap::draw(metab_heatmap_plot, heatmap_legend_side = "right",
                            annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
     })
+
+    output$downloadheatmapEigenMetab <- downloadHandler(
+      filename = function() {
+        "HeatmapEigenMetabolites.png"
+      },
+      content = function(file) {
+        png(file)
+        metab_heatmap_plot = ComplexHeatmap::Heatmap(
+          as.data.frame(t(Eigengene1()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
+          row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
+          heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
+          show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
+          show_column_names = TRUE
+        )
+        ComplexHeatmap::draw(metab_heatmap_plot, heatmap_legend_side = "right",
+                             annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
+        dev.off()
+      }
+    )
 
     Classification_Metabolites <- reactive({
       eigengenes_metab = as.data.frame(Eigengene1()$Eigengenes)
@@ -781,19 +852,32 @@ mod_module1_server <- function(id){
       return(list(pca_res = pca_res, data_heat= data_heat, heatmap_data_sub_order = heatmap_data_sub_order, cluster_variables_MetabKEGG = cluster_variables_MetabKEGG))
     })
 
-    output$ModuleFeatures <- DT::renderDataTable({
+    output$ModuleFeaturesAnnot <- DT::renderDataTable({
+      req(loadings_metab())
       df2 = as.data.frame(loadings_metab()$cluster_variables_MetabKEGG)
       names(df2) = "Feature_ID"
-      DT::datatable(df2)
+      if (!is.null(filedata3())) {
+        AnnoMeta = as.data.frame(filedata3())
+        df2 <- merge(df2, AnnoMeta[, c("Feature_ID", "KEGG", "Metabolite")], by = "Feature_ID", all.x = TRUE)
+      }
+      DT::datatable(df2, rownames = FALSE)
     })
 
-    output$ModuleFeaturesAnnot <- DT::renderDataTable({
-        req(filedata3())
-        AnnoMeta = as.data.frame(filedata3())
-        cluster_variables_Metab = loadings_metab()$cluster_variables_MetabKEGG
-        cluster_variables_MetabKEGG <- AnnoMeta[AnnoMeta$Feature_ID %in% cluster_variables_Metab, c("Feature_ID", "KEGG", "Metabolite")]
-      DT::datatable(cluster_variables_MetabKEGG, rownames = FALSE)
-    })
+    # Render the download handler
+    output$downloadModuleFeaturesAnnot <- downloadHandler(
+      filename = function() {
+        "FeaturesOnMetabolomicsModule.csv"
+      },
+      content = function(file) {
+        df2 = as.data.frame(loadings_metab()$cluster_variables_MetabKEGG)
+        names(df2) = "Feature_ID"
+        if (!is.null(filedata3())) {
+          AnnoMeta = as.data.frame(filedata3())
+          df2 <- merge(df2, AnnoMeta[, c("Feature_ID", "KEGG", "Metabolite")], by = "Feature_ID", all.x = TRUE)
+        }
+        write.csv(df2, file, row.names = FALSE)
+      }
+    )
 
     output$Loadings1 <- renderPlot({
       library(ggfortify)
@@ -802,24 +886,32 @@ mod_module1_server <- function(id){
         ggplot2::autoplot(loadings_metab()$pca_res, data = metadata(), colour = input$phenotypeSelector, loadings = TRUE)
     })
 
+    # Render the download handler
+    output$downloadLoadings1 <- downloadHandler(
+      filename = function() {
+        "Loadings_Metabolites.png"
+      },
+      content = function(file) {
+        p <- ggplot2::autoplot(loadings_metab()$pca_res, data = metadata(), colour = input$phenotypeSelector, loadings = TRUE)
+        ggplot2::ggsave(file, plot = p, device = "png")
+        }
+    )
+
     output$heatmap1 <- renderPlot({
       selected_variable <- input$phenotypeSelector
       levels_selected_variable <- unique(metadata()[[selected_variable]])
-
       if (length(levels_selected_variable) == 2) {
         # Usar una paleta diferente para dos niveles
         col_palette <- c("Level1" = "#1B9E77", "Level2" = "#D95F02")
       } else {
         col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
       }
-
       # Column annotation
       column_anno = ComplexHeatmap::HeatmapAnnotation(
         selected_variable = as.factor(loadings_metab()$heatmap_data_sub_order[[selected_variable]]),
         col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
         annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
       )
-
       metab_heatmap_plot = ComplexHeatmap::Heatmap(
         loadings_metab()$data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
         row_title = "Metabolite Abundance", column_title = "Tissues", name = "Z-score",
@@ -828,10 +920,10 @@ mod_module1_server <- function(id){
         #show_row_names = FALSE,
         show_column_names = FALSE,  top_annotation = column_anno
         )
-
       ComplexHeatmap::draw(metab_heatmap_plot, heatmap_legend_side = "right",
                            annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
     })
+
 
     partial_cors2 <- reactive({
       withProgress(message = 'Calculating partial correlations (Proteins/Genes)...', value = 0, {
@@ -873,6 +965,40 @@ mod_module1_server <- function(id){
                   hcDynMods = hcDynMods,
                   hcCluster_assignments = hcCluster_assignments ))
     })
+
+    output$hc_plot2 <- renderPlot({
+      hcClu = hierarchical_cluster2()$hclusterTree
+      hcMod = hierarchical_cluster2()$hcDynMods
+      WGCNA::plotDendroAndColors(dendro = hcClu,
+                                 colors = hcMod,
+                                 dendroLabels = FALSE,
+                                 hang = 0.03,
+                                 addGuide = TRUE,
+                                 guideHang = 0.05,
+                                 groupLabels = "Modules",
+                                 main = "Feature dendrogram and module assignments")
+    })
+
+    # Render the download handler
+    output$downloadhc_plot2 <- downloadHandler(
+      filename = function() {
+        "Hierarchical_clusterProtein/Genes.png"
+      },
+      content = function(file) {
+        png(file)
+        hcClu = hierarchical_cluster2()$hclusterTree
+        hcMod = hierarchical_cluster2()$hcDynMods
+        WGCNA::plotDendroAndColors(dendro = hcClu,
+                                   colors = hcMod,
+                                   dendroLabels = FALSE,
+                                   hang = 0.03,
+                                   addGuide = TRUE,
+                                   guideHang = 0.05,
+                                   groupLabels = "Modules",
+                                   main = "Feature dendrogram and module assignments")
+        dev.off()
+      }
+    )
 
     cluster_assignments_genes1 <- reactive({
       cluster_genes = as.data.frame(hierarchical_cluster2()$hcCluster_assignments)
@@ -948,19 +1074,6 @@ mod_module1_server <- function(id){
       }
     )
 
-    output$hc_plot2 <- renderPlot({
-      hcClu = hierarchical_cluster2()$hclusterTree
-      hcMod = hierarchical_cluster2()$hcDynMods
-      WGCNA::plotDendroAndColors(dendro = hcClu,
-                                 colors = hcMod,
-                                 dendroLabels = FALSE,
-                                 hang = 0.03,
-                                 addGuide = TRUE,
-                                 guideHang = 0.05,
-                                 groupLabels = "Modules",
-                                 main = "Feature dendrogram and module assignments")
-    })
-
     Eigengene2 <- reactive({
       req(filedata2())
       Expression_mat = filedata2()
@@ -975,6 +1088,16 @@ mod_module1_server <- function(id){
       DT::datatable(df3)
     })
 
+    # Render the download handler
+    output$downloadtableEigengene2 <- downloadHandler(
+      filename = function() {
+        "EigenfeaturesProteins_Genes.csv"
+      },
+      content = function(file) {
+        write.csv(Eigengene2()$Eigengenes, file, row.names = TRUE)
+      }
+    )
+
     output$heatmapEigenProt <- renderPlot({
       metab_heatmap_plot = ComplexHeatmap::Heatmap(
         as.data.frame(t(Eigengene2()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
@@ -983,11 +1106,28 @@ mod_module1_server <- function(id){
         show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
         show_column_names = TRUE
       )
-
       ComplexHeatmap::draw(metab_heatmap_plot, heatmap_legend_side = "right",
                            annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
     })
 
+    output$downloadheatmapEigenProt <- downloadHandler(
+      filename = function() {
+        "HeatmapEigenProt.png"
+      },
+      content = function(file) {
+        png(file)
+        metab_heatmap_plot = ComplexHeatmap::Heatmap(
+          as.data.frame(t(Eigengene2()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
+          row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
+          heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
+          show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
+          show_column_names = TRUE
+        )
+        ComplexHeatmap::draw(metab_heatmap_plot, heatmap_legend_side = "right",
+                             annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
+        dev.off()
+      }
+    )
 
     output$table6 <- DT::renderDataTable({
       df <- metadata()
@@ -1091,19 +1231,32 @@ mod_module1_server <- function(id){
       return(list(pca_res = pca_res, data_heat= data_heat, heatmap_data_sub_order = heatmap_data_sub_order, cluster_variables_ProtSymbol = cluster_variables_ProtSymbol))
     })
 
-    output$ModuleFeatures2 <- DT::renderDataTable({
+    output$ModuleFeatures2Annot <- DT::renderDataTable({
+      req(loadings_Prot())
       df2 = as.data.frame(loadings_Prot()$cluster_variables_ProtSymbol)
       names(df2) = "Feature_ID"
-      DT::datatable(df2)
+      if (!is.null(filedata4())) {
+        AnnoProt = as.data.frame(filedata4())
+        df2 <- merge(df2, AnnoProt[, c("Feature_ID", "Symbol")], by = "Feature_ID", all.x = TRUE)
+      }
+      DT::datatable(df2, rownames = FALSE)
     })
 
-    output$ModuleFeatures2Annot <- DT::renderDataTable({
-      req(filedata4())
-      AnnoProt = as.data.frame(filedata4())
-      cluster_variables_Prot = loadings_Prot()$cluster_variables_ProtSymbol
-      cluster_variables_ProtSymbol <- AnnoProt[AnnoProt$Feature_ID %in% cluster_variables_Prot, c("Feature_ID", "Symbol")]
-      DT::datatable(cluster_variables_ProtSymbol, rownames = FALSE)
-    })
+    # Render the download handler
+    output$downloadModuleFeatures2Annot <- downloadHandler(
+      filename = function() {
+        "FeaturesOnProteomicsModule.csv"
+      },
+      content = function(file) {
+        df2 = as.data.frame(loadings_Prot()$cluster_variables_ProtSymbol)
+        names(df2) = "Feature_ID"
+        if (!is.null(filedata4())) {
+          AnnoProt = as.data.frame(filedata4())
+          df2 <- merge(df2, AnnoProt[, c("Feature_ID", "Symbol")], by = "Feature_ID", all.x = TRUE)
+          }
+        write.csv(df2, file, row.names = FALSE)
+      }
+    )
 
     output$Loadings2 <- renderPlot({
       library(ggfortify)
@@ -1111,6 +1264,17 @@ mod_module1_server <- function(id){
       requireNamespace("ggfortify", quietly = TRUE)
       ggplot2::autoplot(loadings_Prot()$pca_res, data = metadata(), colour = input$phenotypeSelector2, loadings = TRUE)
     })
+
+    # Render the download handler
+    output$downloadLoadings2 <- downloadHandler(
+      filename = function() {
+        "Loadings_Proteomics_Genes.png"
+      },
+      content = function(file) {
+        p <- ggplot2::autoplot(loadings_Prot()$pca_res, data = metadata(), colour = input$phenotypeSelector2, loadings = TRUE)
+        ggplot2::ggsave(file, plot = p, device = "png")
+      }
+    )
 
     output$heatmap2 <- renderPlot({
       selected_variable <- input$phenotypeSelector2
@@ -1437,13 +1601,82 @@ mod_module1_server <- function(id){
       }
     )
 
-    output$cluster_assignments_1 <- DT::renderDataTable({
-      Important_Features()$df1_1
+    #Metabolites
+    # output$cluster_assignments_2 <- DT::renderDataTable({
+    #   df <- Important_Features()$df1_2
+    # })
+
+    output$cluster_assignments_features2 <- DT::renderDataTable({
+      df <- Important_Features()$df1_2
+      # Selecciona las columnas de interés
+      df_features <- df %>%
+        select(feature, feature_name, feature_map, Metabolite) %>%
+        distinct()  # Elimina duplicados
+      DT::datatable(df_features)
     })
 
-    output$cluster_assignments_2 <- DT::renderDataTable({
-      Important_Features()$df1_2
+    output$cluster_assignments_summary2 <- DT::renderDataTable({
+      df <- Important_Features()$df1_2
+      # Prepara la tabla con la información de las demás columnas
+      cluster <- unique(df$cluster)
+      col <- unique(df$col)
+      SummaryData <- data.frame(cluster = cluster, col = col, stringsAsFactors = FALSE)
+      DT::datatable(SummaryData)
     })
+
+    output$downloadcluster_assignments_2 <- downloadHandler(
+      filename = function() {
+        "Metabolites_TopModule.csv"
+      },
+      content = function(file) {
+        write.csv(Important_Features()$df1_2, file, row.names = TRUE)
+      }
+    )
+
+    #Proteins
+    # output$cluster_assignments_1 <- DT::renderDataTable({
+    #   Important_Features()$df1_1
+    # })
+
+    output$cluster_assignments_features <- DT::renderDataTable({
+      df <- Important_Features()$df1_1
+
+      # Selecciona las columnas de interés
+      df_features <- df %>%
+        select(feature, feature_name) %>%
+        distinct()  # Elimina duplicados
+
+      DT::datatable(df_features)
+    })
+
+    output$cluster_assignments_summary <- DT::renderDataTable({
+      df <- Important_Features()$df1_1
+
+      # Prepara la tabla con la información de las demás columnas
+      df_summary <- df %>%
+        group_by(cluster, col) %>%
+        summarise(
+          enriched_Term = unique(enriched_Term),
+          enriched_Overlap = unique(enriched_Overlap),
+          enriched_Genes = unique(enriched_Genes),
+          enriched_P.value = unique(enriched_P.value),
+          enriched_Adjusted_P.value = unique(enriched_Adjusted.P.value),
+          enriched_GO = unique(enriched_GO)
+        ) %>%
+        ungroup()
+
+      DT::datatable(df_summary)
+    })
+
+    # Render the download handler
+    output$downloadcluster_assignments_1 <- downloadHandler(
+      filename = function() {
+        "Proteins_Genes_TopModule.csv"
+      },
+      content = function(file) {
+        write.csv(Important_Features()$df1_1, file, row.names = TRUE)
+      }
+    )
 
     output$Important_features_1 <- renderText({
       Important_Features()$df5_1
