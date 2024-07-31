@@ -100,7 +100,13 @@ mod_module1_ui <- function(id) {
 
                             DT::DTOutput(ns("infotable")),
                             DT::DTOutput(ns("table")),
-                            h4("Principal component analysis for each phenotype"),
+                            h4("Principal component analysis for each phenotype",
+                               bsButton("surf-infoMPCAPh", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMPCAPh", title = "More information",
+                                      content = HTML(paste0("Drop-down menu displays conditions or sample descriptions provided with uploaded “Metadata”. Graph below displays Principal Component Analysis (PCA) plots representing each of your phenotype descriptions.")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                               ),
                             selectInput(ns("phenotypeSelectorPCA"),
                                         label = "Select the phenotype of interest",
                                         choices = NULL,
@@ -108,25 +114,39 @@ mod_module1_ui <- function(id) {
                             plotOutput(ns("PCA1")),
                             downloadButton(ns("downloadPCA"),
                                            "Principal component analysis"),
-                            h4("Metabolomics annotation data"),
+                            h4("Metabolomics annotation data",
+                               bsButton("surf-infoMAD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMAD", title = "More information",
+                                      content = HTML(paste0("Table reflecting the uploaded file “Metabolomics Annotation Data”. Check if the total number of entries at bottom of table matches the total number of features in the “Metabolomics Abundance Data”. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a metabolomic feature of interest.")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+                               ),
                             DT::DTOutput(ns("table3"))
                    ),
                    tabPanel("Module Assignments",
-                            h4("Sparse partial correlations: Metabolites", bsButton("surfInfoPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surfInfoPC", title = "More information",
+                            h4("Sparse partial correlations: Metabolites", bsButton("surfInfoMPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surfInfoMPC", title = "More information",
                               content = HTML("</p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimated the partial correlation and capture only direct associations.</p> </p>Preview of the sparse partial correlation of the first five metabolomic features. The full .csv file of sparse partial correlation calculations for all the metabolomic features can be downloaded at the bottom of the table.</p>"),
                               placement = "right", trigger = "hover", options = list(container = "body")),
                             verbatimTextOutput(ns("matrizTable")),
                             downloadButton(ns("downloadParCor"),
                                            "Partial correlation matrix"),
-                            h4("Hierarchical clustering", bsButton("surfInfoHC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surfInfoHC", title = "More information",
+
+                            h4("Hierarchical clustering", bsButton("surfInfoMHC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surfInfoMHC", title = "More information",
                                       content = HTML("Hierarchical clustering is used to identify common neighbors between the metabolomic features. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram. Axes: The vertical axis (y-axis) represents the dissimilarity between genes or modules, while the horizontal axis (x-axis) shows the genes or modules. Branches: Each line in the dendrogram represents a gene or module. Genes that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles."),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             plotOutput(ns("hc_plot")),
                             downloadButton(ns("downloadhc_plot"),
                                            "Hierarchical clustering"),
-                            h4("Cluster assignments"),
+                            h4("Cluster assignments",
+                               bsButton("surf-info", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info", title = "More information",
+                                      content = HTML(paste0("<p> Hierarchical clustering generates multiple clusters (modules) to which each metabolomic feature is assigned. The table below details the following columns: </p> <ul> <li>  feature: metabolite ID </li> <li> cluster: The module where the metabolite is assigned </li> <li> col:  the color used on the hierarchical clustering dendrogram </li> <li> If annotation data is available, it also shows the KEGG ID and the metabolite name </li></ul> <p>The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a metabolomic feature of interest. The full .csv file of Cluster Assignments for all the metabolomic features can be downloaded at the bottom of the table. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                               ),
                             DT::DTOutput(ns("tableClusterAssig")),
                             downloadButton(ns("downloadClusterAssig"),
                                            "Cluster assigment table"),
