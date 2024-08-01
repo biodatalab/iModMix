@@ -243,22 +243,49 @@ mod_module1_ui <- function(id) {
                  tabsetPanel(
                    type = "tabs",
                    tabPanel("Data Input",
-                            h4("Proteomics/Genomics expression matrix"),
+                            h4("Proteomics/Genomics expression matrix",
+                               bsButton("surf-info_PGEM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PGEM", title = "More information",
+                                      content = HTML(paste0("Table reflecting uploaded file <i>Proteomics/Genomics Expression data</i>. Check if the number of samples and the number of protein/genes are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a protein/gene of interest. ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                               ),
                             DT::DTOutput(ns("infotable2")),
                             DT::DTOutput(ns("table2")),
                             h4("Principal component analysis for each phenotype"),
                             selectInput(ns("phenotypeSelectorPCA2"),
-                                        label = "Select the phenotype of interest",
+                                        label = "Select the phenotype of interest"
+                                        ,
+                                        bsButton("surf-info_PDI", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PDI", title = "More information",
+                                      content = HTML(paste0("Drop-down menu displays conditions or sample descriptions provided with uploaded “Metadata”. Graph below displays Principal Component Analysis (PCA) plots representing each of your phenotype descriptions. ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                                        ,
                                         choices = NULL,
                                         selected = NULL),
                             plotOutput(ns("PCA2")),
                             downloadButton(ns("downloadPCA2"),
                                            "Principal component analysis"),
-                            h4("Proteomics/Genomics annotation data"),
+                            h4("Proteomics/Genomics annotation data",
+                               bsButton("surf-info_PGAD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PGAD", title = "More information",
+                                      content = HTML(paste0("Table reflecting the uploaded file <i>Proteomics/Genomics Annotation Data</i>. Check if the total number of entries at bottom of table matches the total number of features in the <i>Proteomics/Genomics Expression Data</i>. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a protein/gene of interest. ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+                               ),
                             DT::DTOutput(ns("table4"))
                    ),
                    tabPanel("Module Assignments",
-                            h4("Sparse partial correlations: Proteins/Genes"),
+                            h4("Sparse partial correlations: Proteins/Genes",
+                               bsButton("surf-info", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info", title = "More information",
+                                      content = HTML(paste0("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimated the partial correlation and capture only direct associations.  </p> <p> Preview of the sparse partial correlation of the first five proteins/genes. The full .csv file of sparse partial correlation calculations for all the proteins/genes can be downloaded at the bottom of the table. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+                               ),
                             verbatimTextOutput(ns("matrizTable2")),
                             downloadButton(ns("downloadParCor2"),
                                            "Partial correlation"),
@@ -266,11 +293,26 @@ mod_module1_ui <- function(id) {
                             plotOutput(ns("hc_plot2")),
                             downloadButton(ns("downloadhc_plot2"),
                                            "Hierarchical clustering"),
-                            h4("Cluster assignments"),
+                            h4("Cluster assignments",
+                               bsButton("surf-info_PGCA", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PGCA", title = "More information",
+                                      content = HTML(paste0("<p>Hierarchical clustering generates multiple clusters (modules) to which each proteins/genes are assigned. The table below details the following columns:  </p> <ul> <li> feature: proteins/genes ID </li>  <li>  cluster: The module where the protein/gene is assigned </li>  </li> Col:  the color used on the hierarchical clustering dendrogram </li> </li> If annotation data is available, it also shows the gene symbol. </li> </ul> <p> The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a protein/gene of interest. The full .csv file of Cluster Assignments for all the proteins/genes features can be downloaded at the bottom of the table. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+
+                               ),
                             DT::DTOutput(ns("tableClusterAssig4")),
                             downloadButton(ns("downloadClusterAssig2"),
                                            "Cluster assigment"),
-                            h4("Cluster assignments enriched"),
+                            h4("Cluster assignments enriched",
+                               bsButton("surf-info_PGCAE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PGCAE", title = "More information",
+                                      content = HTML(paste0("Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the Proteomics/Genomics cluster descriptions on table below. Under column “enriched_Term” the most highly correlated pathway is displayed and in the following columns, along with <i> enriched_Genes</i>, and p-values as determined by Enrichr. The search bar can also be used to find the details of a protein/gene or module of interest. The full .csv file of Cluster Enrichments for Proteomics/Genomics can be downloaded at the bottom of the table.")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+                               ),
                             helpText(
                               "Note: Upload the Annotation data to be able to run enrichment analysis."),
                             selectInput(
@@ -280,7 +322,14 @@ mod_module1_ui <- function(id) {
                             DT::DTOutput(ns("tableClusterAssig3")),
                             downloadButton(ns("downloadEnrichment"),
                                            "Enrichment analysis"),
-                            h4("First principal component from each module (Eigenfeatures)"),
+                            h4("First principal component from each module (Eigenfeatures)",
+                               bsButton("surf-info_PGPC1ef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PGPC1ef", title = "More information",
+                                      content = HTML(paste0("<p> The first principal component (PC1) is calculated for each module, referred to as eigenfeatures. Eigenfeatures are useful for: </p> <ol> <li> Relating the modules to the phenotypes. </li> <li>  Obtaining the correlation between omics datasets (integration). </li> </ol> <p> The full .csv file of calculations for PC1 for proteomics/genomics modules can be downloaded at the bottom of the table. </p> <p> The heatmap below shows eigenfeatures across samples. The vertical axis (y-axis) represents the eigenfeatures, and the horizontal axis (x-axis) displays the sample conditions. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+                               ),
                             DT::DTOutput(ns("tableEigengene2")),
                             downloadButton(ns("downloadtableEigengene2"),
                                            "Eigenfeatures table"),
