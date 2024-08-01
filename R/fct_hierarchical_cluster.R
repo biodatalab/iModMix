@@ -37,7 +37,8 @@ hierarchical_cluster = function(parcor_mat, tom = TRUE, min_module_size = 10) {
   # starts counting assignments at 0 (0 is unassigned), so add 1 to all values to conform to R counting (starts at 1)
   dynamicMods = dynamicMods + 1
   mod_count = max(dynamicMods)
-  color_palette = colorRampPalette(RColorBrewer::brewer.pal("Set1", n = 9))(mod_count)
+  #color_palette = colorRampPalette(RColorBrewer::brewer.pal("Set1", n = 9))(mod_count)
+  color_palette = viridis::viridis(mod_count)
   dynamicMods_colors = color_palette[dynamicMods]
   dynamicMods_labels = paste0("cluster_", stringr::str_pad(dynamicMods, 6, pad = "0"))
   cluster_assignments = data.frame(feature = colnames(parcor_mat), cluster = dynamicMods_labels, col = dynamicMods_colors, stringsAsFactors = FALSE)
