@@ -141,8 +141,8 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadhc_plot"),
                                            "Hierarchical clustering"),
                             h4("Cluster assignments",
-                               bsButton("surf-info", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info", title = "More information",
+                               bsButton("surf-infoMAC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMAC", title = "More information",
                                       content = HTML(paste0("<p> Hierarchical clustering generates multiple clusters (modules) to which each metabolomic feature is assigned. The table below details the following columns: </p> <ul> <li>  feature: metabolite ID </li> <li> cluster: The module where the metabolite is assigned </li> <li> col:  the color used on the hierarchical clustering dendrogram </li> <li> If annotation data is available, it also shows the KEGG ID and the metabolite name </li></ul> <p>The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a metabolomic feature of interest. The full .csv file of Cluster Assignments for all the metabolomic features can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
 
@@ -150,7 +150,16 @@ mod_module1_ui <- function(id) {
                             DT::DTOutput(ns("tableClusterAssig")),
                             downloadButton(ns("downloadClusterAssig"),
                                            "Cluster assigment table"),
-                            h4("First principal component from each module (Eigenfeatures)"),
+                            h4("First principal component from each module (Eigenfeatures)",
+                               bsButton("surf-infoMEF", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMEF", title = "More information",
+                                      content = HTML(paste0("<p>The first principal component (PC1) is calculated for each module, referred to as an eigenfeature. Eigenfeatures are useful for: </p> <ol> <li>  Relating the modules to the phenotypes. </li> <li> Obtaining the correlation between omics datasets (integration). </li> </ol> <p> The full .csv file of calculations for PC1 for metabolomics modules can be downloaded at the bottom of the table. </p> <p> The heatmap below shows eigenfeatures across samples. The vertical axis (y-axis) represents the eigenfeatures, and the horizontal axis (x-axis) displays the sample conditions. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
+
+
+                               ),
                             DT::DTOutput(ns("tableEigengene")),
                             downloadButton(ns("downloadtableEigengene"),
                                            "Eigenfeatures table"),
@@ -160,11 +169,26 @@ mod_module1_ui <- function(id) {
                                            "Eigenfeatures heatmap")
                    ),
                    tabPanel("Phenotype",
-                            h4("Phenotype data"),
+                            h4("Phenotype data",
+                               bsButton("surf-infoMPD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMPD", title = "More information",
+                                      content = HTML(paste0("Table reflecting the uploaded file “Metadata”. Check if the number of samples and the number of entries listed at the bottom of the table are the same. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a sample.")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+                               ),
                             helpText(
                               "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table5")),
-                            h4("Classification between phenotypes by eigenfeatures"),
+                            h4("Classification between phenotypes by eigenfeatures",
+                               bsButton("surf-infoMCPE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMCPE", title = "More information",
+                                      content = HTML(paste0("<p>Statistical analysis by Student's t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> <b> Variable</b>: Represents the ID of the module. </li> <li> <b>Class</b>: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> <b>Result_t </b>: The t-statistic value. </li> <li> <b> Result_pValue </b>: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+
+                               ),
                             fluidRow(
                               column(6,
                             selectInput(ns("phenotypeSelector"),
@@ -191,7 +215,13 @@ mod_module1_ui <- function(id) {
                                    downloadButton(ns("downloadClassification_plot_1_all"),
                                                   "Boxplot classification")
                             ),
-                            h4("Module screening"),
+                            h4("Module screening",
+                               bsButton("surf-infoMMS", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMMS", title = "More information",
+                                      content = HTML(paste0("The drop-down menu displays all modules generated by iModMix. Users can view the features within a selected module. If annotation data is available, it also shows the KEGG ID and metabolite name. PCA loading and heatmap plots are generated to visualize the behavior of each specific module across the phenotype.")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                               ),
                             selectInput(ns("moduleSelector"),
                                         label = "Select the module of interest",
                                         choices = NULL,
