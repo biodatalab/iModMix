@@ -94,19 +94,14 @@ mod_module1_ui <- function(id) {
                                bsButton("surf-infoMAM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoMAM", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file “Metabolomics Abundance Data”. Check if the number of samples and the number of metabolomic features are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a metabolomic feature of interest. ")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")
-
-                               ),
-
+                                      placement = "right", trigger = "hover", options = list(container = "body") ),
                             DT::DTOutput(ns("infotable")),
                             DT::DTOutput(ns("table")),
                             h4("Principal component analysis for each phenotype",
                                bsButton("surf-infoMPCAPh", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoMPCAPh", title = "More information",
                                       content = HTML(paste0("Drop-down menu displays conditions or sample descriptions provided with uploaded “Metadata”. Graph below displays Principal Component Analysis (PCA) plots representing each of your phenotype descriptions.")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")
-
-                               ),
+                                      placement = "right", trigger = "hover", options = list(container = "body") ),
                             selectInput(ns("phenotypeSelectorPCA"),
                                         label = "Select the phenotype of interest",
                                         choices = NULL,
@@ -119,8 +114,6 @@ mod_module1_ui <- function(id) {
                             bsPopover(id = "surf-infoMAD", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file “Metabolomics Annotation Data”. Check if the total number of entries at bottom of table matches the total number of features in the “Metabolomics Abundance Data”. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a metabolomic feature of interest.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
-
-
                                ),
                             DT::DTOutput(ns("table3"))
                    ),
