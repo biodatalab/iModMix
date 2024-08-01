@@ -119,8 +119,6 @@ mod_module1_ui <- function(id) {
                             bsPopover(id = "surf-infoMAD", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file “Metabolomics Annotation Data”. Check if the total number of entries at bottom of table matches the total number of features in the “Metabolomics Abundance Data”. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a metabolomic feature of interest.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
-
-
                                ),
                             DT::DTOutput(ns("table3"))
                    ),
