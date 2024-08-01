@@ -223,22 +223,49 @@ mod_module1_ui <- function(id) {
                  tabsetPanel(
                    type = "tabs",
                    tabPanel("Data Input",
-                            h4("Proteomics/Genomics expression matrix"),
+                            h4("Proteomics/Genomics expression matrix",
+                               bsButton("surf-info_PGEM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PGEM", title = "More information",
+                                      content = HTML(paste0("Table reflecting uploaded file <i>Proteomics/Genomics Expression data</i>. Check if the number of samples and the number of protein/genes are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a protein/gene of interest. ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                               ),
                             DT::DTOutput(ns("infotable2")),
                             DT::DTOutput(ns("table2")),
                             h4("Principal component analysis for each phenotype"),
                             selectInput(ns("phenotypeSelectorPCA2"),
-                                        label = "Select the phenotype of interest",
+                                        label = "Select the phenotype of interest"
+                                        ,
+                                        bsButton("surf-info_PDI", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PDI", title = "More information",
+                                      content = HTML(paste0("Drop-down menu displays conditions or sample descriptions provided with uploaded “Metadata”. Graph below displays Principal Component Analysis (PCA) plots representing each of your phenotype descriptions. ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                                        ,
                                         choices = NULL,
                                         selected = NULL),
                             plotOutput(ns("PCA2")),
                             downloadButton(ns("downloadPCA2"),
                                            "Principal component analysis"),
-                            h4("Proteomics/Genomics annotation data"),
+                            h4("Proteomics/Genomics annotation data",
+                               bsButton("surf-info_PGAD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PGAD", title = "More information",
+                                      content = HTML(paste0("Table reflecting the uploaded file <i>Proteomics/Genomics Annotation Data</i>. Check if the total number of entries at bottom of table matches the total number of features in the <i>Proteomics/Genomics Expression Data</i>. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a protein/gene of interest. ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+                               ),
                             DT::DTOutput(ns("table4"))
                    ),
                    tabPanel("Module Assignments",
-                            h4("Sparse partial correlations: Proteins/Genes"),
+                            h4("Sparse partial correlations: Proteins/Genes",
+                               bsButton("surf-info", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info", title = "More information",
+                                      content = HTML(paste0("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimated the partial correlation and capture only direct associations.  </p> <p> Preview of the sparse partial correlation of the first five proteins/genes. The full .csv file of sparse partial correlation calculations for all the proteins/genes can be downloaded at the bottom of the table. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+                               ),
                             verbatimTextOutput(ns("matrizTable2")),
                             downloadButton(ns("downloadParCor2"),
                                            "Partial correlation"),
@@ -246,11 +273,26 @@ mod_module1_ui <- function(id) {
                             plotOutput(ns("hc_plot2")),
                             downloadButton(ns("downloadhc_plot2"),
                                            "Hierarchical clustering"),
-                            h4("Cluster assignments"),
+                            h4("Cluster assignments",
+                               bsButton("surf-info_PGCA", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PGCA", title = "More information",
+                                      content = HTML(paste0("<p>Hierarchical clustering generates multiple clusters (modules) to which each proteins/genes are assigned. The table below details the following columns:  </p> <ul> <li> feature: proteins/genes ID </li>  <li>  cluster: The module where the protein/gene is assigned </li>  </li> Col:  the color used on the hierarchical clustering dendrogram </li> </li> If annotation data is available, it also shows the gene symbol. </li> </ul> <p> The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a protein/gene of interest. The full .csv file of Cluster Assignments for all the proteins/genes features can be downloaded at the bottom of the table. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+
+                               ),
                             DT::DTOutput(ns("tableClusterAssig4")),
                             downloadButton(ns("downloadClusterAssig2"),
                                            "Cluster assigment"),
-                            h4("Cluster assignments enriched"),
+                            h4("Cluster assignments enriched",
+                               bsButton("surf-info_PGCAE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PGCAE", title = "More information",
+                                      content = HTML(paste0("Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the Proteomics/Genomics cluster descriptions on table below. Under column “enriched_Term” the most highly correlated pathway is displayed and in the following columns, along with <i> enriched_Genes</i>, and p-values as determined by Enrichr. The search bar can also be used to find the details of a protein/gene or module of interest. The full .csv file of Cluster Enrichments for Proteomics/Genomics can be downloaded at the bottom of the table.")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+                               ),
                             helpText(
                               "Note: Upload the Annotation data to be able to run enrichment analysis."),
                             selectInput(
@@ -260,7 +302,14 @@ mod_module1_ui <- function(id) {
                             DT::DTOutput(ns("tableClusterAssig3")),
                             downloadButton(ns("downloadEnrichment"),
                                            "Enrichment analysis"),
-                            h4("First principal component from each module (Eigenfeatures)"),
+                            h4("First principal component from each module (Eigenfeatures)",
+                               bsButton("surf-info_PGPC1ef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PGPC1ef", title = "More information",
+                                      content = HTML(paste0("<p> The first principal component (PC1) is calculated for each module, referred to as eigenfeatures. Eigenfeatures are useful for: </p> <ol> <li> Relating the modules to the phenotypes. </li> <li>  Obtaining the correlation between omics datasets (integration). </li> </ol> <p> The full .csv file of calculations for PC1 for proteomics/genomics modules can be downloaded at the bottom of the table. </p> <p> The heatmap below shows eigenfeatures across samples. The vertical axis (y-axis) represents the eigenfeatures, and the horizontal axis (x-axis) displays the sample conditions. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+
+                               ),
                             DT::DTOutput(ns("tableEigengene2")),
                             downloadButton(ns("downloadtableEigengene2"),
                                            "Eigenfeatures table"),
@@ -270,7 +319,13 @@ mod_module1_ui <- function(id) {
                                            "Eigenfeatures heatmap")
                    ),
                    tabPanel("Phenotype",
-                            h4("Phenotype data"),
+                            h4("Phenotype data",
+                               bsButton("surf-info_PGPData", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PGPData", title = "More information",
+                                      content = HTML(paste0("<p> Statistical analysis by Student's t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p>  <p> It returns a data frame with the following columns: </p> <ul> <li>  <b> Variable<b>: Represents the ID of the module. </li> <li> <b>Class</b>: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> <li> <b> Result_t</b>: The t-statistic value. </li> </li> <b>Result_pValue</b>: The p-value for the test.</li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
                             helpText(
                               "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table6")),
@@ -303,7 +358,13 @@ mod_module1_ui <- function(id) {
                                                     "Boxplot classification")
                               )
                             ),
-                            h4("Module screening"),
+                            h4("Module screening",
+                               bsButton("surf-infoMS", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMS", title = "More information",
+                                      content = HTML(paste0("The drop-down menu displays all modules generated by iModMix. Users can view the features within a selected module. If annotation data is available, it also shows the Gene Symbol. PCA loading and heatmap plots are generated to visualize the behavior of each specific module across the phenotype.")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
                             selectInput(ns("moduleSelector2"),
                                         label = "Select the module of interest",
                                         choices = NULL,
@@ -327,10 +388,22 @@ mod_module1_ui <- function(id) {
                  tabsetPanel(
                    type = "tabs",
                    tabPanel("Modules correlation",
-                            h4("Correlation: Metabolites and Proteins/Genes"),
+                            h4("Correlation: Metabolites and Proteins/Genes",
+                               bsButton("surf-infoMC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMC", title = "More information",
+                                      content = HTML(paste0("Histogram depicting the correlation between eigen-metabolites and eigen-genes using Spearman correlation")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
                             plotOutput(ns("Correlation_plot")),
                             sliderInput(ns("pValueThreshold3"),
                                         label = "Select Correlation Threshold",
+                                        bsButton("surf-info_SCT", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_SCT", title = "More information",
+                                      content = HTML(paste0("Set a correlation threshold by typing in the value to automatically update the table below. If interested in a specific module from the metabolomics or proteomics/genomics that was previously noted, then insert module number or name of module into the search bar on the top right. ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                                      ,
                                         min = 0,
                                         max = 1,
                                         step = 0.0001,
@@ -338,7 +411,13 @@ mod_module1_ui <- function(id) {
                             DT::DTOutput(ns("tableCorrelation")),
                             downloadButton(ns("downloadOmicsCorrelation"),
                                            "Omics correlation"),
-                            h4("Module Network of Metabolites and Proteins/Genes"),
+                            h4("Module Network of Metabolites and Proteins/Genes",
+                               bsButton("surf-info_MMPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_MMPG", title = "More information",
+                                      content = HTML(paste0("An interactive module network showing each proteins/gene module as a green triangle  and metabolite modules as a yellow diamond. Clicking directly on the triangle or diamond identifies the module number. Correlation coefficients are seen on arrows connecting modules. Modules can be fluidly switched into different order and moved on the screen. The network can be downloaded as an html for saving. ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
                             #plotOutput(ns("Network_plot")),
                             visNetworkOutput(ns("network")),
                             downloadLink(ns("downloadNetwork"),
@@ -346,9 +425,21 @@ mod_module1_ui <- function(id) {
 
                    ),
                    tabPanel("Important features",
-                            h4("Top 5 Multi-omics modules correlations"),
+                            h4("Top 5 Multi-omics modules correlations",
+                               bsButton("surf-infoT5MM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoT5MM", title = "More information",
+                                      content = HTML(paste0("Table of the top 5 highly correlated modules, with the number of features within each module, the correlation between modules, and the enriched term for the proteins/genomics modules.   ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
                             DT::DTOutput(ns("ImportantVariables")),
-                            h4("Top module correlation details"),
+                            h4("Top module correlation details",
+                               bsButton("surf-infoTMCD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoTMCD", title = "More information",
+                                      content = HTML(paste0("The drop-down menu displays the details for each of the top 5 highly correlated modules. Select one option to see the features within each module and the correlation between each feature (Corrplot and table). The arrows to the right of each column title can be used to sort data from increasing or decreasing values. Users can also use the search bar to find the details of a protein/gene or metabolites of interest. The user can download the full .csv file of Module correlations at the bottom of the table. ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
                             selectInput(ns("visualization_list"),
                                         label = "Select Lists to Visualize",
                                         choices = c("Top_1" = 1,
@@ -368,12 +459,24 @@ mod_module1_ui <- function(id) {
                             h4("Corrplot: Metabolites and Proteins/Genes"),
                             plotOutput(ns("CorplotImp")),
 
-                            h4("Modules correlation: Metabolites and Proteins/Genes"),
+                            h4("Modules correlation: Metabolites and Proteins/Genes",
+                               bsButton("surf-infoMCMPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMCMPG", title = "More information",
+                                      content = HTML(paste0("Displays the list of proteins/genes within a proteomic/genomic module that is highly correlated with a metabolomic module. The module ID is first specified, along with its enriched term, enriched genes, and p-value. This is followed by the list of constituent proteins/genes. This information enables further pathway analysis and provides valuable insights into the relationships between metabolites, proteins, and genes.")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
                             DT::DTOutput(ns("Correlation_mod")),
                             downloadButton(ns("downloadModCorrelation"),
                                            "Modules correlation"),
 
-                            h4("Metabolites from top module"),
+                            h4("Metabolites from top module",
+                               bsButton("surf-infoMTopM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMTopM", title = "More information",
+                                      content = HTML(paste0("<p> Displays the list of metabolites within a metabolomic module that is highly correlated with a protein module. The metabolomic module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
                             # DT::DTOutput(ns("cluster_assignments_2")),
                             DT::DTOutput(ns("cluster_assignments_summary2")),
                             DT::DTOutput(ns("cluster_assignments_features2")),
