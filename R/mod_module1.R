@@ -204,7 +204,9 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadLoadings1"),
                                            "PCA_Loadings"),
                             h4("Heatmap by module"),
-                            plotOutput(ns("heatmap1"))
+                            plotOutput(ns("heatmap1")),
+                            downloadButton(ns("downloadHeatmap1"),
+                                           "Heatmap")
                    )
                  )
         ),
@@ -306,7 +308,9 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadLoadings2"),
                                            "PCA_Loadings"),
                             h4("Heatmap by module"),
-                            plotOutput(ns("heatmap2"))
+                            plotOutput(ns("heatmap2")),
+                            downloadButton(ns("downloadHeatmap2"),
+                                           "Heatmap")
                    )
                  )
                  ),
@@ -950,6 +954,41 @@ mod_module1_server <- function(id){
                            annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
     })
 
+    output$downloadHeatmap1 <- downloadHandler(
+      filename = function() {
+        "HeatmapModMetabolomics.png"
+      },
+      content = function(file) {
+        png(file, width = 800, height = 600)  # Adjust dimensions as needed
+        selected_variable <- input$phenotypeSelector
+        levels_selected_variable <- unique(metadata()[[selected_variable]])
+
+        if (length(levels_selected_variable) == 2) {
+          col_palette <- c("Level1" = "#1B9E77", "Level2" = "#D95F02")
+        } else {
+          col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
+        }
+
+        column_anno = ComplexHeatmap::HeatmapAnnotation(
+          selected_variable = as.factor(loadings_metab()$heatmap_data_sub_order[[selected_variable]]),
+          col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
+          annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
+        )
+
+        metab_heatmap_plot = ComplexHeatmap::Heatmap(
+          loadings_metab()$data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
+          row_title = "Metabolite Abundance", column_title = "Tissues", name = "Z-score",
+          heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
+          show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
+          show_column_names = FALSE, top_annotation = column_anno
+        )
+
+        ComplexHeatmap::draw(metab_heatmap_plot, heatmap_legend_side = "right",
+                             annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
+        dev.off()
+      }
+    )
+
 
     partial_cors2 <- reactive({
       withProgress(message = 'Calculating partial correlations (Proteins/Genes)...', value = 0, {
@@ -1324,13 +1363,47 @@ mod_module1_server <- function(id){
         row_title = "Genes Abundance", column_title = "Tissues", name = "Z-score",
         heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
         show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
-        #show_row_names = FALSE,
         show_column_names = FALSE,  top_annotation = column_anno
       )
 
       ComplexHeatmap::draw(Prot_heatmap_plot, heatmap_legend_side = "right",
                            annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
     })
+
+    output$downloadHeatmap2 <- downloadHandler(
+      filename = function() {
+        "HeatmapModProt_Genes.png"
+      },
+      content = function(file) {
+        png(file, width = 800, height = 600)  # Adjust dimensions as needed
+        selected_variable <- input$phenotypeSelector2
+        levels_selected_variable <- unique(metadata()[[selected_variable]])
+
+        if (length(levels_selected_variable) == 2) {
+          col_palette <- c("Level1" = "#1B9E77", "Level2" = "#D95F02")
+        } else {
+          col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
+        }
+
+        column_anno = ComplexHeatmap::HeatmapAnnotation(
+          selected_variable = as.factor(loadings_Prot()$heatmap_data_sub_order[[selected_variable]]),
+          col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
+          annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
+        )
+
+        Prot_heatmap_plot = ComplexHeatmap::Heatmap(
+          loadings_Prot()$data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
+          row_title = "Genes Abundance", column_title = "Tissues", name = "Z-score",
+          heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
+          show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
+          show_column_names = FALSE, top_annotation = column_anno
+        )
+
+        ComplexHeatmap::draw(Prot_heatmap_plot, heatmap_legend_side = "right",
+                             annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
+        dev.off()
+      }
+    )
 
     Cor_Prot_Metab1 <- reactive({
       threshold <- input$pValueThreshold3

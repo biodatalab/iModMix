@@ -40,7 +40,7 @@ usethis::use_package("plotly")
 usethis::use_package("visNetwork")
 usethis::use_package("shinyWidgets")
 usethis::use_package("shinyBS")
-
+usethis::use_package("viridis")
 
 
 ## install.packages('attachment') # if needed.
