@@ -161,15 +161,12 @@ mod_module1_ui <- function(id) {
                               "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table5")),
                             h4("Classification between phenotypes by eigenfeatures",
-<<<<<<< HEAD
                                bsButton("surf-infoMCPE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoMCPE", title = "More information",
                                       content = HTML("<p>Statistical analysis by Student's t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> <b> Variable</b>: Represents the ID of the module. </li> <li> <b>Class</b>: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> <b>Result_t </b>: The t-statistic value. </li> <li> <b> Result_pValue </b>: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> "),
-=======
                                bsButton("surf-infoMCPEf", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoMCPEf", title = "More information",
                                       content = HTML(paste0("<p>Statistical analysis by Student's t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> Variable: Represents the ID of the module. </li> <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> Result_t: The t-statistic value. </li> <li> Result_pValue: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> ")),
->>>>>>> 1ff8cd465d1e0c5ac844b4d3e8322e974f98a162
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             fluidRow(
                               column(6,
@@ -316,9 +313,9 @@ mod_module1_ui <- function(id) {
                                bsButton("surf-info_PGPData", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-info_PGPData", title = "More information",
                                       content = HTML(paste0("<p> Statistical analysis by Student's t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p>  <p> It returns a data frame with the following columns: </p> <ul> <li>  <b> Variable<b>: Represents the ID of the module. </li> <li> <b>Class</b>: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> <li> <b> Result_t</b>: The t-statistic value. </li> </li> <b>Result_pValue</b>: The p-value for the test.</li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p>")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
 
-                            ),
+
                             helpText(
                               "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table6")),
