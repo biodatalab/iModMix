@@ -92,7 +92,7 @@ mod_module1_ui <- function(id) {
                                bsButton("surf-infoMAM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoMAM", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file <i>Metabolomics Abundance Data</i>. Check if the number of samples and the number of metabolomic features are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a metabolomic feature of interest. ")),
-                                      placement = "right", trigger = "hover", options = list(container = "body") ),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("infotable")),
                             DT::DTOutput(ns("table")),
                             h4("Principal component analysis for each phenotype",
@@ -162,19 +162,8 @@ mod_module1_ui <- function(id) {
                             DT::DTOutput(ns("table5")),
                             h4("Classification between phenotypes by eigenfeatures",
                                bsButton("surf-infoMCPE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMCPE", title = "More information",
-                                      content = HTML("<p>Statistical analysis by Student's t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> <b> Variable</b>: Represents the ID of the module. </li> <li> <b>Class</b>: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> <b>Result_t </b>: The t-statistic value. </li> <li> <b> Result_pValue </b>: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> "),
-                               bsButton("surf-infoMCPEf", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoMCPEf", title = "More information",
-<<<<<<< HEAD
                                       content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> Variable: Represents the ID of the module. </li> <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> Result_t: The t-statistic value. </li> <li> Result_pValue: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> ")),
-=======
-                                      content = HTML(paste0("<p>Statistical analysis by Student's t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> Variable: Represents the ID of the module. </li> <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> Result_t: The t-statistic value. </li> <li> Result_pValue: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> ")),
-<<<<<<< HEAD
-=======
->>>>>>> 1ff8cd465d1e0c5ac844b4d3e8322e974f98a162
->>>>>>> d8774218f87e5df4b4aa3e19c368ec6be5a09227
->>>>>>> 98cd0b760df5a9789ec97a6a69885adbf1128487
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             fluidRow(
                               column(6,
@@ -241,8 +230,7 @@ mod_module1_ui <- function(id) {
                                bsButton("surf-info_PGPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-info_PGPC", title = "More information",
                                       content = HTML(paste0("Drop-down menu displays conditions or sample descriptions provided with uploaded <i>Metadata</i>. Graph below displays Principal Component Analysis (PCA) plots representing each of your phenotype descriptions. ")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")
-                                      ),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
                             selectInput(ns("phenotypeSelectorPCA2"),
                                         label = "Select the phenotype of interest",
                                         choices = NULL,
@@ -254,10 +242,7 @@ mod_module1_ui <- function(id) {
                                bsButton("surf-info_PGAD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-info_PGAD", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file <i>Proteomics/Genomics Annotation Data</i>. Check if the total number of entries at bottom of table matches the total number of features in the <i>Proteomics/Genomics Expression Data</i>. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a protein/gene of interest. ")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")
-
-
-                               ),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("table4"))
                    ),
                    tabPanel("Module Assignments",
@@ -283,11 +268,7 @@ mod_module1_ui <- function(id) {
                                bsButton("surf-info_PGCA", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-info_PGCA", title = "More information",
                                       content = HTML(paste0("<p>Hierarchical clustering generates multiple clusters (modules) to which each proteins/genes are assigned. The table below details the following columns:  </p> <ul> <li> Feature: proteins/genes ID </li>  <li>  Cluster: The module where the protein/gene is assigned </li>  <li> Col:  the color used on the hierarchical clustering dendrogram </li> <li> Gene_symbol: If annotation data is available, it also shows the gene symbol. </li> </ul> <p> The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a protein/gene of interest.</p> <p> The full .csv file of Cluster Assignments for all the proteins/genes features can be downloaded at the bottom of the table. </p>")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")
-
-
-
-                               ),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("tableClusterAssig4")),
                             downloadButton(ns("downloadClusterAssig2"),
                                            "Cluster assigment"),
@@ -295,10 +276,7 @@ mod_module1_ui <- function(id) {
                                bsButton("surf-info_PGCAE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-info_PGCAE", title = "More information",
                                       content = HTML(paste0("Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the Proteomics/Genomics cluster descriptions on table below. Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr. The search bar can also be used to find the details of a protein/gene or module of interest. The full .csv file of Cluster Enrichments for Proteomics/Genomics can be downloaded at the bottom of the table.")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")
-
-
-                               ),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
                             helpText(
                               "Note: Upload the Annotation data to be able to run enrichment analysis."),
                             selectInput(
@@ -312,10 +290,7 @@ mod_module1_ui <- function(id) {
                                bsButton("surf-info_PGPC1ef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-info_PGPC1ef", title = "More information",
                                       content = HTML(paste0("<p> The first principal component (PC1) is calculated for each module, referred to as eigenfeatures. Eigenfeatures are useful for: </p> <ol> <li> Relating the modules to the phenotypes. </li> <li>  Obtaining the correlation between omics datasets (integration). </li> </ol> <p> The full .csv file of calculations for PC1 for proteomics/genomics modules can be downloaded at the bottom of the table. </p> <p> The heatmap below shows eigenfeatures across samples. The vertical axis (y-axis) represents the eigenfeatures, and the horizontal axis (x-axis) displays the sample conditions. </p>")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")
-
-
-                               ),
+                                      placement = "right", trigger = "hover", options = list(container = "body") ),
                             DT::DTOutput(ns("tableEigengene2")),
                             downloadButton(ns("downloadtableEigengene2"),
                                            "Eigenfeatures table"),
@@ -328,15 +303,8 @@ mod_module1_ui <- function(id) {
                             h4("Phenotype data",
                                bsButton("surf-info_PGPData", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-info_PGPData", title = "More information",
-<<<<<<< HEAD
-                                      content = HTML(paste0("<p> Statistical analysis by Student's t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p>  <p> It returns a data frame with the following columns: </p> <ul> <li>  <b> Variable<b>: Represents the ID of the module. </li> <li> <b>Class</b>: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> <li> <b> Result_t</b>: The t-statistic value. </li> </li> <b>Result_pValue</b>: The p-value for the test.</li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p>")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")),
-
-=======
                                       content = HTML(paste0("Table reflecting the uploaded file <i> Metadata</i>. Check if the number of samples and the number of entries listed at the bottom of the table are the same. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a sample.")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")
->>>>>>> 98cd0b760df5a9789ec97a6a69885adbf1128487
-
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
                             helpText(
                               "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table6")),
@@ -344,8 +312,7 @@ mod_module1_ui <- function(id) {
                                bsButton("surf-info_PGCPef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-info_PGCPef", title = "More information",
                                       content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> Variable: Represents the ID of the module. </li> <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> Result_t: The t-statistic value. </li> <li> Result_pValue: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> ")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")
-                               ),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
                             fluidRow(
                               column(6,
                                      selectInput(ns("phenotypeSelector2"),
@@ -378,9 +345,7 @@ mod_module1_ui <- function(id) {
                                bsButton("surf-infoMS", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoMS", title = "More information",
                                       content = HTML(paste0("The drop-down menu displays all modules generated by iModMix. Users can view the features within a selected module. If annotation data is available, it also shows the Gene Symbol. PCA loading and heatmap plots are generated to visualize the behavior of each specific module across the phenotype.")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")
-
-                            ),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
                             selectInput(ns("moduleSelector2"),
                                         label = "Select the module of interest",
                                         choices = NULL,
@@ -427,9 +392,7 @@ mod_module1_ui <- function(id) {
                             #plotOutput(ns("Network_plot")),
                             visNetworkOutput(ns("network")),
                             downloadLink(ns("downloadNetwork"),
-                                         "Network as .html")
-
-                   ),
+                                         "Network as .html")),
                    tabPanel("Important features",
                             h4("Top 5 Multi-omics modules correlations",
                                bsButton("surf-infoT5MM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
@@ -499,9 +462,9 @@ mod_module1_ui <- function(id) {
                             DT::DTOutput(ns("cluster_assignments_features")),
                             downloadButton(ns("downloadcluster_assignments_1"),
                                            "Proteins_Genes_TopModule")
+                            )
+                   )
                  )
-          )
-        )
       )
     )
   )

@@ -19,7 +19,7 @@ Welcome to the Integrative Modules for Multi-omics data (IModMix) shiny app. Thi
 
 
 ## What is IModMix?
-IModMix is a novel network-based approach that integrates multi-omics data, including metabolomics, proteomics, and transcriptomics data, into a unified network to unravel complex molecular interactions in diverse biological systems and reveal significant associations with phenotypes of interest. 
+IModMix is a novel network-based approach that integrates multi-omics data, including metabolomics, proteomics, and transcriptomics data, into a unified network to unravel complex molecular interactions in diverse biological systems and reveal significant associations with phenotypes of interest. *(See Figure 1)
 
 ```{r, echo=F, fig.align="center", fig.width=2, out.width="100%", fig.cap="Figure 1: Overview of IModMix's analytical process."}
 knitr::include_graphics(paste0(here::here(),"/documentation/OverviewIModMix.png"), error = FALSE)
@@ -52,7 +52,7 @@ Metabolomics data must be have `KEGG` for the metabolites that have correspondin
 Proteomics/Genomics data must be have `Symbol` for the features that have corresponding Symbols for enrichment analysis.
 *See Figure 3 for an example of the annotation data input format.*
 
-```{r, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Figure 3: Example annotation data that can be uploaded in the 'Metabolomics data' and 'Proteomics/Genomics data' tabs."}
+```{r, echo=F, fig.align="center", fig.width=2, out.width="90%", fig.cap="Figure 3: Example annotation data that can be uploaded in the 'Metabolomics data' and 'Proteomics/Genomics data' tabs."}
 knitr::include_graphics(paste0(here::here(),"/documentation/Annotation.png"), error = FALSE)
 ```
 
@@ -61,7 +61,7 @@ The metadata files should have a column with the sample IDs that are used in the
 *See Figure 4 for an example of the Metadata input format.*
 
 
-```{r, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Figure 4: Example metadata data that can be uploaded in the 'Metadata' tab."}
+```{r, echo=F, fig.align="center", fig.width=2, out.width="70%", fig.cap="Figure 4: Example metadata data that can be uploaded in the 'Metadata' tab."}
 knitr::include_graphics(paste0(here::here(),"/documentation/Metadata.png"), error = FALSE)
 ```
 
