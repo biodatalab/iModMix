@@ -19,7 +19,12 @@ Welcome to the Integrative Modules for Multi-omics data (IModMix) shiny app. Thi
 
 
 ## What is IModMix?
-IModMix is a novel integrative analysis framework by which networks and molecular modules are determined to increase the statistical power to uncover biological relevant associations with a phenotype of interest. 
+IModMix is a novel network-based approach that integrates multi-omics data, including metabolomics, proteomics, and transcriptomics data, into a unified network to unravel complex molecular interactions in diverse biological systems and reveal significant associations with phenotypes of interest. 
+
+```{r, echo=F, fig.align="center", fig.width=2, out.width="100%", fig.cap="Figure 1: Overview of IModMix's analytical process."}
+knitr::include_graphics(paste0(here::here(),"/documentation/OverviewIModMix.png"), error = FALSE)
+```
+
 
 ## What does this application do?
 This application allows users with little or no coding skills to try, explore and play with the IModMix method.
@@ -36,26 +41,27 @@ In general terms, this application will let the user:
 ## Data input 
 
 In the first section you can upload one or two omics tables
-the metabolite,proteins and genes must be identified in, `Feature_ID` which contains a unique ID for each row. *See Figure 1 for an example of the mass spec data input format.* 
+the metabolite,proteins and genes must be identified in, `Feature_ID` which contains a unique ID for each row. *See Figure 2 for an example of the mass spec data input format.* 
 
 
-```{r data-example, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Figure 1: Example expression data that can be uploaded in the 'Metabolomics data' and 'Proteomics/Genomics data' tabs."}
+```{r data-example, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Figure 2: Example expression data that can be uploaded in the 'Metabolomics data' and 'Proteomics/Genomics data' tabs."}
 knitr::include_graphics(paste0(here::here(),"/documentation/Expression.png"), error = FALSE)
 ```
 
 Metabolomics data must be have `KEGG` for the metabolites that have corresponding KEGG IDs for annotation purposes.
 Proteomics/Genomics data must be have `Symbol` for the features that have corresponding Symbols for enrichment analysis.
-*See Figure 2 for an example of the annotation data input format.*
+*See Figure 3 for an example of the annotation data input format.*
 
-```{r, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Figure 2: Example annotation data that can be uploaded in the 'Metabolomics data' and 'Proteomics/Genomics data' tabs."}
+```{r, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Figure 3: Example annotation data that can be uploaded in the 'Metabolomics data' and 'Proteomics/Genomics data' tabs."}
 knitr::include_graphics(paste0(here::here(),"/documentation/Annotation.png"), error = FALSE)
 ```
 
 
 The metadata files should have a column with the sample IDs that are used in the expression data files, identified in, `Sample`. This allows linking samples when having both positive and negative ion channel data in separate files. At least one additional column is required that groups samples together (think 'treatment' and 'control') that is selected for PCA, plots, etc.
+*See Figure 4 for an example of the Metadata input format.*
 
 
-```{r, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Figure 3: Example metadata data that can be uploaded in the 'Metadata' tab."}
+```{r, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Figure 4: Example metadata data that can be uploaded in the 'Metadata' tab."}
 knitr::include_graphics(paste0(here::here(),"/documentation/Metadata.png"), error = FALSE)
 ```
 
