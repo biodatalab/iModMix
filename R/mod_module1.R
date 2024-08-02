@@ -118,14 +118,14 @@ mod_module1_ui <- function(id) {
                    tabPanel("Module Assignments",
                             h4("Sparse partial correlations: Metabolites", bsButton("surfInfoMPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surfInfoMPC", title = "More information",
-                              content = HTML("</p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimated the partial correlation and capture only direct associations.</p> </p>Preview of the sparse partial correlation of the first five metabolomic features. The full .csv file of sparse partial correlation calculations for all the metabolomic features can be downloaded at the bottom of the table.</p>"),
+                              content = HTML("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimated the partial correlation and captures only direct associations.</p> <p>Below is a preview of the sparse partial correlation of the first five metabolomic features. The full .csv file of sparse partial correlation calculations for all the metabolomic features can be downloaded at the bottom of the table.</p>"),
                               placement = "right", trigger = "hover", options = list(container = "body")),
                             verbatimTextOutput(ns("matrizTable")),
                             downloadButton(ns("downloadParCor"),
                                            "Partial correlation matrix"),
                             h4("Hierarchical clustering", bsButton("surfInfoMHC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surfInfoMHC", title = "More information",
-                                      content = HTML("Hierarchical clustering is used to identify common neighbors between the metabolomic features. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram. Axes: The vertical axis (y-axis) represents the dissimilarity between genes or modules, while the horizontal axis (x-axis) shows the genes or modules. Branches: Each line in the dendrogram represents a gene or module. Genes that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles."),
+                                      content = HTML("<p>Hierarchical clustering is used to identify common neighbors between the metabolomic features. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram.</p> <p> Axes: The vertical axis (y-axis) represents the dissimilarity between genes or modules, while the horizontal axis (x-axis) shows the genes or modules. Branches: Each line in the dendrogram represents a gene or module. Genes that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles.</p>"),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             plotOutput(ns("hc_plot")),
                             downloadButton(ns("downloadhc_plot"),
@@ -133,7 +133,7 @@ mod_module1_ui <- function(id) {
                             h4("Cluster assignments",
                                bsButton("surf-infoMAC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoMAC", title = "More information",
-                                      content = HTML(paste0("<p> Hierarchical clustering generates multiple clusters (modules) to which each metabolomic feature is assigned. The table below details the following columns: </p> <ul> <li>  feature: metabolite ID </li> <li> cluster: The module where the metabolite is assigned </li> <li> col:  the color used on the hierarchical clustering dendrogram </li> <li> If annotation data is available, it also shows the KEGG ID and the metabolite name </li></ul> <p>The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a metabolomic feature of interest. The full .csv file of Cluster Assignments for all the metabolomic features can be downloaded at the bottom of the table. </p>")),
+                                      content = HTML(paste0("<p> Hierarchical clustering generates multiple clusters (modules) to which each metabolomic feature is assigned. The table below details the following columns: </p> <ul> <li>  Feature: metabolite ID </li> <li> Cluster: The module where the metabolite is assigned </li> <li> Col:  the color used on the hierarchical clustering dendrogram </li> <li> If annotation data is available, it also shows the KEGG ID and the metabolite name </li></ul> <p>The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a metabolomic feature of interest. The full .csv file of Cluster Assignments for all the metabolomic features can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("tableClusterAssig")),
                             downloadButton(ns("downloadClusterAssig"),
@@ -161,9 +161,15 @@ mod_module1_ui <- function(id) {
                               "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table5")),
                             h4("Classification between phenotypes by eigenfeatures",
+<<<<<<< HEAD
                                bsButton("surf-infoMCPE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoMCPE", title = "More information",
                                       content = HTML("<p>Statistical analysis by Student's t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> <b> Variable</b>: Represents the ID of the module. </li> <li> <b>Class</b>: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> <b>Result_t </b>: The t-statistic value. </li> <li> <b> Result_pValue </b>: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> "),
+=======
+                               bsButton("surf-infoMCPEf", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMCPEf", title = "More information",
+                                      content = HTML(paste0("<p>Statistical analysis by Student's t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> Variable: Represents the ID of the module. </li> <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> Result_t: The t-statistic value. </li> <li> Result_pValue: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> ")),
+>>>>>>> 1ff8cd465d1e0c5ac844b4d3e8322e974f98a162
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             fluidRow(
                               column(6,
@@ -263,7 +269,7 @@ mod_module1_ui <- function(id) {
                             h4("Cluster assignments",
                                bsButton("surf-info_PGCA", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-info_PGCA", title = "More information",
-                                      content = HTML(paste0("<p>Hierarchical clustering generates multiple clusters (modules) to which each proteins/genes are assigned. The table below details the following columns:  </p> <ul> <li> feature: proteins/genes ID </li>  <li>  cluster: The module where the protein/gene is assigned </li>  </li> Col:  the color used on the hierarchical clustering dendrogram </li> </li> If annotation data is available, it also shows the gene symbol. </li> </ul> <p> The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a protein/gene of interest. The full .csv file of Cluster Assignments for all the proteins/genes features can be downloaded at the bottom of the table. </p>")),
+                                      content = HTML(paste0("<p>Hierarchical clustering generates multiple clusters (modules) to which each proteins/genes are assigned. The table below details the following columns:  </p> <ul> <li> Feature: proteins/genes ID </li>  <li>  Cluster: The module where the protein/gene is assigned </li>  <li> Col:  the color used on the hierarchical clustering dendrogram </li> <li> Gene_symbol: If annotation data is available, it also shows the gene symbol. </li> </ul> <p> The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a protein/gene of interest.</p> <p> The full .csv file of Cluster Assignments for all the proteins/genes features can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
 
 
@@ -275,7 +281,7 @@ mod_module1_ui <- function(id) {
                             h4("Cluster assignments enriched",
                                bsButton("surf-info_PGCAE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-info_PGCAE", title = "More information",
-                                      content = HTML(paste0("Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the Proteomics/Genomics cluster descriptions on table below. Under column “enriched_Term” the most highly correlated pathway is displayed and in the following columns, along with <i> enriched_Genes</i>, and p-values as determined by Enrichr. The search bar can also be used to find the details of a protein/gene or module of interest. The full .csv file of Cluster Enrichments for Proteomics/Genomics can be downloaded at the bottom of the table.")),
+                                      content = HTML(paste0("Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the Proteomics/Genomics cluster descriptions on table below. Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr. The search bar can also be used to find the details of a protein/gene or module of interest. The full .csv file of Cluster Enrichments for Proteomics/Genomics can be downloaded at the bottom of the table.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
 
 
@@ -316,7 +322,12 @@ mod_module1_ui <- function(id) {
                             helpText(
                               "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table6")),
-                            h4("Classification between phenotypes by eigenfeatures"),
+                            h4("Classification between phenotypes by eigenfeatures",
+                               bsButton("surf-info_PGCPef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_PGCPef", title = "More information",
+                                      content = HTML(paste0("<p>Statistical analysis by Student's t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> Variable: Represents the ID of the module. </li> <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> <li>Result_t: The t-statistic value. </li> <li> Result_pValue: The p-value for the test. </li> </uL> <p>Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype.</p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+                               ),
                             fluidRow(
                               column(6,
                                      selectInput(ns("phenotypeSelector2"),
@@ -381,7 +392,7 @@ mod_module1_ui <- function(id) {
                                       content = HTML(paste0("Histogram depicting the correlation between eigen-metabolites and eigen-genes using Spearman correlation")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             plotOutput(ns("Correlation_plot")),
-                            sliderInput(ns("pValueThreshold3"),
+                            numericInput(ns("pValueThreshold3"),
                                         label = "Select Correlation Threshold",
                                         min = 0,
                                         max = 1,
@@ -420,10 +431,22 @@ mod_module1_ui <- function(id) {
                                                     "Top_3" = 3,
                                                     "Top_4" = 4,
                                                     "Top_5" = 5)),
-                            h4("List of Metabolites"),
+                            h4("List of Metabolites",
+                               bsButton("surf-info_LofMet", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_LofMet", title = "More information",
+                                      content = HTML(paste0("<p> Displays the list of metabolites within a metabolomic module that is highly correlated with a protein module. The metabolomic module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
                             verbatimTextOutput(ns("Important_features_2")),
 
-                            h4("List of Proteins/Genes"),
+                            h4("List of Proteins/Genes",
+                               bsButton("surf-info_LofPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-info_LofPG", title = "More information",
+                                      content = HTML(paste0("Displays the list of proteins/genes within a proteomic/genomic module that is highly correlated with a metabolomic module. The module ID is first specified, along with its enriched term, enriched genes, and p-value. This is followed by the list of constituent proteins/genes. This information enables further pathway analysis and provides valuable insights into the relationships between metabolites, proteins, and genes.")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
                             verbatimTextOutput(ns("Important_features_1")),
 
                             # h4("Modules correlation: Metabolites and Proteins/Genes"),
