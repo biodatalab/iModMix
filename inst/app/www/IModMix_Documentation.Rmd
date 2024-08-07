@@ -12,22 +12,22 @@ library("knitr")
 
 ## Introduction
 
-Welcome to the Integrative Modules for Multi-omics data (IModMix) shiny app. This app implements integrative analysis of molecular data in a user-friendly interface to analyse:
+Welcome to the Integrative Modules for Multi-omics data (iModMix) shiny app. This app implements integrative analysis of molecular data in a user-friendly interface to analyse:
 
 - Metabolomics vs proteomics, and
 - Metabolomics vs transcriptomics.
 
 
-## What is IModMix?
+## What is iModMix?
 IModMix is a novel network-based approach that integrates multi-omics data, including metabolomics, proteomics, and transcriptomics data, into a unified network to unravel complex molecular interactions in diverse biological systems and reveal significant associations with phenotypes of interest. *(See Figure 1)
 
-```{r, echo=F, fig.align="center", fig.width=2, out.width="100%", fig.cap="Figure 1: Overview of IModMix's analytical process."}
+```{r, echo=F, fig.align="center", fig.width=2, out.width="100%", fig.cap="Figure 1: Overview of iModMix's analytical process."}
 knitr::include_graphics(paste0(here::here(),"/documentation/OverviewIModMix.png"), error = FALSE)
 ```
 
 
 ## What does this application do?
-This application allows users with little or no coding skills to try, explore and play with the IModMix method.
+This application allows users with little or no coding skills to try, explore and play with the iModMix method.
 
 In general terms, this application will let the user:
 
