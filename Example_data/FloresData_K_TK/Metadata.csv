@@ -1,21 +1,21 @@
-Sample,Condition,Genotype
-K1A,K,KrasLSLG12D/+; RosaM/M
-K2A,K,KrasLSLG12D/+; RosaM/M
-K2B,K,KrasLSLG12D/+; RosaM/M
-K2C,K,KrasLSLG12D/+; RosaM/M
-K3A,K,KrasLSLG12D/+; RosaM/M
-K4A,K,KrasLSLG12D/+; RosaM/M
-K5B,K,KrasLSLG12D/+; RosaM/M
-K5C,K,KrasLSLG12D/+; RosaM/M
-K6A,K,KrasLSLG12D/+; RosaM/M
-K6B,K,KrasLSLG12D/+; RosaM/M
-TK1A,TK,TAp73fltd/fltd; Rosa+/+; KrasLSLG12D/+
-TK2A,TK,TAp73fltd/fltd; Rosa+/+; KrasLSLG12D/+
-TK4A,TK,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+
-TK4B,TK,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+
-TK4C,TK,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+
-TK4D,TK,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+
-TK5B,TK,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+
-TK5C,TK,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+
-TK5D,TK,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+
-TK5E,TK,TAp73fltd/fltd; RosaM/+; KrasLSLG12D/+
+Sample,Condition
+WT1A,WT
+WT2A,WT
+WT2B,WT
+WT2C,WT
+WT3A,WT
+WT4A,WT
+WT5B,WT
+WT5C,WT
+WT6A,WT
+WT6B,WT
+KO1A,KO
+KO2A,KO
+KO4A,KO
+KO4B,KO
+KO4C,KO
+KO4D,KO
+KO5B,KO
+KO5C,KO
+KO5D,KO
+KO5E,KO

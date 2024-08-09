@@ -133,7 +133,7 @@ mod_module1_ui <- function(id) {
                             h4("Cluster assignments",
                                bsButton("surf-infoMAC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoMAC", title = "More information",
-                                      content = HTML(paste0("<p> Hierarchical clustering generates multiple clusters (modules) to which each metabolomic feature is assigned. The table below details the following columns: </p> <ul> <li>  Feature: metabolite ID </li> <li> Cluster: The module where the metabolite is assigned </li> <li> Col:  the color used on the hierarchical clustering dendrogram </li> <li> If annotation data is available, it also shows the KEGG ID and the metabolite name </li></ul> <p>The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a metabolomic feature of interest. The full .csv file of Cluster Assignments for all the metabolomic features can be downloaded at the bottom of the table. </p>")),
+                                      content = HTML(paste0("<p> Hierarchical clustering generates multiple modules (clusters) to which each metabolomic feature is assigned. The table below details the following columns: </p> <ul> <li>  Feature: metabolite ID </li> <li> module_id: The module where the metabolite is assigned and the color used on the hierarchical clustering dendrogram </li> <li> If annotation data is available, it also shows the KEGG ID and the metabolite name </li></ul> <p>The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a metabolomic feature of interest. The full .csv file of Cluster Assignments for all the metabolomic features can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("tableClusterAssig")),
                             downloadButton(ns("downloadClusterAssig"),
@@ -267,7 +267,7 @@ mod_module1_ui <- function(id) {
                             h4("Cluster assignments",
                                bsButton("surf-info_PGCA", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-info_PGCA", title = "More information",
-                                      content = HTML(paste0("<p>Hierarchical clustering generates multiple clusters (modules) to which each proteins/genes are assigned. The table below details the following columns:  </p> <ul> <li> Feature: proteins/genes ID </li>  <li>  Cluster: The module where the protein/gene is assigned </li>  <li> Col:  the color used on the hierarchical clustering dendrogram </li> <li> Gene_symbol: If annotation data is available, it also shows the gene symbol. </li> </ul> <p> The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a protein/gene of interest.</p> <p> The full .csv file of Cluster Assignments for all the proteins/genes features can be downloaded at the bottom of the table. </p>")),
+                                      content = HTML(paste0("<p>Hierarchical clustering generates multiple modules (clusters) to which each proteins/genes are assigned. The table below details the following columns:  </p> <ul> <li> Feature: proteins/genes ID </li>  <li>  module_id: The module where the protein/gene is assigned and the color used on the hierarchical clustering dendrogram </li> <li> Gene_symbol: If annotation data is available, it also shows the gene symbol. </li> </ul> <p> The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a protein/gene of interest.</p> <p> The full .csv file of Cluster Assignments for all the proteins/genes features can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("tableClusterAssig4")),
                             downloadButton(ns("downloadClusterAssig2"),
@@ -809,6 +809,8 @@ mod_module1_server <- function(id){
 
     output$tableClusterAssig <- DT::renderDataTable({
       df1 = cluster_assignments_metabolites1()$cluster_assignments_metab
+      df1 = df1[, -which(names(df1) == "cluster")]
+      names(df1)[names(df1) == "col"] = "module_id"
       DT::datatable(df1)
     })
 
@@ -893,7 +895,10 @@ mod_module1_server <- function(id){
 
 
     output$classification_results <- DT::renderDataTable({
-      Classification_Metabolites()$result
+      df <- Classification_Metabolites()$result
+      rownames(df) <- NULL
+      names(df)[names(df) == "Variable"] = "module_id"
+      DT::datatable(df)
     })
 
     # Render the download handler
@@ -1161,6 +1166,8 @@ mod_module1_server <- function(id){
 
     output$tableClusterAssig4 <- DT::renderDataTable({
       df1 = cluster_assignments_genes1()$cluster_assignments_Prot
+      df1 = df1[, -which(names(df1) == "cluster")]
+      names(df1)[names(df1) == "col"] = "module_id"
       DT::datatable(df1)
     })
 
@@ -1210,6 +1217,8 @@ mod_module1_server <- function(id){
 
     output$tableClusterAssig3 <- DT::renderDataTable({
       df3 = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
+      df3 = df3[, -which(names(df3) == "cluster")]
+      names(df3)[names(df3) == "col"] = "module_id"
       DT::datatable(df3)
     })
 
@@ -1307,8 +1316,12 @@ mod_module1_server <- function(id){
     })
 
     output$classification_results2 <- DT::renderDataTable({
-      Classification_Proteins()$result
+      df <- Classification_Proteins()$result
+      rownames(df) <- NULL
+      names(df)[names(df) == "Variable"] = "module_id"
+      DT::datatable(df)
     })
+
 
     # Render the download handler
     output$downloadClassification_results2 <- downloadHandler(
@@ -1535,14 +1548,16 @@ mod_module1_server <- function(id){
         colnames(edges) <- c("Prot_module" = "from", "Metab_module" = "to", "label", "dashes", "title", "smooth", "shadow")
 
         unique_from <- unique(edges$from)
-        label_from <- paste0("Module", seq_along(unique_from))
+        label_from <- unique_from
+        #label_from <- paste0("Module", seq_along(unique_from))
         value_from <- Count_Prot[match(unique_from, names(Count_Prot))]
         shape_from <- "triangle"
         title_from0 = paste(value_from, "genes", sep = " ")
         color_from <- "darkgreen"
 
         unique_to <- unique(edges$to)
-        label_to <- paste0("Module", seq_along(unique_to))
+        label_to <- unique_to
+        #label_to <- paste0("Module", seq_along(unique_to))
         value_to <- Count_Metab[match(unique_to, names(Count_Metab))]
         shape_to <- "diamond"
         title_to = paste(value_to, "metabolites", sep = " ")
@@ -1550,7 +1565,6 @@ mod_module1_server <- function(id){
 
         #nodes to function Visnetwork
         nodes <- data.frame(id = c(unique_from, unique_to),
-                            #label = c(label_from, label_to),
                             label = c(title_from0, title_to),
                             value = c(value_from, value_to),
                             shape = c(rep(shape_from, length(unique_from)), rep(shape_to, length(unique_to))),
@@ -1590,6 +1604,9 @@ mod_module1_server <- function(id){
 
     output$tableCorrelation <- DT::renderDataTable({
       df4 = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
+      df4 = df4[, -which(names(df4) %in% c("Metab_Module_id", "Prot_Module_id"))]
+      names(df4)[names(df4) == "Metab_module"] = "Metab_module_id"
+      names(df4)[names(df4) == "Prot_module"] = "Prot_module_id"
       DT::datatable(df4)
     })
 
@@ -1758,8 +1775,11 @@ mod_module1_server <- function(id){
     })
 
     output$ImportantVariables <- DT::renderDataTable({
-      df = as.data.frame(ImpVar_Prot_Metab1()$Top_correlations)
-      DT::datatable(df)
+      df4 = as.data.frame(ImpVar_Prot_Metab1()$Top_correlations)
+      df4 = df4[, -which(names(df4) %in% c("Metab_Module_id", "Prot_Module_id"))]
+      names(df4)[names(df4) == "Metab_module"] = "Metab_module_id"
+      names(df4)[names(df4) == "Prot_module"] = "Prot_module_id"
+      DT::datatable(df4)
     })
 
     output$Correlation_plotImp <- renderPlot({

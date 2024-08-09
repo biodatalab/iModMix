@@ -61,7 +61,7 @@ The metadata files should have a column with the sample IDs that are used in the
 *See Figure 4 for an example of the Metadata input format.*
 
 
-```{r, echo=F, fig.align="center", fig.width=2, out.width="70%", fig.cap="Figure 4: Example metadata data that can be uploaded in the 'Metadata' tab."}
+```{r, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Figure 4: Example metadata data that can be uploaded in the 'Metadata' tab."}
 knitr::include_graphics(paste0(here::here(),"/documentation/Metadata.png"), error = FALSE)
 ```
 
