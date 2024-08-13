@@ -430,9 +430,6 @@ mod_module1_ui <- function(id) {
                             ),
                             verbatimTextOutput(ns("Important_features_1")),
 
-                            # h4("Modules correlation: Metabolites and Proteins/Genes"),
-                            # plotOutput(ns("Correlation_plotImp")),
-
                             h4("Corrplot: Metabolites and Proteins/Genes"),
                             plotOutput(ns("CorplotImp")),
 
@@ -450,14 +447,12 @@ mod_module1_ui <- function(id) {
                             bsPopover(id = "surf-infoMTopM", title = "More information",
                                       content = HTML(paste0("<p> Displays the list of metabolites within a metabolomic module that is highly correlated with a protein module. The metabolomic module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
-                            # DT::DTOutput(ns("cluster_assignments_2")),
                             DT::DTOutput(ns("cluster_assignments_summary2")),
                             DT::DTOutput(ns("cluster_assignments_features2")),
                             downloadButton(ns("downloadcluster_assignments_2"),
                                            "Metabolites_TopModule"),
 
                             h4("Proteins/Genes from top module"),
-                            #DT::DTOutput(ns("cluster_assignments_1")),
                             DT::DTOutput(ns("cluster_assignments_summary")),
                             DT::DTOutput(ns("cluster_assignments_features")),
                             downloadButton(ns("downloadcluster_assignments_1"),
@@ -852,7 +847,7 @@ mod_module1_server <- function(id){
         as.data.frame(t(Eigengene1()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
         row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
         heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
-        show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
+        show_row_names = FALSE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
         show_column_names = TRUE
       )
 
@@ -960,7 +955,6 @@ mod_module1_server <- function(id){
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
       cluster_Metab <- subset(hierarchical_cluster1()$hcCluster_assignments2, col == input$moduleSelector)
-      #cluster_Metab <- subset(cluster_assignments_metabolites1()$cluster_assignments_metab, cluster == "cluster_000011")
       cluster_variables_Metab <- cluster_Metab$feature
       cluster_variables_MetabKEGG <- cluster_variables_Metab
       cluster_expression_matrix_Metab <- feature_mat_t_imp_data[, colnames(feature_mat_t_imp_data) %in% cluster_variables_Metab, drop = FALSE]
@@ -1077,7 +1071,6 @@ mod_module1_server <- function(id){
         dev.off()
       }
     )
-
 
     partial_cors2 <- reactive({
       withProgress(message = 'Calculating partial correlations (Proteins/Genes)...', value = 0, {
@@ -1214,7 +1207,6 @@ mod_module1_server <- function(id){
       })
     })
 
-
     output$tableClusterAssig3 <- DT::renderDataTable({
       df3 = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
       df3 = df3[, -which(names(df3) == "cluster")]
@@ -1261,7 +1253,7 @@ mod_module1_server <- function(id){
         as.data.frame(t(Eigengene2()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
         row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
         heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
-        show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
+        show_row_names = FALSE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
         show_column_names = TRUE
       )
       ComplexHeatmap::draw(metab_heatmap_plot, heatmap_legend_side = "right",
@@ -1321,7 +1313,6 @@ mod_module1_server <- function(id){
       names(df)[names(df) == "Variable"] = "module_id"
       DT::datatable(df)
     })
-
 
     # Render the download handler
     output$downloadClassification_results2 <- downloadHandler(
@@ -1534,7 +1525,6 @@ mod_module1_server <- function(id){
         # Remove the "ME" prefix from Prot_module and Metab_module columns
         Top_cor_Prot_metab[c("Prot_module", "Metab_module")] <- lapply(Top_cor_Prot_metab[c("Prot_module", "Metab_module")], function(x) sub("^ME", "", x))
 
-
         # Edges to funcion visnetwork
         edges <- Top_cor_Prot_metab[1:min(nrow(Top_cor_Prot_metab), 30), ]
         edges$label <-as.character(edges$Correlation)
@@ -1606,7 +1596,12 @@ mod_module1_server <- function(id){
       df4 = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
       df4 = df4[, -which(names(df4) %in% c("Metab_Module_id", "Prot_Module_id"))]
       names(df4)[names(df4) == "Metab_module"] = "Metab_module_id"
+      names(df4)[names(df4) == "Metab_count"] = "# of metabolites into the module"
       names(df4)[names(df4) == "Prot_module"] = "Prot_module_id"
+      names(df4)[names(df4) == "Prot_count"] = "# of Prot/Genes into the module"
+      rownames(df4) <- NULL
+      df4$`# of metabolites into the module` <- gsub("metabolites", "", df4$`# of metabolites into the module`)
+      df4$`# of Prot/Genes into the module` <- gsub("genes", "", df4$`# of Prot/Genes into the module`)
       DT::datatable(df4)
     })
 
@@ -1688,7 +1683,6 @@ mod_module1_server <- function(id){
         mynetwork() %>% visSave(con)
       }
     )
-
 
     ImpVar_Prot_Metab1 <- reactive({
       Cor_Prot_Metab = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
@@ -1778,7 +1772,12 @@ mod_module1_server <- function(id){
       df4 = as.data.frame(ImpVar_Prot_Metab1()$Top_correlations)
       df4 = df4[, -which(names(df4) %in% c("Metab_Module_id", "Prot_Module_id"))]
       names(df4)[names(df4) == "Metab_module"] = "Metab_module_id"
+      names(df4)[names(df4) == "Metab_count"] = "# of metabolites into the module"
       names(df4)[names(df4) == "Prot_module"] = "Prot_module_id"
+      names(df4)[names(df4) == "Prot_count"] = "# of Prot/Genes into the module"
+      df4$`# of metabolites into the module` <- gsub("metabolites", "", df4$`# of metabolites into the module`)
+      df4$`# of Prot/Genes into the module` <- gsub("genes", "", df4$`# of Prot/Genes into the module`)
+      rownames(df4) <- NULL
       DT::datatable(df4)
     })
 
@@ -1804,23 +1803,16 @@ mod_module1_server <- function(id){
       }
     )
 
-    #Metabolites
-    # output$cluster_assignments_2 <- DT::renderDataTable({
-    #   df <- Important_Features()$df1_2
-    # })
-
     output$cluster_assignments_features2 <- DT::renderDataTable({
       df <- Important_Features()$df1_2
-      # Selecciona las columnas de interés
       df_features <- df %>%
         select(feature, feature_name, feature_map, Metabolite) %>%
-        distinct()  # Elimina duplicados
+        distinct()
       DT::datatable(df_features)
     })
 
     output$cluster_assignments_summary2 <- DT::renderDataTable({
       df <- Important_Features()$df1_2
-      # Prepara la tabla con la información de las demás columnas
       cluster <- unique(df$cluster)
       col <- unique(df$col)
       SummaryData <- data.frame(cluster = cluster, col = col, stringsAsFactors = FALSE)
@@ -1836,11 +1828,6 @@ mod_module1_server <- function(id){
       }
     )
 
-    #Proteins
-    # output$cluster_assignments_1 <- DT::renderDataTable({
-    #   Important_Features()$df1_1
-    # })
-
     output$cluster_assignments_features <- DT::renderDataTable({
       df <- Important_Features()$df1_1
 
@@ -1855,7 +1842,6 @@ mod_module1_server <- function(id){
     output$cluster_assignments_summary <- DT::renderDataTable({
       df <- Important_Features()$df1_1
 
-      # Prepara la tabla con la información de las demás columnas
       df_summary <- df %>%
         group_by(cluster, col) %>%
         summarise(
