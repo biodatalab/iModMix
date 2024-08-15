@@ -1175,7 +1175,7 @@ mod_module1_server <- function(id){
     )
 
     databaseSelectorList <- reactive({
-      gene_set_library = readxl::read_excel("example_data/Gene_set_Library.xlsx", col_names = FALSE)
+      gene_set_library = readxl::read_excel("Example_data/Gene_set_Library.xlsx", col_names = FALSE)
       choices <- gene_set_library[[1]]
       data.frame(choices = choices)
     })
