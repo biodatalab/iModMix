@@ -559,6 +559,7 @@ mod_module1_server <- function(id){
     })
     output$table <- DT::renderDataTable({
       df <- filedata()
+      df[] <- lapply(df, function(x) if(is.numeric(x)) round(x, digits = 2) else x)
       DT::datatable(df)
     })
 
@@ -619,6 +620,7 @@ mod_module1_server <- function(id){
 
     output$table2 <- DT::renderDataTable({
       df <- filedata2()
+      df[] <- lapply(df, function(x) if(is.numeric(x)) round(x, digits = 2) else x)
       DT::datatable(df)
     })
 
@@ -829,6 +831,7 @@ mod_module1_server <- function(id){
 
     output$tableEigengene <- DT::renderDataTable({
       df2 = as.data.frame(Eigengene1()$Eigengenes)
+      df2[] <- lapply(df2, function(x) if(is.numeric(x)) round(x, digits = 4) else x)
       DT::datatable(df2)
     })
 
@@ -1211,6 +1214,8 @@ mod_module1_server <- function(id){
       df3 = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
       df3 = df3[, -which(names(df3) == "cluster")]
       names(df3)[names(df3) == "col"] = "module_id"
+      df3$enriched_P.value <- round(df3$enriched_P.value, digits = 4)
+      df3$enriched_Adjusted.P.value <- round(df3$enriched_Adjusted.P.value, digits = 4)
       DT::datatable(df3)
     })
 
@@ -1235,6 +1240,7 @@ mod_module1_server <- function(id){
 
     output$tableEigengene2 <- DT::renderDataTable({
       df3 = as.data.frame(Eigengene2()$Eigengenes)
+      df3[] <- lapply(df3, function(x) if(is.numeric(x)) round(x, digits = 4) else x)
       DT::datatable(df3)
     })
 
@@ -1602,6 +1608,8 @@ mod_module1_server <- function(id){
       rownames(df4) <- NULL
       df4$`# of metabolites into the module` <- gsub("metabolites", "", df4$`# of metabolites into the module`)
       df4$`# of Prot/Genes into the module` <- gsub("genes", "", df4$`# of Prot/Genes into the module`)
+      df4$Enriched_P.value <- round(df4$Enriched_P.value, digits = 4)
+      df4$Enriched_Adjusted.P.value <- round(df4$Enriched_Adjusted.P.value, digits = 4)
       DT::datatable(df4)
     })
 
@@ -1777,6 +1785,8 @@ mod_module1_server <- function(id){
       names(df4)[names(df4) == "Prot_count"] = "# of Prot/Genes into the module"
       df4$`# of metabolites into the module` <- gsub("metabolites", "", df4$`# of metabolites into the module`)
       df4$`# of Prot/Genes into the module` <- gsub("genes", "", df4$`# of Prot/Genes into the module`)
+      df4$Enriched_P.value <- round(df4$Enriched_P.value, digits = 4)
+      df4$Enriched_Adjusted.P.value <- round(df4$Enriched_Adjusted.P.value, digits = 4)
       rownames(df4) <- NULL
       DT::datatable(df4)
     })
