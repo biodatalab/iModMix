@@ -15,8 +15,11 @@ app_ui <- function(request) {
         .tab-content {background-color: #DEEBF7 !important;}
       ")),
       navbarPage("iModMix",
-                 tabPanel("Home", icon = icon("home", lib = "glyphicon"),
+                 tabPanel("About iModMix", icon = icon("home", lib = "glyphicon"),
                           tags$iframe(src = "www/IModMix_Documentation.html", height = "900px", width = "100%")
+                 ),
+                 tabPanel("How to get started", icon = icon("check", lib = "glyphicon"),
+                          tags$iframe(src = "www/GetStarted.html", height = "900px", width = "100%")
                  ),
                  tabPanel("Modules & Integration", icon = icon("tasks", lib = "glyphicon"),
                           div(style = "background-color: #DEEBF7; width: 100%;",

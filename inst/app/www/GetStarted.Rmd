@@ -1,0 +1,63 @@
+---
+title: "<div style='text-align: center; color: blue; font-size: 18px;'>How to Get Started</div>"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+iModMix allows the analysis and integration of multi-omics data types. If metabolomics abundance and proteomics or transcriptomics expression data from the same samples are available, they can be correlated (integrated) using iModMix. To ensure optimal performance and accurate results, please follow these guidelines to prepare and upload your data: 
+
+## Uploading the Metabolomics Abundance and Protein/Gene Expression Matrices
+
+- Omics matrix data should be in a tabular format (e.g., CSV, Excel).
+- Each row represents a feature (e.g., gene, protein, metabolite), and each column represents a sample.
+- The first column, labeled Feature_ID, should contain unique identifiers for each feature.
+
+```{r data-example, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Example of abundance/expression data that can be uploaded in the 'Metabolomics Abundance Data' and 'Proteomics/Genomics Expression Data' tabs."}
+knitr::include_graphics(paste0(here::here(),"/documentation/Expression.png"), error = FALSE)
+```
+
+## Uploading Metadata File
+
+Prepare a separate metadata file containing the experimental design and sample labels. It should have the following columns:
+
+- Sample: The sample IDs used in your abundance/expression matrix files. Ensure that sample IDs are consistent across all datasets.This column enables linking omics data through samples.
+- Grouping Column: At least one additional column grouping samples (e.g., ‘treatment’ and ‘control’) for can performe the PCA, box plots, etc.
+
+
+```{r, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Example metadata data that can be uploaded in the 'Metadata' tab."}
+knitr::include_graphics(paste0(here::here(),"/documentation/Metadata.png"), error = FALSE)
+```
+
+## Uploading Annotation Files
+
+If available, annotation files are optional but recommended for optimal tool performance.
+
+Metabolomics Annotation data: It should have the following labeled columns:
+
+- Feature_ID: The sample IDs used in your abundance matrix file.
+- Metabolites: Include the corresponding metabolite name.
+- KEGG: Include corresponding KEGG IDs.
+
+Proteomics/Genomics Data: It should have the following columns:
+
+- Feature_ID: The sample IDs used in your expression matrix file.
+- Symbol: Include corresponding Symbols. This will enable enrichment analysis.
+
+```{r, echo=F, fig.align="center", fig.width=2, out.width="90%", fig.cap="Example annotation data that can be uploaded in the 'Metabolomics Annotation Data' and 'Proteomics/Genomics Annotation data' tabs."}
+knitr::include_graphics(paste0(here::here(),"/documentation/Annotation.png"), error = FALSE)
+```
+
+## Preparing Data for Use with Our Tool
+
+To ensure your data is ready for analysis, please follow these guidelines:
+
+- Data Types: You can upload metabolomics, proteomics, or genomics data. Each type of data should be in a separate table.
+- Identifiers: While KEGG IDs for metabolites and gene symbols for genes are optional, they are recommended for optimal performance. 
+- Missing Values: Imodmix handle missing values with knn Imputation if necessary.
+- Unique Identifiers: Ensure that each Feature_ID is unique. Use make.names() for conflicts, and avoid duplicates to prevent errors.
+- Web-based Tools for ID Conversion: If you need to convert identifiers, consider using web-based tools like the Uniprot batch conversion tool for genes/proteins or DAVID for genes.
+- Ensure that the sample IDs in your metadata file match those in your omics data files. If there are discrepancies, the tool will throw an error. Make sure all samples are labeled correctly, and there are no extra or missing samples.
+
