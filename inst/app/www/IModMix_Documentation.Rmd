@@ -1,6 +1,5 @@
 ---
 title: "iModMix -integrative Modules for Multi-omics data"
-date: "2024-04-01"
 output: html_document
 ---
 
@@ -12,56 +11,29 @@ library("knitr")
 
 ## Introduction
 
-Welcome to the Integrative Modules for Multi-omics data (iModMix) shiny app. This app implements integrative analysis of molecular data in a user-friendly interface to analyse:
+Welcome to the Integrative Modules for Multi-omics data (iModMix) Shiny app. This app implements integrative analysis of molecular data in a user-friendly interface to analyze:
 
-- Metabolomics vs proteomics, and
-- Metabolomics vs transcriptomics.
+- Metabolomics vs proteomics
+- Metabolomics vs transcriptomics
 
 
 ## What is iModMix?
-IModMix is a novel network-based approach that integrates multi-omics data, including metabolomics, proteomics, and transcriptomics data, into a unified network to unravel complex molecular interactions in diverse biological systems and reveal significant associations with phenotypes of interest. *(See Figure 1)
+IModMix is a novel network-based approach that integrates multi-omics data, including metabolomics, proteomics, and transcriptomics data, into a unified network to unveil associations across various layers of omics data and reveal significant associations with phenotypes of interest. *(See Figure 1)
 
-```{r, echo=F, fig.align="center", fig.width=2, out.width="100%", fig.cap="Figure 1: Overview of iModMix's analytical process."}
+```{r, echo=F, fig.align="center", fig.width=2, out.width="100%", fig.cap="Figure 1: Overview of the iModMix's pipeline"}
 knitr::include_graphics(paste0(here::here(),"/documentation/OverviewIModMix.png"), error = FALSE)
 ```
 
 
 ## What does this application do?
-This application allows users with little or no coding skills to try, explore and play with the iModMix method.
 
-In general terms, this application will let the user:
+In general terms, this application will allow the user to:
 
-- generate a partial correlation network of all features available in the selected dataset,
-- interrogate this network to identify groups of genes (modules) correlated with each other,
-- cross these gene modules with available clinical data,
-- explore the relations between metabolite modules and gene modules, and
-- generate a network of modules between metabolomics and proteomics/transcriptomics datasets.
-
-
-## Data input 
-
-In the first section you can upload one or two omics tables
-the metabolite,proteins and genes must be identified in, `Feature_ID` which contains a unique ID for each row. *See Figure 2 for an example of the mass spec data input format.* 
+- Generate a partial correlation network of all features available in the selected dataset.
+- Interrogate this network to identify groups of features (modules) correlated with each other.
+- Cross these modules with available clinical data.
+- Explore the correlations between metabolite modules and protein/gene modules.
+- Generate a network of modules between metabolomics and proteomics/transcriptomics datasets.
 
 
-```{r data-example, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Figure 2: Example expression data that can be uploaded in the 'Metabolomics data' and 'Proteomics/Genomics data' tabs."}
-knitr::include_graphics(paste0(here::here(),"/documentation/Expression.png"), error = FALSE)
-```
-
-Metabolomics data must be have `KEGG` for the metabolites that have corresponding KEGG IDs for annotation purposes.
-Proteomics/Genomics data must be have `Symbol` for the features that have corresponding Symbols for enrichment analysis.
-*See Figure 3 for an example of the annotation data input format.*
-
-```{r, echo=F, fig.align="center", fig.width=2, out.width="90%", fig.cap="Figure 3: Example annotation data that can be uploaded in the 'Metabolomics data' and 'Proteomics/Genomics data' tabs."}
-knitr::include_graphics(paste0(here::here(),"/documentation/Annotation.png"), error = FALSE)
-```
-
-
-The metadata files should have a column with the sample IDs that are used in the expression data files, identified in, `Sample`. This allows linking samples when having both positive and negative ion channel data in separate files. At least one additional column is required that groups samples together (think 'treatment' and 'control') that is selected for PCA, plots, etc.
-*See Figure 4 for an example of the Metadata input format.*
-
-
-```{r, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Figure 4: Example metadata data that can be uploaded in the 'Metadata' tab."}
-knitr::include_graphics(paste0(here::here(),"/documentation/Metadata.png"), error = FALSE)
-```
 
