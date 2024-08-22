@@ -13,9 +13,28 @@ library("knitr")
 
 Welcome to the Integrative Modules for Multi-omics data (iModMix) Shiny app. This app implements integrative analysis of molecular data in a user-friendly interface to analyze:
 
-- Metabolomics vs proteomics
-- Metabolomics vs transcriptomics
+- Metabolomics vs proteomics.
+- Metabolomics vs transcriptomics.
 
+<style>
+  .github-button {
+    position: absolute;
+    top: 170px;
+    right: 150px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    text-align: center;
+  }
+</style>
+
+<div class="github-button">
+  <a href="https://github.com/IsisNarvaez/iModMix">
+    <img src="https://github.com/favicon.ico" width="30" height="30" alt="GitHub" />
+    <span>iModMix GitHub repository</span>
+  </a>
+</div>
 
 ## What is iModMix?
 IModMix is a novel network-based approach that integrates multi-omics data, including metabolomics, proteomics, and transcriptomics data, into a unified network to unveil associations across various layers of omics data and reveal significant associations with phenotypes of interest. *(See Figure 1)
