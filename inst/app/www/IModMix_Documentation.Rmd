@@ -19,8 +19,8 @@ Welcome to the Integrative Modules for Multi-omics data (iModMix) Shiny app. Thi
 <style>
   .github-button {
     position: absolute;
-    top: 170px;
-    right: 150px;
+    top: 10px;
+    right: 10px;
     border: 1px solid #ccc;
     padding: 10px;
     background-color: #f9f9f9;

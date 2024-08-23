@@ -10,8 +10,15 @@ partial_cors = function(Expression_mat) {
   Expression_mat$missing_count <- rowSums(is.na(Expression_mat))
   feature_mat <- subset(Expression_mat, missing_count <= 0.1 * (ncol(Expression_mat) - 2))
   features <- feature_mat$Feature_ID
-  feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
+
+  feature_mat_t <- t(feature_mat[, -c(1, ncol(feature_mat))])
   colnames(feature_mat_t) <- features
+  feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
+  feature_mat_t <- as.matrix(scale(feature_mat_t))
+
+  # feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
+  # colnames(feature_mat_t) <- features
+
   # generate covariance matrix
   cov_mat = cov(feature_mat_t, use = "pairwise.complete.obs")
   # calculate partial correlations

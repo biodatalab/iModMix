@@ -568,9 +568,17 @@ mod_module1_server <- function(id){
       data = filedata()
       data$missing_count = rowSums(is.na(data))
       feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
-      features <- feature_mat[,1]
-      feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
+
+      features <- feature_mat$Feature_ID
+      feature_mat_t <- t(feature_mat[, -c(1, ncol(feature_mat))])
       colnames(feature_mat_t) <- features
+      feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
+      feature_mat_t <- as.matrix(scale(feature_mat_t))
+
+#       features <- feature_mat[,1]
+#       feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
+#       colnames(feature_mat_t) <- features
+
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
       pca_res <- prcomp(feature_mat_t_imp_data)
@@ -629,9 +637,17 @@ mod_module1_server <- function(id){
       data = filedata2()
       data$missing_count = rowSums(is.na(data))
       feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
-      features <- feature_mat[,1]
-      feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
+
+      features <- feature_mat$Feature_ID
+      feature_mat_t <- t(feature_mat[, -c(1, ncol(feature_mat))])
       colnames(feature_mat_t) <- features
+      feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
+      feature_mat_t <- as.matrix(scale(feature_mat_t))
+
+      # features <- feature_mat[,1]
+      # feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
+      # colnames(feature_mat_t) <- features
+
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
       pca_res <- prcomp(feature_mat_t_imp_data)
@@ -799,7 +815,9 @@ mod_module1_server <- function(id){
       if (is.null(filedata3())) {
         cluster_assignments_metab <- cluster_assignments_metabolites(cluster_metabolites = cluster_metabolites, metab_annotation = NULL)
       } else {
-        cluster_assignments_metab <- cluster_assignments_metabolites(cluster_metabolites = cluster_metabolites, metab_annotation = filedata3())
+        filedata3 = filedata3()
+        filedata3_Uni <- filedata3[filedata3$Feature_ID %in% colnames(partial_cors1()$par_cor1), ]
+        cluster_assignments_metab <- cluster_assignments_metabolites(cluster_metabolites = cluster_metabolites, metab_annotation = filedata3_Uni)
       }
       return(list(cluster_assignments_metab = cluster_assignments_metab))
     })
@@ -825,7 +843,7 @@ mod_module1_server <- function(id){
       req(filedata())
       Expression_mat = filedata()
       Cluster_assignments = hierarchical_cluster1()$hcCluster_assignments2[,3]
-      Eigengenes = Eigengenes(Expression_mat = Expression_mat, cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
+      Eigengenes = Eigengenes( Expression_mat = Expression_mat, cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
       return(list(Eigengenes = Eigengenes))
     })
 
@@ -952,9 +970,17 @@ mod_module1_server <- function(id){
       selected_variable <- input$phenotypeSelector
       data$missing_count = rowSums(is.na(data))
       feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
-      features <- feature_mat[,1]
-      feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
+
+      features <- feature_mat$Feature_ID
+      feature_mat_t <- t(feature_mat[, -c(1, ncol(feature_mat))])
       colnames(feature_mat_t) <- features
+      feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
+      feature_mat_t <- as.matrix(scale(feature_mat_t))
+
+      # features <- feature_mat[,1]
+      # feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
+      # colnames(feature_mat_t) <- features
+
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
       cluster_Metab <- subset(hierarchical_cluster1()$hcCluster_assignments2, col == input$moduleSelector)
@@ -1155,7 +1181,9 @@ mod_module1_server <- function(id){
       if (is.null(filedata4())) {
         cluster_assignments_Prot <- cluster_assignments_genes(cluster_genes = cluster_genes, Prot_annotation = NULL)
       } else {
-        cluster_assignments_Prot <- cluster_assignments_genes(cluster_genes = cluster_genes, Prot_annotation = filedata4())
+        filedata4 = filedata4()
+        filedata4_Uni <- filedata4[filedata4$Feature_ID %in% colnames(partial_cors2()$par_cor), ]
+        cluster_assignments_Prot <- cluster_assignments_genes(cluster_genes = cluster_genes, Prot_annotation = filedata4_Uni)
       }
       return(list(cluster_assignments_Prot = cluster_assignments_Prot))
     })
@@ -1373,9 +1401,17 @@ mod_module1_server <- function(id){
       selected_variable <- input$phenotypeSelector2
       data$missing_count = rowSums(is.na(data))
       feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
-      features <- feature_mat[,1]
-      feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
+
+      features <- feature_mat$Feature_ID
+      feature_mat_t <- t(feature_mat[, -c(1, ncol(feature_mat))])
       colnames(feature_mat_t) <- features
+      feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
+      feature_mat_t <- as.matrix(scale(feature_mat_t))
+
+      # features <- feature_mat[,1]
+      # feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
+      # colnames(feature_mat_t) <- features
+
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
       cluster_Prot <- subset(hierarchical_cluster2()$hcCluster_assignments, col == input$moduleSelector2)
@@ -1510,7 +1546,8 @@ mod_module1_server <- function(id){
       cluster_assignments_ProtGenes <- hierarchical_cluster2()$hcCluster_assignments
       Count_Prot <- table(cluster_assignments_ProtGenes$col)
 
-      if (is.null(filedata4())) {
+      #if (is.null(filedata4())) {
+      if (is.null(filedata4()) | is.null(Genes_Prot_enrich()$cluster_assignments_Prot_enrich)) {
         # Si filedata4 es NULL, calcular la correlación usando cor() directamente
         cor_Prot_metab_WGCNA <- cor(eigengenes_Prot, eigengenes_metab, method = 'spearman', use = "pairwise.complete.obs")
         cor_Prot_metab_list <- reshape2::melt(cor_Prot_metab_WGCNA, varnames = c("Prot_module", "Metab_module"))
