@@ -1,6 +1,8 @@
 ---
 title: "iModMix -integrative Modules for Multi-omics data"
-output: html_document
+output: 
+  html_document:
+    css: styles.css
 ---
 
 ```{r setup, include=FALSE}

@@ -9,6 +9,8 @@
 #' @importFrom shiny NS tagList
 #'
 
+options(shiny.maxRequestSize=100*1024^2)
+
 #mod_module1_ui <- function(id, input, output, session) {
 mod_module1_ui <- function(id) {
   ns <- NS(id)
@@ -517,19 +519,19 @@ mod_module1_server <- function(id){
       withProgress(message = 'Loading example data...', value = 0, {
         incProgress(0, detail = 'Loading Metab_exp.csv')
         filedata(load_metab_exp())
-        Sys.sleep(1)
+        Sys.sleep(5)
 
         incProgress(10, detail = 'Loading Metab_annot.csv')
         filedata3(load_metab_annot())
-        Sys.sleep(1)
+        Sys.sleep(3)
 
         incProgress(20, detail = 'Loading Prot_exp.csv')
         filedata2(load_prot_exp())
-        Sys.sleep(1)
+        Sys.sleep(6)
 
         incProgress(30, detail = 'Loading Prot_annot.csv')
         filedata4(load_prot_annot())
-        Sys.sleep(1)
+        Sys.sleep(3)
 
         incProgress(50, detail = 'Loading Metadata.csv...')
         metadata(load_metadata())
@@ -726,13 +728,18 @@ mod_module1_server <- function(id){
         if (is.null(demo_loaded())) {
           req(filedata())
           Expression_mat <- filedata()
-          Sys.sleep(1)  #
+          #Sys.sleep(5)  #
+          incProgress(0.3, detail = 'Loading data...')
           par_cor1 <- partial_cors(Expression_mat = Expression_mat)
+          incProgress(0.6, detail = 'Calculating partial correlations...')
         } else {
-          Sys.sleep(1)
+          #Sys.sleep(3)
+          incProgress(0.3, detail = 'Loading demo data...')
           par_cor1 <- load_partial_cor_metab()
+          incProgress(0.6, detail = 'Calculating partial correlations...')
         }
-        incProgress(100, detail = 'Complete!')
+        incProgress(1, detail = 'Complete!')
+        #incProgress(100, detail = 'Complete!')
         list(par_cor1 = par_cor1)
       })
     })
@@ -1106,13 +1113,18 @@ mod_module1_server <- function(id){
         if (is.null(demo_loaded2())) {
           req(filedata2())
           Expression_mat <- filedata2()
-          Sys.sleep(1)  #
+          incProgress(0.3, detail = 'Loading data...')
+          #Sys.sleep(1)  #
           par_cor <- partial_cors(Expression_mat = Expression_mat)
+          incProgress(0.6, detail = 'Calculating partial correlations...')
         } else {
-          Sys.sleep(1)
+          #Sys.sleep(1)
+          incProgress(0.3, detail = 'Loading demo data...')
           par_cor <- load_partial_cor_prot()
+          incProgress(0.6, detail = 'Calculating partial correlations...')
         }
-        incProgress(100, detail = 'Complete!')
+        incProgress(1, detail = 'Complete!')
+        #incProgress(100, detail = 'Complete!')
         list(par_cor = par_cor)
       })
     })
@@ -1230,7 +1242,7 @@ mod_module1_server <- function(id){
                                                                      database = selected_database)
           Sys.sleep(1)
         } else {
-          Sys.sleep(1)
+          Sys.sleep(5)
           cluster_assignments_Prot_enrich <- load_enrichment_mouse()
         }
         incProgress(100, detail = 'Complete!')

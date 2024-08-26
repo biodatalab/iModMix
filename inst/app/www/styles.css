@@ -1,0 +1,10 @@
+h1 {
+  margin-top: 70px; /* Ajusta este valor según sea necesario */
+  color: darkblue; /* Cambia el color del título a azul */
+  text-align: center; /* Centra el título */
+}
+
+h2 {
+  color: darkblue; /* Cambia el color del título a azul */
+}
+

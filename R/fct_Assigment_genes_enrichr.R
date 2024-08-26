@@ -9,6 +9,7 @@
 Assigment_genes_enrichr <- function(cluster_assignments_ProtGenes,
                                     database = "GO_Biological_Process_2023" ) {
   websiteLive <- getOption("enrichR.live")
+
   # if (websiteLive) {
   #   enrichR::listEnrichrSites()
   #   enrichR::setEnrichrSite("Enrichr") # Human genes
@@ -48,25 +49,27 @@ Assigment_genes_enrichr <- function(cluster_assignments_ProtGenes,
     cluster_id <- grouped_lists$cluster[i]
     feature_list <- grouped_lists$feature_name[[i]]
 
-    if (websiteLive) {
+    if (websiteLive && length(feature_list) > 0) {
       enriched_result <- enrichR::enrichr(feature_list, dbs)
-      term <- enriched_result[[database]][["Term"]][1]
-      overlap <- enriched_result[[database]][["Overlap"]][1]
-      Genes <- enriched_result[[database]][["Genes"]][1]
-      P.value <- enriched_result[[database]][["P.value"]][1]
-      Adjusted.P.value <- enriched_result[[database]][["Adjusted.P.value"]][1]
-      # Split the 'Term' column into 'enriched_Term' and 'enriched_GO'
-      term_parts <- strsplit(term, "\\(")[[1]]
-      enriched_Term <- term_parts[1]
-      enriched_GO <- sub("\\)$", "", term_parts[2])
+      if (!is.null(enriched_result[[database]]) && nrow(enriched_result[[database]]) > 0) {
+        term <- enriched_result[[database]][["Term"]][1]
+        overlap <- enriched_result[[database]][["Overlap"]][1]
+        Genes <- enriched_result[[database]][["Genes"]][1]
+        P.value <- enriched_result[[database]][["P.value"]][1]
+        Adjusted.P.value <- enriched_result[[database]][["Adjusted.P.value"]][1]
+        # Split the 'Term' column into 'enriched_Term' and 'enriched_GO'
+        term_parts <- strsplit(term, "\\(")[[1]]
+        enriched_Term <- term_parts[1]
+        enriched_GO <- sub("\\)$", "", term_parts[2])
 
-      # Update the new columns in the dataframe
-      Genes_enrich[Genes_enrich$cluster == cluster_id, "enriched_Term"] <- enriched_Term
-      Genes_enrich[Genes_enrich$cluster == cluster_id, "enriched_GO"] <- enriched_GO
-      Genes_enrich[Genes_enrich$cluster == cluster_id, "enriched_Overlap"] <- overlap
-      Genes_enrich[Genes_enrich$cluster == cluster_id, "enriched_Genes"] <- Genes
-      Genes_enrich[Genes_enrich$cluster == cluster_id, "enriched_P.value"] <- P.value
-      Genes_enrich[Genes_enrich$cluster == cluster_id, "enriched_Adjusted.P.value"] <- Adjusted.P.value
+        # Update the new columns in the dataframe
+        Genes_enrich[Genes_enrich$cluster == cluster_id, "enriched_Term"] <- enriched_Term
+        Genes_enrich[Genes_enrich$cluster == cluster_id, "enriched_GO"] <- enriched_GO
+        Genes_enrich[Genes_enrich$cluster == cluster_id, "enriched_Overlap"] <- overlap
+        Genes_enrich[Genes_enrich$cluster == cluster_id, "enriched_Genes"] <- Genes
+        Genes_enrich[Genes_enrich$cluster == cluster_id, "enriched_P.value"] <- P.value
+        Genes_enrich[Genes_enrich$cluster == cluster_id, "enriched_Adjusted.P.value"] <- Adjusted.P.value
+      }
     }
   }
 

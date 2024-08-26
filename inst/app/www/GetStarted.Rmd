@@ -1,6 +1,8 @@
 ---
-title: "<div style='text-align: center; color: blue; font-size: 18px;'>How to Get Started</div>"
-output: html_document
+title: "How to Get Started"
+output: 
+  html_document:
+    css: styles.css
 ---
 
 ```{r setup, include=FALSE}
