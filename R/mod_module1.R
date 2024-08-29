@@ -578,7 +578,13 @@ mod_module1_server <- function(id){
       feature_mat_t <- as.matrix(scale(feature_mat_t))
 
       sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
-      feature_mat_t3SD <- feature_mat_t[, sd_values > quantile(sd_values, 0.25)]
+      filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
+
+      feature_mat_t <- if (length(filtered_indices) > 20000) {
+        feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      } else {
+        feature_mat_t[, filtered_indices]
+      }
 
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
@@ -646,7 +652,13 @@ mod_module1_server <- function(id){
       feature_mat_t <- as.matrix(scale(feature_mat_t))
 
       sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
-      feature_mat_t3SD <- feature_mat_t[, sd_values > quantile(sd_values, 0.25)]
+      filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
+
+      feature_mat_t <- if (length(filtered_indices) > 20000) {
+        feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      } else {
+        feature_mat_t[, filtered_indices]
+      }
 
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
@@ -978,7 +990,13 @@ mod_module1_server <- function(id){
       feature_mat_t <- as.matrix(scale(feature_mat_t))
 
       sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
-      feature_mat_t3SD <- feature_mat_t[, sd_values > quantile(sd_values, 0.25)]
+      filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
+
+      feature_mat_t <- if (length(filtered_indices) > 20000) {
+        feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      } else {
+        feature_mat_t[, filtered_indices]
+      }
 
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
@@ -1414,7 +1432,13 @@ mod_module1_server <- function(id){
       feature_mat_t <- as.matrix(scale(feature_mat_t))
 
       sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
-      feature_mat_t3SD <- feature_mat_t[, sd_values > quantile(sd_values, 0.25)]
+      filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
+
+      feature_mat_t <- if (length(filtered_indices) > 20000) {
+        feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      } else {
+        feature_mat_t[, filtered_indices]
+      }
 
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
