@@ -577,9 +577,14 @@ mod_module1_server <- function(id){
       feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
       feature_mat_t <- as.matrix(scale(feature_mat_t))
 
-#       features <- feature_mat[,1]
-#       feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
-#       colnames(feature_mat_t) <- features
+      sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
+      filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
+
+      feature_mat_t <- if (length(filtered_indices) > 20000) {
+        feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      } else {
+        feature_mat_t[, filtered_indices]
+      }
 
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
@@ -646,9 +651,14 @@ mod_module1_server <- function(id){
       feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
       feature_mat_t <- as.matrix(scale(feature_mat_t))
 
-      # features <- feature_mat[,1]
-      # feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
-      # colnames(feature_mat_t) <- features
+      sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
+      filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
+
+      feature_mat_t <- if (length(filtered_indices) > 20000) {
+        feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      } else {
+        feature_mat_t[, filtered_indices]
+      }
 
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
@@ -728,18 +738,13 @@ mod_module1_server <- function(id){
         if (is.null(demo_loaded())) {
           req(filedata())
           Expression_mat <- filedata()
-          #Sys.sleep(5)  #
-          incProgress(0.3, detail = 'Loading data...')
+          Sys.sleep(5)  #
           par_cor1 <- partial_cors(Expression_mat = Expression_mat)
-          incProgress(0.6, detail = 'Calculating partial correlations...')
         } else {
-          #Sys.sleep(3)
-          incProgress(0.3, detail = 'Loading demo data...')
+          Sys.sleep(5)
           par_cor1 <- load_partial_cor_metab()
-          incProgress(0.6, detail = 'Calculating partial correlations...')
         }
-        incProgress(1, detail = 'Complete!')
-        #incProgress(100, detail = 'Complete!')
+        incProgress(100, detail = 'Complete!')
         list(par_cor1 = par_cor1)
       })
     })
@@ -984,9 +989,14 @@ mod_module1_server <- function(id){
       feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
       feature_mat_t <- as.matrix(scale(feature_mat_t))
 
-      # features <- feature_mat[,1]
-      # feature_mat_t <- as.matrix(scale(t(feature_mat[, -c(1, ncol(feature_mat))])))
-      # colnames(feature_mat_t) <- features
+      sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
+      filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
+
+      feature_mat_t <- if (length(filtered_indices) > 20000) {
+        feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      } else {
+        feature_mat_t[, filtered_indices]
+      }
 
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
@@ -1113,18 +1123,19 @@ mod_module1_server <- function(id){
         if (is.null(demo_loaded2())) {
           req(filedata2())
           Expression_mat <- filedata2()
-          incProgress(0.3, detail = 'Loading data...')
-          #Sys.sleep(1)  #
+          #incProgress(0.3, detail = 'Loading data...')
+          Sys.sleep(3)  #
           par_cor <- partial_cors(Expression_mat = Expression_mat)
-          incProgress(0.6, detail = 'Calculating partial correlations...')
+          #incProgress(0.6, detail = 'Calculating partial correlations...')
         } else {
-          #Sys.sleep(1)
-          incProgress(0.3, detail = 'Loading demo data...')
+          Sys.sleep(3)
+          #incProgress(0.3, detail = 'Loading demo data...')
           par_cor <- load_partial_cor_prot()
-          incProgress(0.6, detail = 'Calculating partial correlations...')
+          Sys.sleep(3)
+          #incProgress(0.6, detail = 'Calculating partial correlations...')
         }
-        incProgress(1, detail = 'Complete!')
-        #incProgress(100, detail = 'Complete!')
+        #incProgress(1, detail = 'Complete!')
+        incProgress(100, detail = 'Complete!')
         list(par_cor = par_cor)
       })
     })
@@ -1420,9 +1431,14 @@ mod_module1_server <- function(id){
       feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
       feature_mat_t <- as.matrix(scale(feature_mat_t))
 
-      # features <- feature_mat[,1]
-      # feature_mat_t <- as.matrix(scale(t(feature_mat[,-c(1,ncol(feature_mat))])))
-      # colnames(feature_mat_t) <- features
+      sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
+      filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
+
+      feature_mat_t <- if (length(filtered_indices) > 20000) {
+        feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      } else {
+        feature_mat_t[, filtered_indices]
+      }
 
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data

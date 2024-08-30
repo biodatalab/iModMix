@@ -10,12 +10,6 @@ Assigment_genes_enrichr <- function(cluster_assignments_ProtGenes,
                                     database = "GO_Biological_Process_2023" ) {
   websiteLive <- getOption("enrichR.live")
 
-  # if (websiteLive) {
-  #   enrichR::listEnrichrSites()
-  #   enrichR::setEnrichrSite("Enrichr") # Human genes
-  # }
-  # if (websiteLive) dbs <- enrichR::listEnrichrDbs()
-
   # Attempt to establish connection
   tryCatch(
     expr = {

@@ -22,7 +22,7 @@ app_ui <- function(request) {
                  tabPanel("How to get started", icon = icon("check", lib = "glyphicon"),
                           tags$iframe(src = "www/GetStarted.html", height = "900px", width = "100%")
                  ),
-                 tabPanel("Modules & Integration", icon = icon("tasks", lib = "glyphicon"),
+                 tabPanel("Run iModMix", icon = icon("tasks", lib = "glyphicon"),
                           div(style = "background-color: #DEEBF7; width: 100%;",
                               navbarMenu(" ",
                                          "Upload dataset",
