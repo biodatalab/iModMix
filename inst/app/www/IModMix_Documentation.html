@@ -406,17 +406,44 @@ Figure 1: Overview of the iModMix’s pipeline
 </div>
 <div id="what-does-this-application-do" class="section level2">
 <h2>What does this application do?</h2>
-<p>In general terms, this application will allow the user to:</p>
+<p>IModMix begins by evaluating separately the metabolomics dataset and
+the transcriptomics/proteomics dataset provided by the user. Features
+from each are assigned into modules based on similarities calculated
+using the topographical overlap matrix. Each module (set of metabolomic
+features, genes, or proteins) can be compared by phenotypes based on
+conditions provided by user in the metadata file. After separate
+analysis of metabolomics and transcriptomics/proteomics datasets, a
+multi-omic integration can be performed to correlate metabolomic modules
+to transcriptomic/proteomic modules. After setting a correlation
+threshold, a table is generated listing the correlations between
+metabolomic and transcriptomic/proteomic modules, and producing a
+multi-omic module network. The top 5 highest correlated modules are
+provided with the list of metabolites and proteins/genes for modules of
+interest including a correlation plot of each metabolite to each
+gene/protein.</p>
+<p>In summary, this application will allow the user to perform
+multi-omic integration from the same samples by taking a metabolomics
+data set and comparing it to a transcriptomics or proteomics dataset.
+The simplified output are the top metabolite modules (set of metabolites
+of interest) and its correlated transcriptomics/proteomics module (set
+of genes/proteins). This is performed by the following steps:</p>
 <ul>
 <li>Generate a partial correlation network of all features available in
-the selected dataset.</li>
+each dataset.</li>
 <li>Interrogate this network to identify groups of features (modules)
-correlated with each other.</li>
-<li>Cross these modules with available clinical data.</li>
-<li>Explore the correlations between metabolite modules and protein/gene
+using topographical overlap matrix (TOM) and outputing a hierarchal
+clustering dendrogram -Clusters are enriched for
+transcriptomics/proteomics modules and linked to EnrichR so users can
+select libraries of interest for downstream analysis</li>
+<li>Deeper analysis of modules using provided metadata.</li>
+<li>Integration of metabolomics with transcriptomics/proteomics to
+define correlations between metabolite modules and protein/gene
 modules.</li>
 <li>Generate a network of modules between metabolomics and
 proteomics/transcriptomics datasets.</li>
+<li>Identification of top correlated modules with lists of metabolites
+and proteins/genes of interest and generation of a correlation plot of
+metabolites to protein/genes</li>
 </ul>
 </div>
 
