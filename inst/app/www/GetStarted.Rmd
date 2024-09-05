@@ -17,7 +17,7 @@ IModMix allows the analysis and integration of multi-omics data types. If metabo
 - Each row represents a feature (e.g., gene, protein, metabolite), and each column represents a sample.
 - The first column, labeled Feature_ID, should contain unique identifiers for each feature.
 
-```{r data-example, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Example of abundance/expression data that can be uploaded in the 'Metabolomics Abundance Data' and 'Proteomics/Genomics Expression Data' tabs."}
+```{r data-example, echo=F, fig.align="center", fig.width=2, out.width="80%", fig.cap="Example of abundance/expression data that can be uploaded in the 'Metabolomics Abundance Data' and 'Proteomics/Genomics Expression Data' tabs."}
 knitr::include_graphics(paste0(here::here(),"/documentation/Expression.png"), error = FALSE)
 ```
 
@@ -30,7 +30,7 @@ Prepare a separate metadata file containing the experimental design and sample l
 - Column 1 should be labeled Sample and each row should include unique sample IDs that match the sample IDs in your abundance/expression matrix files. Ensure that sample IDs are consistent across all datasets.This column enables linking omics data through samples.
 - Column 2 can be labeled by a description for grouping samples (e.g., ‘treatment’ and ‘control’). Additional columns can be included for more grouping conditions. At least one grouping column is required to perform PCA, box plots, etc.
 
-```{r, echo=F, fig.align="center", fig.width=2, out.width="50%", fig.cap="Example metadata data that can be uploaded in the 'Metadata' tab."}
+```{r, echo=F, fig.align="center", fig.width=2, out.width="20%", fig.cap="Example metadata data that can be uploaded in the 'Metadata' tab."}
 knitr::include_graphics(paste0(here::here(),"/documentation/Metadata.png"), error = FALSE)
 ```
 

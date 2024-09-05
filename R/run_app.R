@@ -14,17 +14,17 @@ run_app <- function(
   uiPattern = "/",
   ...
 ) {
-  demo_data_path <- "Example_data/FloresData_K_TK"
+  demo_data_path <- "Example_data/ccRCC4_Data"
   file_path_metab_exp <- file.path(demo_data_path, "Metab_exp.csv")
   file_path_metab_annot <- file.path(demo_data_path, "Metab_annot.csv")
-  file_path_prot_exp <- file.path(demo_data_path, "Prot_exp.csv")
-  file_path_prot_annot <- file.path(demo_data_path, "Prot_annot.csv")
+  file_path_RNA_exp <- file.path(demo_data_path, "RNA_exp.csv")
+  file_path_RNA_annot <- file.path(demo_data_path, "RNA_annot.csv")
   file_path_metadata <- file.path(demo_data_path, "Metadata.csv")
 
   precargados_metab_exp <<- read.csv(file_path_metab_exp)
   precargados_metab_annot <<- read.csv(file_path_metab_annot)
-  precargados_prot_exp <<- read.csv(file_path_prot_exp)
-  precargados_prot_annot <<- read.csv(file_path_prot_annot)
+  precargados_RNA_exp <<- read.csv(file_path_RNA_exp)
+  precargados_RNA_annot <<- read.csv(file_path_RNA_annot)
   precargados_metadata <<- read.csv(file_path_metadata)
 
   temp_dir <- tempdir()
@@ -33,13 +33,13 @@ run_app <- function(
   precargados_partial_cor_metab <<- read.csv(file_path_partial_cor_metab, header = TRUE, row.names = 1, check.names = FALSE)
   precargados_partial_cor_metab <<- as.matrix(precargados_partial_cor_metab)
 
-  unzip(file.path(demo_data_path, "PartialCorProt.csv.zip"), exdir = temp_dir)
-  file_path_partial_cor_prot <- file.path(temp_dir, "PartialCorProt.csv")
-  precargados_partial_cor_prot <<- read.csv(file_path_partial_cor_prot, header = TRUE, row.names = 1, check.names = FALSE)
-  precargados_partial_cor_prot <<- as.matrix(precargados_partial_cor_prot)
+  unzip(file.path(demo_data_path, "PartialCorGenes.csv.zip"), exdir = temp_dir)
+  file_path_partial_cor_RNA <- file.path(temp_dir, "PartialCorGenes.csv")
+  precargados_partial_cor_RNA <<- read.csv(file_path_partial_cor_RNA, header = TRUE, row.names = 1, check.names = FALSE)
+  precargados_partial_cor_RNA <<- as.matrix(precargados_partial_cor_RNA)
 
-  file_path_enrichment_mouse <- file.path(demo_data_path, "EnrichmentMouse.csv")
-  precargados_enrichment_mouse <<- read.csv(file_path_enrichment_mouse, header = TRUE, row.names = 1, check.names = FALSE)
+  file_path_enrichment <- file.path(demo_data_path, "Enrichment.csv")
+  precargados_enrichment <<- read.csv(file_path_enrichment, header = TRUE, row.names = 1, check.names = FALSE)
 
 
   # Definir funciones para cargar los datos
@@ -49,11 +49,11 @@ run_app <- function(
   load_metab_annot <<- function() {
     return(precargados_metab_annot)
   }
-  load_prot_exp <<- function() {
-    return(precargados_prot_exp)
+  load_RNA_exp <<- function() {
+    return(precargados_RNA_exp)
   }
-  load_prot_annot <<- function() {
-    return(precargados_prot_annot)
+  load_RNA_annot <<- function() {
+    return(precargados_RNA_annot)
   }
   load_metadata <<- function() {
     return(precargados_metadata)
@@ -61,11 +61,11 @@ run_app <- function(
   load_partial_cor_metab <<- function() {
     return(precargados_partial_cor_metab)
   }
-  load_partial_cor_prot <<- function() {
-    return(precargados_partial_cor_prot)
+  load_partial_cor_RNA <<- function() {
+    return(precargados_partial_cor_RNA)
   }
-  load_enrichment_mouse <<- function() {
-    return(precargados_enrichment_mouse)
+  load_enrichment <<- function() {
+    return(precargados_enrichment)
   }
 
   with_golem_options(

@@ -154,7 +154,7 @@ mod_module1_ui <- function(id) {
                                            "Eigenfeatures heatmap Image (.png)")
                    ),
                    tabPanel("Phenotype",
-                            h4("Phenotype data",
+                            h4("Metadata",
                                bsButton("surf-infoMPD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoMPD", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file <i>Metadata</i>. Check if the number of samples and the number of entries listed at the bottom of the table are the same. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a sample.")),
@@ -302,7 +302,7 @@ mod_module1_ui <- function(id) {
                                            "Eigenfeatures heatmap Image (.png)")
                    ),
                    tabPanel("Phenotype",
-                            h4("Phenotype data",
+                            h4("Metadata",
                                bsButton("surf-info_PGPData", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-info_PGPData", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file <i> Metadata</i>. Check if the number of samples and the number of entries listed at the bottom of the table are the same. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a sample.")),
@@ -526,11 +526,11 @@ mod_module1_server <- function(id){
         Sys.sleep(3)
 
         incProgress(20, detail = 'Loading Prot_exp.csv')
-        filedata2(load_prot_exp())
+        filedata2(load_RNA_exp())
         Sys.sleep(6)
 
         incProgress(30, detail = 'Loading Prot_annot.csv')
-        filedata4(load_prot_annot())
+        filedata4(load_RNA_annot())
         Sys.sleep(3)
 
         incProgress(50, detail = 'Loading Metadata.csv...')
@@ -540,8 +540,8 @@ mod_module1_server <- function(id){
         demo_loaded(TRUE)
         demo_loaded2(TRUE)
         enrich_loaded(TRUE)
-        updateSelectInput(session, "databaseSelector", selected = "KEGG_2019_Mouse")
-        updateSliderInput(session, "pValueThreshold3", value = 0.9172)
+        updateSelectInput(session, "databaseSelector", selected = "GO_Biological_Process_2023")
+        updateSliderInput(session, "pValueThreshold3", value = 0.60)
 
         incProgress(100, detail = 'Complete!')
       })
@@ -1130,7 +1130,7 @@ mod_module1_server <- function(id){
         } else {
           Sys.sleep(3)
           #incProgress(0.3, detail = 'Loading demo data...')
-          par_cor <- load_partial_cor_prot()
+          par_cor <- load_partial_cor_RNA()
           Sys.sleep(3)
           #incProgress(0.6, detail = 'Calculating partial correlations...')
         }
@@ -1254,7 +1254,7 @@ mod_module1_server <- function(id){
           Sys.sleep(1)
         } else {
           Sys.sleep(5)
-          cluster_assignments_Prot_enrich <- load_enrichment_mouse()
+          cluster_assignments_Prot_enrich <- load_enrichment()
         }
         incProgress(100, detail = 'Complete!')
         list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich)
