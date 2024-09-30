@@ -75,11 +75,17 @@ mod_module1_ui <- function(id) {
 
       div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
 
+      label = h5("Upload Metadata"),
+
       helpText(
         "Example data is available to help you get started with iModMix. You can use this data to run the application and explore its features."),
 
       actionButton(
-        ns("runDemo"), "Run with example datasets", icon = icon("play")
+        ns("runDemo"), "ccRCC datasets (id metabolites)", icon = icon("play")
+      ),
+
+      actionButton(
+        ns("runDemoAll"), "LUAD datasets (id and unidentified metabolites)", icon = icon("play")
       )
     ),
 
@@ -482,6 +488,9 @@ mod_module1_server <- function(id){
     demo_loaded <- reactiveVal(NULL)
     demo_loaded2 <- reactiveVal(NULL)
     enrich_loaded <- reactiveVal(NULL)
+    demo_loadedAll <- reactiveVal(NULL)
+    demo_loaded2All <- reactiveVal(NULL)
+    enrich_loadedAll <- reactiveVal(NULL)
     classification_plot <- reactiveVal()
     classification_plot2 <- reactiveVal()
 
@@ -538,10 +547,48 @@ mod_module1_server <- function(id){
         Sys.sleep(2)
 
         demo_loaded(TRUE)
+        demo_loadedAll(FALSE)
         demo_loaded2(TRUE)
+        demo_loaded2All(FALSE)
         enrich_loaded(TRUE)
+        enrich_loadedAll(FALSE)
         updateSelectInput(session, "databaseSelector", selected = "GO_Biological_Process_2023")
         updateSliderInput(session, "pValueThreshold3", value = 0.60)
+
+        incProgress(100, detail = 'Complete!')
+      })
+    })
+
+    observeEvent(input$runDemoAll, {
+      withProgress(message = 'Loading example data...', value = 0, {
+        incProgress(0, detail = 'Loading Metab_exp.csv')
+        filedata(load_metab_expAll())
+        Sys.sleep(5)
+
+        incProgress(10, detail = 'Loading Metab_annot.csv')
+        filedata3(load_metab_annotAll())
+        Sys.sleep(3)
+
+        incProgress(20, detail = 'Loading Prot_exp.csv')
+        filedata2(load_RNA_expAll())
+        Sys.sleep(6)
+
+        incProgress(30, detail = 'Loading Prot_annot.csv')
+        filedata4(load_RNA_annotAll())
+        Sys.sleep(3)
+
+        incProgress(50, detail = 'Loading Metadata.csv...')
+        metadata(load_metadataAll())
+        Sys.sleep(2)
+
+        demo_loaded(FALSE)
+        demo_loadedAll(TRUE)
+        demo_loaded2(FALSE)
+        demo_loaded2All(TRUE)
+        enrich_loaded(FALSE)
+        enrich_loadedAll(TRUE)
+        updateSelectInput(session, "databaseSelector", selected = "KEGG_2019_Mouse")
+        updateSliderInput(session, "pValueThreshold3", value = 0.90)
 
         incProgress(100, detail = 'Complete!')
       })
@@ -735,14 +782,17 @@ mod_module1_server <- function(id){
 
     partial_cors1 <- reactive({
       withProgress(message = 'Calculating partial correlations (Metabolites)...', value = 0, {
-        if (is.null(demo_loaded())) {
+        if (is.null(demo_loaded()) && is.null(demo_loadedAll())) {
           req(filedata())
           Expression_mat <- filedata()
-          Sys.sleep(5)  #
+          Sys.sleep(5)
           par_cor1 <- partial_cors(Expression_mat = Expression_mat)
-        } else {
+        } else if (demo_loaded()) {
           Sys.sleep(5)
           par_cor1 <- load_partial_cor_metab()
+        } else if (demo_loadedAll()) {
+          Sys.sleep(5)
+          par_cor1 <- load_partial_cor_metabAll()
         }
         incProgress(100, detail = 'Complete!')
         list(par_cor1 = par_cor1)
@@ -1120,21 +1170,18 @@ mod_module1_server <- function(id){
 
     partial_cors2 <- reactive({
       withProgress(message = 'Calculating partial correlations (Proteins/Genes)...', value = 0, {
-        if (is.null(demo_loaded2())) {
+        if (is.null(demo_loaded2()) && is.null(demo_loaded2All())) {
           req(filedata2())
           Expression_mat <- filedata2()
-          #incProgress(0.3, detail = 'Loading data...')
-          Sys.sleep(3)  #
+          Sys.sleep(5)
           par_cor <- partial_cors(Expression_mat = Expression_mat)
-          #incProgress(0.6, detail = 'Calculating partial correlations...')
-        } else {
-          Sys.sleep(3)
-          #incProgress(0.3, detail = 'Loading demo data...')
+        } else if (demo_loaded2()) {
+          Sys.sleep(5)
           par_cor <- load_partial_cor_RNA()
-          Sys.sleep(3)
-          #incProgress(0.6, detail = 'Calculating partial correlations...')
+        } else if (demo_loaded2All()) {
+          Sys.sleep(5)
+          par_cor <- load_partial_cor_RNAAll()
         }
-        #incProgress(1, detail = 'Complete!')
         incProgress(100, detail = 'Complete!')
         list(par_cor = par_cor)
       })
@@ -1245,17 +1292,20 @@ mod_module1_server <- function(id){
 
     Genes_Prot_enrich <- reactive({
       withProgress(message = 'Performing enrichment analysis...', value = 0, {
-        if (is.null(enrich_loaded())) {
+        if (is.null(enrich_loaded()) && is.null(enrich_loadedAll())) {
           req(input$databaseSelector)
           selected_database <- input$databaseSelector
           cluster_assignments_ProtGenes <- cluster_assignments_genes1()$cluster_assignments_Prot
           cluster_assignments_Prot_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
                                                                      database = selected_database)
           Sys.sleep(1)
-        } else {
+        } else if (enrich_loaded()) {
           Sys.sleep(5)
           cluster_assignments_Prot_enrich <- load_enrichment()
-        }
+        } else if (enrich_loadedAll()) {
+        Sys.sleep(5)
+        cluster_assignments_Prot_enrich <- load_enrichmentAll()
+      }
         incProgress(100, detail = 'Complete!')
         list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich)
       })
