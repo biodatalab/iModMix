@@ -68,6 +68,63 @@ run_app <- function(
     return(precargados_enrichment)
   }
 
+  ### data Flores
+
+  demo_data_pathAll <- "Example_data/FloresData_K_TK"
+  file_path_metab_expAll <- file.path(demo_data_pathAll, "Metab_exp.csv")
+  file_path_metab_annotAll <- file.path(demo_data_pathAll, "Metab_annot.csv")
+  file_path_RNA_expAll <- file.path(demo_data_pathAll, "Prot_exp.csv")
+  file_path_RNA_annotAll <- file.path(demo_data_pathAll, "Prot_annot.csv")
+  file_path_metadataAll <- file.path(demo_data_pathAll, "Metadata.csv")
+
+  precargados_metab_expAll <<- read.csv(file_path_metab_expAll)
+  precargados_metab_annotAll <<- read.csv(file_path_metab_annotAll)
+  precargados_RNA_expAll <<- read.csv(file_path_RNA_expAll)
+  precargados_RNA_annotAll <<- read.csv(file_path_RNA_annotAll)
+  precargados_metadataAll <<- read.csv(file_path_metadataAll)
+
+  temp_dirAll <- tempdir()
+  unzip(file.path(demo_data_pathAll, "PartialCorMetabolites.csv.zip"), exdir = temp_dirAll)
+  file_path_partial_cor_metabAll <- file.path(temp_dirAll, "PartialCorMetabolites.csv")
+  precargados_partial_cor_metabAll <<- read.csv(file_path_partial_cor_metabAll, header = TRUE, row.names = 1, check.names = FALSE)
+  precargados_partial_cor_metabAll <<- as.matrix(precargados_partial_cor_metabAll)
+
+  unzip(file.path(demo_data_pathAll, "PartialCorProt.csv.zip"), exdir = temp_dirAll)
+  file_path_partial_cor_RNAAll <- file.path(temp_dirAll, "PartialCorProt.csv")
+  precargados_partial_cor_RNAAll <<- read.csv(file_path_partial_cor_RNAAll, header = TRUE, row.names = 1, check.names = FALSE)
+  precargados_partial_cor_RNAAll <<- as.matrix(precargados_partial_cor_RNAAll)
+
+  file_path_enrichmentAll <- file.path(demo_data_pathAll, "EnrichmentMouse.csv")
+  precargados_enrichmentAll <<- read.csv(file_path_enrichmentAll, header = TRUE, row.names = 1, check.names = FALSE)
+
+
+  # Definir funciones para cargar los datos
+  load_metab_expAll <<- function() {
+    return(precargados_metab_expAll)
+  }
+  load_metab_annotAll <<- function() {
+    return(precargados_metab_annotAll)
+  }
+  load_RNA_expAll <<- function() {
+    return(precargados_RNA_expAll)
+  }
+  load_RNA_annotAll <<- function() {
+    return(precargados_RNA_annotAll)
+  }
+  load_metadataAll <<- function() {
+    return(precargados_metadataAll)
+  }
+  load_partial_cor_metabAll <<- function() {
+    return(precargados_partial_cor_metabAll)
+  }
+  load_partial_cor_RNAAll <<- function() {
+    return(precargados_partial_cor_RNAAll)
+  }
+  load_enrichmentAll <<- function() {
+    return(precargados_enrichmentAll)
+  }
+
+
   with_golem_options(
     app = shinyApp(
       ui = app_ui,
