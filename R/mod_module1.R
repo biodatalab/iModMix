@@ -460,11 +460,61 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadcluster_assignments_2"),
                                            "Metabolites_TopModule"),
 
+                            h4("Classification between phenotypes by Metabolites",
+                               bsButton("surf-infoMCPM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMCPM", title = "More information",
+                                      content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The feactures of top correlated module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a boxplot </p>  <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> </li> </ul> <p> Dots marking outliers and a legend describing the compared phenotype. </p> ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
+                            fluidRow(
+                              column(6,
+                                     selectInput(ns("phenotypeSelector_imp_metab"),
+                                                 label = "Select the phenotype of interest",
+                                                 choices = NULL,
+                                                 selected = NULL)
+                              ),
+                              column(6,
+                                     numericInput(ns("pValueThreshold_imp_metab"),
+                                                  label = "Select p-value Threshold",
+                                                  min = 0,
+                                                  max = 1,
+                                                  step = 0.001,
+                                                  value = 0.05)
+                              )
+                            ),
+                            DT::DTOutput(ns("classification_results_imp_metab")),
+                            plotOutput(ns("classification_plot_1_all_imp_metab")),
+
                             h4("Proteins/Genes from top module"),
                             DT::DTOutput(ns("cluster_assignments_summary")),
                             DT::DTOutput(ns("cluster_assignments_features")),
                             downloadButton(ns("downloadcluster_assignments_1"),
-                                           "Proteins_Genes_TopModule")
+                                           "Proteins_Genes_TopModule"),
+
+
+                            h4("Classification between phenotypes by Proteins/Genes",
+                               bsButton("surf-infoMCPPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            bsPopover(id = "surf-infoMCPPG", title = "More information",
+                                      content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The feactures of top correlated module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a boxplot </p>  <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> </li> </ul> <p> Dots marking outliers and a legend describing the compared phenotype. </p> ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
+                            fluidRow(
+                              column(6,
+                                     selectInput(ns("phenotypeSelector_imp_Prot"),
+                                                 label = "Select the phenotype of interest",
+                                                 choices = NULL,
+                                                 selected = NULL)
+                              ),
+                              column(6,
+                                     numericInput(ns("pValueThreshold_imp_Prot"),
+                                                  label = "Select p-value Threshold",
+                                                  min = 0,
+                                                  max = 1,
+                                                  step = 0.001,
+                                                  value = 0.05)
+                              )
+                            ),
+                            DT::DTOutput(ns("classification_results_imp_Prot")),
+                            plotOutput(ns("classification_plot_1_all_imp_Prot"))
+
                             )
                    )
                  )
@@ -554,7 +604,8 @@ mod_module1_server <- function(id){
         enrich_loadedAll(FALSE)
         updateSelectInput(session, "databaseSelector", selected = "GO_Biological_Process_2023")
         updateSliderInput(session, "pValueThreshold3", value = 0.60)
-
+        updateSliderInput(session, "pValueThreshold_imp_metab", value = 0.05)
+        updateSliderInput(session, "pValueThreshold_imp_Prot", value = 0.05)
         incProgress(100, detail = 'Complete!')
       })
     })
@@ -589,7 +640,8 @@ mod_module1_server <- function(id){
         enrich_loadedAll(TRUE)
         updateSelectInput(session, "databaseSelector", selected = "KEGG_2019_Mouse")
         updateSliderInput(session, "pValueThreshold3", value = 0.90)
-
+        updateSliderInput(session, "pValueThreshold_imp_metab", value = 0.5)
+        updateSliderInput(session, "pValueThreshold_imp_Prot", value = 0.5)
         incProgress(100, detail = 'Complete!')
       })
     })
@@ -779,6 +831,23 @@ mod_module1_server <- function(id){
     observe({
       updateSelectInput(session, "phenotypeSelector2", choices = pheno_variables2())
     })
+
+    pheno_variables_imp_metab <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
+
+    observe({
+      updateSelectInput(session, "phenotypeSelector_imp_metab", choices = pheno_variables_imp_metab())
+    })
+
+    pheno_variables_imp_Prot <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
+
+    observe({
+      updateSelectInput(session, "phenotypeSelector_imp_Prot", choices = pheno_variables_imp_Prot())
+    })
+
 
     partial_cors1 <- reactive({
       withProgress(message = 'Calculating partial correlations (Metabolites)...', value = 0, {
@@ -1829,6 +1898,7 @@ mod_module1_server <- function(id){
       return(list(
         Top_correlations = ImpVar_Prot_Metab$Top_correlations,
         cluster_assignments = ImpVar_Prot_Metab$cluster_assignments,
+        expression_matrices = ImpVar_Prot_Metab$expression_matrices,
         correlation_matrices = ImpVar_Prot_Metab$correlation_matrices,
         Important_features = ImpVar_Prot_Metab$Important_features,
         correlation_List = ImpVar_Prot_Metab$correlation_List
@@ -1841,6 +1911,8 @@ mod_module1_server <- function(id){
       if(input$visualization_list == 1){
         df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[1]])
         df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[2]])
+        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[1]])
+        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[2]])
         df4   = ImpVar_Prot_Metab1()$correlation_List[[1]]
         df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[1]], main = "Top 1 Modules Correlation")
         df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[1]], type = "upper",  tl.col = "black", col = custom_palette)
@@ -1851,6 +1923,8 @@ mod_module1_server <- function(id){
       if(input$visualization_list == 2){
         df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[3]])
         df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[4]])
+        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[3]])
+        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[4]])
         df4   = ImpVar_Prot_Metab1()$correlation_List[[2]]
         df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[2]], main = "Top 2 Modules Correlation")
         df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[2]], type = "upper",  tl.col = "black", col = custom_palette)
@@ -1861,6 +1935,8 @@ mod_module1_server <- function(id){
       if(input$visualization_list == 3){
         df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[5]])
         df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[6]])
+        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[5]])
+        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[6]])
         df4   = ImpVar_Prot_Metab1()$correlation_List[[3]]
         df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[3]], main = "Top 3 Modules Correlation")
         df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[3]], type = "upper",  tl.col = "black", col = custom_palette)
@@ -1871,6 +1947,8 @@ mod_module1_server <- function(id){
       if(input$visualization_list == 4){
         df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[7]])
         df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[8]])
+        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[7]])
+        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[8]])
         df4   = ImpVar_Prot_Metab1()$correlation_List[[4]]
         df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[4]], main = "Top 2 Modules Correlation")
         df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[4]], type = "upper",  tl.col = "black", col = custom_palette)
@@ -1881,6 +1959,8 @@ mod_module1_server <- function(id){
       if(input$visualization_list == 5){
         df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[9]])
         df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[10]])
+        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[9]])
+        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[10]])
         df4   = ImpVar_Prot_Metab1()$correlation_List[[5]]
         df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[5]], main = "Top 3 Modules Correlation")
         df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[5]], type = "upper",  tl.col = "black", col = custom_palette)
@@ -1888,7 +1968,7 @@ mod_module1_server <- function(id){
         df5_2 = ImpVar_Prot_Metab1()$Important_features[[10]]
       }
 
-      return(list(df1_1 = df1_1, df1_2=df1_2, df5_1 = df5_1, df5_2=df5_2, df4=df4, df4_1=df4_1, df4_2=df4_2))
+      return(list(df1_1 = df1_1, df1_2=df1_2, df2_1=df2_1, df2_2=df2_2, df5_1 = df5_1, df5_2=df5_2, df4=df4, df4_1=df4_1, df4_2=df4_2))
     })
 
     output$ImportantVariables <- DT::renderDataTable({
@@ -1953,6 +2033,54 @@ mod_module1_server <- function(id){
       }
     )
 
+    Classification_Metabolites_imp_metab <- reactive({
+      df2_2 = as.data.frame(Important_Features()$df2_2)
+      metadata <- as.data.frame(metadata())
+      phenotype_variable = input$phenotypeSelector_imp_metab
+      significance_threshold = input$pValueThreshold_imp_metab
+      classification_metabolite <- perform_classification( eigengene_data = df2_2,
+                                                           metadata = metadata,
+                                                           phenotype_variable = phenotype_variable,
+                                                           significance_threshold = significance_threshold)
+      return(list(
+        result = classification_metabolite$result,
+        plots = classification_metabolite$plots))
+    })
+
+    output$classification_results_imp_metab <- DT::renderDataTable({
+      df <- Classification_Metabolites_imp_metab()$result
+      rownames(df) <- NULL
+      names(df)[names(df) == "Variable"] = "module_id"
+      DT::datatable(df)
+    })
+
+    output$classification_plot_1_all_imp_metab <- renderPlot({
+      selected_variable <- input$phenotypeSelector_imp_metab
+      levels_selected_variable <- unique(metadata()[[selected_variable]])
+      if (length(levels_selected_variable) < 3) {
+        class_names <- levels_selected_variable
+        class_label <- paste(class_names, collapse = " vs ")
+        plot <- Classification_Metabolites_imp_metab()$plots[[1]]
+        plot <- plot +
+          ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
+                        x = "Variables",
+                        y = "Class") +
+          ggplot2::theme(
+            axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
+          )
+        classification_plot(plot)
+        return(plot)
+      } else {
+        # Print multiple boxplot charts, one for each level of the selected variable
+        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+          Classification_Metabolites_imp_metab()$plots[[i]]
+        })
+        plot <- cowplot::plot_grid(plotlist = plots_list)
+        classification_plot(plot)  # Store the plot in the reactive variable
+        return(plot)
+      }
+    })
+
     output$cluster_assignments_features <- DT::renderDataTable({
       df <- Important_Features()$df1_1
 
@@ -1991,6 +2119,55 @@ mod_module1_server <- function(id){
         write.csv(Important_Features()$df1_1, file, row.names = TRUE)
       }
     )
+
+    Classification_Proteins_imp_Prot <- reactive({
+      df2_1 = as.data.frame(Important_Features()$df2_1)
+      metadata <- as.data.frame(metadata())
+      phenotype_variable = input$phenotypeSelector_imp_Prot
+      significance_threshold = input$pValueThreshold_imp_Prot
+      classification_metabolite <- perform_classification( eigengene_data = df2_1,
+                                                           metadata = metadata,
+                                                           phenotype_variable = phenotype_variable,
+                                                           significance_threshold = significance_threshold)
+      return(list(
+        result = classification_metabolite$result,
+        plots = classification_metabolite$plots))
+    })
+
+    output$classification_results_imp_Prot <- DT::renderDataTable({
+      df <- Classification_Proteins_imp_Prot()$result
+      rownames(df) <- NULL
+      names(df)[names(df) == "Variable"] = "module_id"
+      DT::datatable(df)
+    })
+
+    output$classification_plot_1_all_imp_Prot <- renderPlot({
+      selected_variable <- input$phenotypeSelector_imp_Prot
+      levels_selected_variable <- unique(metadata()[[selected_variable]])
+      if (length(levels_selected_variable) < 3) {
+        class_names <- levels_selected_variable
+        class_label <- paste(class_names, collapse = " vs ")
+        plot <- Classification_Proteins_imp_Prot()$plots[[1]]
+        plot <- plot +
+          ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
+                        x = "Variables",
+                        y = "Class") +
+          ggplot2::theme(
+            axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
+          )
+        classification_plot(plot)
+        return(plot)
+      } else {
+        # Print multiple boxplot charts, one for each level of the selected variable
+        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+          Classification_Proteins_imp_Prot()$plots[[i]]
+        })
+        plot <- cowplot::plot_grid(plotlist = plots_list)
+        classification_plot(plot)  # Store the plot in the reactive variable
+        return(plot)
+      }
+    })
+
 
     output$Important_features_1 <- renderText({
       Important_Features()$df5_1

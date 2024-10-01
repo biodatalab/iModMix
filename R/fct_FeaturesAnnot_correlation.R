@@ -51,18 +51,46 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
     ExpressionMetab_mat$missing_count <- rowSums(is.na(ExpressionMetab_mat))
     featureMetab_mat <- subset(ExpressionMetab_mat, missing_count <= 0.1 * (ncol(ExpressionMetab_mat) - 2))
     featuresMetab <- featureMetab_mat$Feature_ID
-    metab_t <- as.matrix(scale(t(featureMetab_mat[, -c(1, ncol(featureMetab_mat))])))
+
+    metab_t <- t(featureMetab_mat[, -c(1, ncol(featureMetab_mat))])
     colnames(metab_t) <- featuresMetab
+    metab_t <- metab_t[, apply(metab_t, 2, function(x) length(unique(x)) > 1)]
+    metab_t <- as.matrix(scale(metab_t))
+
+    sd_values_metab <- apply(metab_t, 2, function(x) sd(x, na.rm = TRUE))
+    filtered_indices <- which(sd_values_metab > quantile(sd_values_metab, 0.25))
+
+    metab_t <- if (length(filtered_indices) > 20000) {
+      metab_t[, order(sd_values_metab[filtered_indices], decreasing = TRUE)[1:20000]]
+    } else {
+      metab_t[, filtered_indices]
+    }
 
     ExpressionProt_mat = ExpressionProt_mat
     ExpressionProt_mat$missing_count <- rowSums(is.na(ExpressionProt_mat))
     featureProt_mat <- subset(ExpressionProt_mat, missing_count <= 0.1 * (ncol(ExpressionProt_mat) - 2))
     featuresProt <- featureProt_mat$Feature_ID
-    Prot_t <- as.matrix(scale(t(featureProt_mat[, -c(1, ncol(featureProt_mat))])))
+
+    Prot_t <- t(featureProt_mat[, -c(1, ncol(featureProt_mat))])
     colnames(Prot_t) <- featuresProt
+    Prot_t <- Prot_t[, apply(Prot_t, 2, function(x) length(unique(x)) > 1)]
+    Prot_t <- as.matrix(scale(Prot_t))
+
+    sd_values_Prot <- apply(Prot_t, 2, function(x) sd(x, na.rm = TRUE))
+    filtered_indices <- which(sd_values_Prot > quantile(sd_values_Prot, 0.25))
+
+    Prot_t <- if (length(filtered_indices) > 20000) {
+      Prot_t[, order(sd_values_Prot[filtered_indices], decreasing = TRUE)[1:20000]]
+    } else {
+      Prot_t[, filtered_indices]
+    }
 
     cluster_expression_matrix_Prot <- Prot_t[, colnames(Prot_t) %in% cluster_variables_Prot, drop = FALSE]
     cluster_expression_matrix_Metab <- metab_t[, colnames(metab_t) %in% cluster_variables_Metab, drop = FALSE]
+
+    # Store cluster-specific expression matrices
+    expression_matrices_list[[paste("Expression_Matrix_Cluster_Prot_", i)]] <- cluster_expression_matrix_Prot
+    expression_matrices_list[[paste("Expression_Matrix_Cluster_Metab_", i)]] <- cluster_expression_matrix_Metab
 
     # Calculate and store the correlation matrix between Prot and Metab expression matrices
     correlation_matrix <- cor(cluster_expression_matrix_Prot, cluster_expression_matrix_Metab, method = 'spearman', use = "pairwise.complete.obs")
@@ -127,6 +155,7 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
   return(list(
     Top_correlations = Top_correlations,
     cluster_assignments = cluster_assignments_list,
+    expression_matrices = expression_matrices_list,
     correlation_matrices = correlation_matrices_list,
     Important_features = Important_features_list,
     correlation_List = correlation_List_list
