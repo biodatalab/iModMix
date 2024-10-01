@@ -2050,7 +2050,7 @@ mod_module1_server <- function(id){
     output$classification_results_imp_metab <- DT::renderDataTable({
       df <- Classification_Metabolites_imp_metab()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "module_id"
+      names(df)[names(df) == "Variable"] = "Metabolite"
       DT::datatable(df)
     })
 
@@ -2137,7 +2137,7 @@ mod_module1_server <- function(id){
     output$classification_results_imp_Prot <- DT::renderDataTable({
       df <- Classification_Proteins_imp_Prot()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "module_id"
+      names(df)[names(df) == "Variable"] = "Protein/Gene"
       DT::datatable(df)
     })
 
