@@ -41,7 +41,11 @@ usethis::use_package("visNetwork")
 usethis::use_package("shinyWidgets")
 usethis::use_package("shinyBS")
 usethis::use_package("viridis")
-
+usethis::use_package("corrplot")
+usethis::use_package("reshape2")
+usethis::use_package("preprocessCore")
+usethis::use_package("GO.db")
+usethis::use_package("impute")
 
 ## install.packages('attachment') # if needed.
 attachment::att_amend_desc()

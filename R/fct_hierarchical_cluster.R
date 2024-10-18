@@ -36,16 +36,30 @@ hierarchical_cluster = function(parcor_mat, tom = TRUE, min_module_size = 10) {
   }
   # starts counting assignments at 0 (0 is unassigned), so add 1 to all values to conform to R counting (starts at 1)
   dynamicMods = dynamicMods + 1
-  mod_count = max(dynamicMods)
+  mod_count = max(dynamicMods, na.rm = TRUE)
   #color_palette = colorRampPalette(RColorBrewer::brewer.pal("Set1", n = 9))(mod_count)
-  color_palette = viridis::viridis(mod_count)
+  color_palette = viridis::viridis(mod_count + 1)
   dynamicMods_colors = color_palette[dynamicMods]
   dynamicMods_labels = paste0("cluster_", stringr::str_pad(dynamicMods, 6, pad = "0"))
-  cluster_assignments = data.frame(feature = colnames(parcor_mat), cluster = dynamicMods_labels, col = dynamicMods_colors, stringsAsFactors = FALSE)
+  cluster_assignments = data.frame(feature = colnames(parcor_mat),
+                                   cluster = dynamicMods_labels,
+                                   col = dynamicMods_colors,
+                                   stringsAsFactors = FALSE)
   if (tom == TRUE) {
-    result_list = list(tom_diss = tom_diss, hclustTree = hclustTree, dynamicMods_labels = dynamicMods_labels, dynamicMods_colors = dynamicMods_colors, dynamicMods_numeric = dynamicMods, mod_count = mod_count, cluster_assignments = cluster_assignments)
+    result_list = list(tom_diss = tom_diss,
+                       hclustTree = hclustTree,
+                       dynamicMods_labels = dynamicMods_labels,
+                       dynamicMods_colors = dynamicMods_colors,
+                       dynamicMods_numeric = dynamicMods,
+                       mod_count = mod_count,
+                       cluster_assignments = cluster_assignments)
   } else if (tom == FALSE) {
-    result_list = list(hclustTree = hclustTree, dynamicMods_labels = dynamicMods_labels, dynamicMods_colors = dynamicMods_colors, dynamicMods_numeric = dynamicMods, mod_count = mod_count, cluster_assignments = cluster_assignments)
+    result_list = list(hclustTree = hclustTree,
+                       dynamicMods_labels = dynamicMods_labels,
+                       dynamicMods_colors = dynamicMods_colors,
+                       dynamicMods_numeric = dynamicMods,
+                       mod_count = mod_count,
+                       cluster_assignments = cluster_assignments)
   }
   return(result_list)
 }

@@ -37,7 +37,6 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
     cluster_top_Prot <- cluster_assignments_Prot[grepl(Prot_module, cluster_assignments_Prot$col), ]
     cluster_top_Metab <- cluster_assignments_metab[grepl(Metab_module, cluster_assignments_metab$col), ]
 
-
     # Store cluster assignments
     cluster_assignments_list[[paste("Cluster_assignments_Prot_", i)]] <- cluster_top_Prot
     cluster_assignments_list[[paste("Cluster_assignments_Metab_", i)]] <- cluster_top_Metab
@@ -88,14 +87,11 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
     cluster_expression_matrix_Prot <- Prot_t[, colnames(Prot_t) %in% cluster_variables_Prot, drop = FALSE]
     cluster_expression_matrix_Metab <- metab_t[, colnames(metab_t) %in% cluster_variables_Metab, drop = FALSE]
 
-    # Store cluster-specific expression matrices
-    expression_matrices_list[[paste("Expression_Matrix_Cluster_Prot_", i)]] <- cluster_expression_matrix_Prot
-    expression_matrices_list[[paste("Expression_Matrix_Cluster_Metab_", i)]] <- cluster_expression_matrix_Metab
-
     # Calculate and store the correlation matrix between Prot and Metab expression matrices
     correlation_matrix <- cor(cluster_expression_matrix_Prot, cluster_expression_matrix_Metab, method = 'spearman', use = "pairwise.complete.obs")
 
-    correlation_matrix2 <- cor(cluster_expression_matrix_Prot, cluster_expression_matrix_Metab, method = 'spearman', use = "pairwise.complete.obs")
+    #correlation_matrix2 <- cor(cluster_expression_matrix_Prot, cluster_expression_matrix_Metab, method = 'spearman', use = "pairwise.complete.obs")
+    correlation_matrix2 <- correlation_matrix
 
     #correlation_matrix
     # Replace row names with corresponding values from cluster_assignments_Prot$feature_name
@@ -123,6 +119,12 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
                                       cluster_assignments_Prot$feature_name[prot_annotation_match],
                                       rownames(correlation_matrix2))
     rownames(correlation_matrix2) <- correlation_matrix_rows
+
+    # Store cluster-specific expression matrices
+    colnames(cluster_expression_matrix_Prot) <- correlation_matrix_rows
+    colnames(cluster_expression_matrix_Metab) <- correlation_matrix_cols
+    expression_matrices_list[[paste("Expression_Matrix_Cluster_Prot_", i)]] <- cluster_expression_matrix_Prot
+    expression_matrices_list[[paste("Expression_Matrix_Cluster_Metab_", i)]] <- cluster_expression_matrix_Metab
 
     # Replace column names in correlation_matrix2 with corresponding values from cluster_assignments_metab$feature_map
     metab_annotation_match2 <- match(colnames(correlation_matrix2), cluster_assignments_metab$feature)

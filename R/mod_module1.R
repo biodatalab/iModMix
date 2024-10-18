@@ -14,6 +14,8 @@ options(shiny.maxRequestSize=100*1024^2)
 #mod_module1_ui <- function(id, input, output, session) {
 mod_module1_ui <- function(id) {
   ns <- NS(id)
+  library(shiny)
+  library(ggplot2)
   library(plotly)
   library(visNetwork)
   library(shinyWidgets)
