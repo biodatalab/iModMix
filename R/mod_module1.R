@@ -404,11 +404,17 @@ mod_module1_ui <- function(id) {
                             downloadLink(ns("downloadNetwork"),
                                          "Network as .html")),
                    tabPanel("Important features",
-                            h4("Top 5 Multi-omics modules correlations",
+                            h4("Top Multi-omics modules correlations",
                                bsButton("surf-infoT5MM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoT5MM", title = "More information",
                                       content = HTML(paste0("Table of the top 5 highly correlated modules, with the number of features within each module, the correlation between modules, and the enriched term for the proteins/genomics modules.   ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
+                            numericInput(ns("TopModules"),
+                                         label = "Select the number of top modules to visualize",
+                                         min = 1,
+                                         max = 50,
+                                         step = 1,
+                                         value = 5),
                             DT::DTOutput(ns("ImportantVariables")),
                             h4("Top module correlation details",
                                bsButton("surf-infoTMCD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
@@ -574,6 +580,12 @@ mod_module1_server <- function(id){
       req(input$metadata)
       filedata_metadata <- read.csv(input$metadata$datapath)
       metadata(filedata_metadata)
+    })
+
+    observeEvent(input$TopModules, {
+      n <- input$TopModules
+      choices <- setNames(as.list(1:n), paste0("Top_", 1:n))
+      updateSelectInput(session, "visualization_list", choices = choices)
     })
 
     observeEvent(input$runDemo, {
@@ -1879,6 +1891,7 @@ mod_module1_server <- function(id){
     )
 
     ImpVar_Prot_Metab1 <- reactive({
+      top_n <- input$TopModules
       Cor_Prot_Metab = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
       cluster_assignments_metab = cluster_assignments_metabolites1()$cluster_assignments_metab
       req(filedata())
@@ -1896,7 +1909,7 @@ mod_module1_server <- function(id){
                                                      cluster_assignments_metab = cluster_assignments_metab,
                                                      ExpressionProt_mat = ExpressionProt_mat,
                                                      ExpressionMetab_mat = ExpressionMetab_mat,
-                                                     top_n = 5) #$correlation_matrices_list
+                                                     top_n = top_n) #$correlation_matrices_list
       return(list(
         Top_correlations = ImpVar_Prot_Metab$Top_correlations,
         cluster_assignments = ImpVar_Prot_Metab$cluster_assignments,
@@ -1908,69 +1921,26 @@ mod_module1_server <- function(id){
     })
 
     Important_Features <- reactive({
-      custom_palette <-colorRampPalette(c(RColorBrewer::brewer.pal(11, "RdYlBu")[11], "white", RColorBrewer::brewer.pal(11, "RdYlBu")[1]))(n = 100)
+      custom_palette <- colorRampPalette(c(RColorBrewer::brewer.pal(11, "RdYlBu")[11], "white", RColorBrewer::brewer.pal(11, "RdYlBu")[1]))(n = 100)
 
-      if(input$visualization_list == 1){
-        df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[1]])
-        df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[2]])
-        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[1]])
-        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[2]])
-        df4   = ImpVar_Prot_Metab1()$correlation_List[[1]]
-        df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[1]], main = "Top 1 Modules Correlation")
-        df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[1]], type = "upper",  tl.col = "black", col = custom_palette)
-        df5_1 = ImpVar_Prot_Metab1()$Important_features[[1]]
-        df5_2 = ImpVar_Prot_Metab1()$Important_features[[2]]
+      n <- input$visualization_list
+      df_list <- list()
+
+      for (i in 1:n) {
+        df1_1 <- as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[2*i - 1]])
+        df1_2 <- as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[2*i]])
+        df2_1 <- as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[2*i - 1]])
+        df2_2 <- as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[2*i]])
+        df4 <- ImpVar_Prot_Metab1()$correlation_List[[i]]
+        df4_1 <- hist(ImpVar_Prot_Metab1()$correlation_matrices[[i]], main = paste("Top", i, "Modules Correlation"))
+        df4_2 <- corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[i]], type = "upper", tl.col = "black", col = custom_palette)
+        df5_1 <- ImpVar_Prot_Metab1()$Important_features[[2*i - 1]]
+        df5_2 <- ImpVar_Prot_Metab1()$Important_features[[2*i]]
+
+        df_list[[i]] <- list(df1_1 = df1_1, df1_2 = df1_2, df2_1 = df2_1, df2_2 = df2_2, df4 = df4, df4_1 = df4_1, df4_2 = df4_2, df5_1 = df5_1, df5_2 = df5_2)
       }
 
-      if(input$visualization_list == 2){
-        df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[3]])
-        df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[4]])
-        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[3]])
-        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[4]])
-        df4   = ImpVar_Prot_Metab1()$correlation_List[[2]]
-        df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[2]], main = "Top 2 Modules Correlation")
-        df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[2]], type = "upper",  tl.col = "black", col = custom_palette)
-        df5_1 = ImpVar_Prot_Metab1()$Important_features[[3]]
-        df5_2 = ImpVar_Prot_Metab1()$Important_features[[4]]
-      }
-
-      if(input$visualization_list == 3){
-        df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[5]])
-        df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[6]])
-        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[5]])
-        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[6]])
-        df4   = ImpVar_Prot_Metab1()$correlation_List[[3]]
-        df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[3]], main = "Top 3 Modules Correlation")
-        df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[3]], type = "upper",  tl.col = "black", col = custom_palette)
-        df5_1 = ImpVar_Prot_Metab1()$Important_features[[5]]
-        df5_2 = ImpVar_Prot_Metab1()$Important_features[[6]]
-      }
-
-      if(input$visualization_list == 4){
-        df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[7]])
-        df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[8]])
-        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[7]])
-        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[8]])
-        df4   = ImpVar_Prot_Metab1()$correlation_List[[4]]
-        df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[4]], main = "Top 2 Modules Correlation")
-        df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[4]], type = "upper",  tl.col = "black", col = custom_palette)
-        df5_1 = ImpVar_Prot_Metab1()$Important_features[[7]]
-        df5_2 = ImpVar_Prot_Metab1()$Important_features[[8]]
-      }
-
-      if(input$visualization_list == 5){
-        df1_1 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[9]])
-        df1_2 = as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[10]])
-        df2_1 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[9]])
-        df2_2 = as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[10]])
-        df4   = ImpVar_Prot_Metab1()$correlation_List[[5]]
-        df4_1 = hist(ImpVar_Prot_Metab1()$correlation_matrices[[5]], main = "Top 3 Modules Correlation")
-        df4_2 = corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[5]], type = "upper",  tl.col = "black", col = custom_palette)
-        df5_1 = ImpVar_Prot_Metab1()$Important_features[[9]]
-        df5_2 = ImpVar_Prot_Metab1()$Important_features[[10]]
-      }
-
-      return(list(df1_1 = df1_1, df1_2=df1_2, df2_1=df2_1, df2_2=df2_2, df5_1 = df5_1, df5_2=df5_2, df4=df4, df4_1=df4_1, df4_2=df4_2))
+      return(df_list)
     })
 
     output$ImportantVariables <- DT::renderDataTable({
@@ -1989,29 +1959,41 @@ mod_module1_server <- function(id){
     })
 
     output$Correlation_plotImp <- renderPlot({
-      Important_Features()$df4_1
+      df_list <- Important_Features()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+      df4_1 <- df_list[[selected_index]]$df4_1
     })
 
     output$CorplotImp <- renderPlot({
-      Important_Features()$df4_2
+      df_list <- Important_Features()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+      df4_2 <- df_list[[selected_index]]$df4_2
     })
 
     output$Correlation_mod <- DT::renderDataTable({
-      df4 = data.frame(Important_Features()$df4)
-      DT::datatable(df4)
+      df_list <- Important_Features()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+      df4 <- df_list[[selected_index]]$df4
+      DT::datatable(data.frame(df4))
     })
+
     # Render the download handler
     output$downloadModCorrelation <- downloadHandler(
       filename = function() {
         "ModulesCorrelation.csv"
       },
       content = function(file) {
-        write.csv(Important_Features()$df4, file, row.names = TRUE)
+        df_list <- Important_Features()
+        selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+        df4 <- df_list[[selected_index]]$df4
+        write.csv(df4, file, row.names = TRUE)
       }
     )
 
     output$cluster_assignments_features2 <- DT::renderDataTable({
-      df <- Important_Features()$df1_2
+      df_list <- Important_Features()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+      df <- df_list[[selected_index]]$df1_2
       df_features <- df %>%
         select(feature, feature_name, feature_map, Metabolite) %>%
         distinct()
@@ -2019,7 +2001,9 @@ mod_module1_server <- function(id){
     })
 
     output$cluster_assignments_summary2 <- DT::renderDataTable({
-      df <- Important_Features()$df1_2
+      df_list <- Important_Features()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+      df <- df_list[[selected_index]]$df1_2
       cluster <- unique(df$cluster)
       col <- unique(df$col)
       SummaryData <- data.frame(cluster = cluster, col = col, stringsAsFactors = FALSE)
@@ -2031,12 +2015,17 @@ mod_module1_server <- function(id){
         "Metabolites_TopModule.csv"
       },
       content = function(file) {
-        write.csv(Important_Features()$df1_2, file, row.names = TRUE)
+        df_list <- Important_Features()
+        selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+        df1_2 <- df_list[[selected_index]]$df1_2
+        write.csv(df1_2, file, row.names = TRUE)
       }
     )
 
     Classification_Metabolites_imp_metab <- reactive({
-      df2_2 = as.data.frame(Important_Features()$df2_2)
+      df_list <- Important_Features()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+      df2_2 <- as.data.frame(df_list[[selected_index]]$df2_2)
       metadata <- as.data.frame(metadata())
       phenotype_variable = input$phenotypeSelector_imp_metab
       significance_threshold = input$pValueThreshold_imp_metab
@@ -2084,19 +2073,19 @@ mod_module1_server <- function(id){
     })
 
     output$cluster_assignments_features <- DT::renderDataTable({
-      df <- Important_Features()$df1_1
-
-      # Selecciona las columnas de interés
+      df_list <- Important_Features()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+      df <- df_list[[selected_index]]$df1_1
       df_features <- df %>%
         select(feature, feature_name) %>%
-        distinct()  # Elimina duplicados
-
+        distinct()
       DT::datatable(df_features)
     })
 
     output$cluster_assignments_summary <- DT::renderDataTable({
-      df <- Important_Features()$df1_1
-
+      df_list <- Important_Features()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+      df <- df_list[[selected_index]]$df1_1
       df_summary <- df %>%
         group_by(cluster, col) %>%
         summarise(
@@ -2118,12 +2107,17 @@ mod_module1_server <- function(id){
         "Proteins_Genes_TopModule.csv"
       },
       content = function(file) {
-        write.csv(Important_Features()$df1_1, file, row.names = TRUE)
+        df_list <- Important_Features()
+        selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+        df1_1 <- df_list[[selected_index]]$df1_1
+        write.csv(df1_1, file, row.names = TRUE)
       }
     )
 
     Classification_Proteins_imp_Prot <- reactive({
-      df2_1 = as.data.frame(Important_Features()$df2_1)
+      df_list <- Important_Features()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+      df2_1 <- df_list[[selected_index]]$df2_1
       metadata <- as.data.frame(metadata())
       phenotype_variable = input$phenotypeSelector_imp_Prot
       significance_threshold = input$pValueThreshold_imp_Prot
@@ -2170,13 +2164,16 @@ mod_module1_server <- function(id){
       }
     })
 
-
     output$Important_features_1 <- renderText({
-      Important_Features()$df5_1
+      df_list <- Important_Features()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+      df5_1 <- df_list[[selected_index]]$df5_1
     })
 
     output$Important_features_2 <- renderText({
-      Important_Features()$df5_2
+      df_list <- Important_Features()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+      df5_2 <- df_list[[selected_index]]$df5_2
     })
 
   })
