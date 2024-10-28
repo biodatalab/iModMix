@@ -315,8 +315,6 @@ mod_module1_ui <- function(id) {
                             bsPopover(id = "surf-info_PGPData", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file <i> Metadata</i>. Check if the number of samples and the number of entries listed at the bottom of the table are the same. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a sample.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
-                            helpText(
-                              "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table6")),
                             h4("Classification between phenotypes by eigenfeatures",
                                bsButton("surf-info_PGCPef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
@@ -713,8 +711,18 @@ mod_module1_server <- function(id){
       ggplot2::autoplot(pca1()$pca_res)
        } else {
         req(metadata())
-        ggplot2::autoplot(pca1()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA)
-      }
+
+        pca_data <- as.data.frame(pca1()$pca_res$x)
+        combined_data <- cbind(pca_data, metadata())
+        color_column <- input$phenotypeSelectorPCA
+
+        if (!is.null(color_column) && color_column != "") {
+          ggplot(combined_data, aes_string(x = "PC1", y = "PC2", color = color_column)) +
+            geom_point()
+        } else {
+          print("Select a phenotype.")
+        }
+       }
     })
 
     # Render the download handler
@@ -786,7 +794,19 @@ mod_module1_server <- function(id){
       if(is.null(metadata())){
         ggplot2::autoplot(pca2()$pca_res)
       } else {
-        ggplot2::autoplot(pca2()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA2)
+        #ggplot2::autoplot(pca2()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA2)
+        req(metadata())
+
+        pca_data <- as.data.frame(pca2()$pca_res$x)
+        combined_data <- cbind(pca_data, metadata())
+        color_column <- input$phenotypeSelectorPCA2
+
+        if (!is.null(color_column) && color_column != "") {
+          ggplot(combined_data, aes_string(x = "PC1", y = "PC2", color = color_column)) +
+            geom_point()
+        } else {
+          print("Select a phenotype.")
+        }
       }
     })
 
