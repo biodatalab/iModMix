@@ -1,10 +1,9 @@
 #' cluster_assignments_genes
 #'
-#' @description cluster Assignments for proteins and genes
-#' @param hclustTree (hierarchical clustering object)
-#' @param Genes_Annotation (data frame with de symbol genes of the Proteins or RNAseq: Should have a column called Feature_ID
-#' @return result_list data frame containing cluster_assignments and HMDB/Symbol
-#'
+#' @description Cluster assignments for proteins and genes.
+#' @param cluster_genes A data frame containing cluster assignments for genes.
+#' @param Prot_annotation A data frame with the annotation names of the proteins. Should have a column called Feature_ID.
+#' @return A data frame containing cluster assignments and HMDB/Symbol.
 #' @export
 cluster_assignments_genes <- function(cluster_genes, Prot_annotation = NULL) {
   if (!is.null(Prot_annotation)) {

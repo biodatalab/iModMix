@@ -10,7 +10,9 @@ Assigment_genes_enrichr(
 )
 }
 \arguments{
-\item{cluster_assignments_genes}{(data frame containing cluster_assignments and HMDB/Symbol)}
+\item{cluster_assignments_ProtGenes}{(data frame containing cluster_assignments and HMDB/Symbol)}
+
+\item{database}{A list with all the available databases from enrichr}
 }
 \value{
 result_list data frame containing cluster_assignments and Enrichr terms

@@ -1,10 +1,15 @@
+utils::globalVariables(c("missing_count"))
+
 #' Eigengenes
 #'
-#' @description moduleEigengenes function by WGCNA
-#' @return A feature matrix with the first principal component of each metabolomic/protein cluster
-#'
+#' @description Calculates module eigengenes using the WGCNA package.
+#' @param Expression_mat A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.
+#' @param cluster_assignments A vector of cluster assignments for each feature.
+#' @return A list containing:
+#' \item{module_eigenmetab_List_Me}{The full result from WGCNA::moduleEigengenes.}
+#' \item{module_eigenmetab_Me}{The matrix of module eigengenes.}
+#' \item{feature_mat_t}{The filtered and scaled feature matrix.}
 #' @export
-
 Eigengenes = function(Expression_mat = Expression_mat, cluster_assignments=cluster_assignments) {
   Expression_mat = Expression_mat
   Expression_mat$missing_count <- rowSums(is.na(Expression_mat))
@@ -25,7 +30,7 @@ Eigengenes = function(Expression_mat = Expression_mat, cluster_assignments=clust
     feature_mat_t[, filtered_indices]
   }
 
-  module_eigenmetab_List_Me = WGCNA::moduleEigengenes(expr = feature_mat_t , colors = cluster_assignments)
+  module_eigenmetab_List_Me = WGCNA::moduleEigengenes(expr = as.matrix(feature_mat_t) , colors = cluster_assignments)
   module_eigenmetab_Me = module_eigenmetab_List_Me$eigengenes
   return(list(module_eigenmetab_List_Me = module_eigenmetab_List_Me, module_eigenmetab_Me = module_eigenmetab_Me, feature_mat_t = feature_mat_t))
   }

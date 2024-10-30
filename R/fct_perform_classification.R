@@ -4,7 +4,7 @@
 #' @param eigengene_data A data frame of eigengenes organized with patient IDs in rows and variables in columns.
 #' @param metadata A data frame containing metadata, with a column call "Sample" that matches patient IDs in eigengene_data.
 #' @param phenotype_variable The variable selected by the user in the Shiny app (response variable).
-#'
+#' @param significance_threshold A numeric value to filter p-value. Default is 00.5.
 #' @return A data frame with metrics such as AUC, Accuracy, and Error Rate for each binary classification.
 #'
 #' @export

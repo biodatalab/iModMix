@@ -6,6 +6,9 @@
 \usage{
 load_data(file_name)
 }
+\arguments{
+\item{file_name}{The name of the fle to upload.}
+}
 \value{
 The return value, if any, from executing the function.
 }

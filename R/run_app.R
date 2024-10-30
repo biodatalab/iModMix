@@ -14,7 +14,7 @@ run_app <- function(
   uiPattern = "/",
   ...
 ) {
-  demo_data_path <- "Example_data/ccRCC4_Data"
+  demo_data_path <- "inst/Example_data/ccRCC4_Data"
   file_path_metab_exp <- file.path(demo_data_path, "Metab_exp.csv")
   file_path_metab_annot <- file.path(demo_data_path, "Metab_annot.csv")
   file_path_RNA_exp <- file.path(demo_data_path, "RNA_exp.csv")
@@ -70,7 +70,7 @@ run_app <- function(
 
   ### data Flores
 
-  demo_data_pathAll <- "Example_data/FloresData_K_TK"
+  demo_data_pathAll <- "inst/Example_data/FloresData_K_TK"
   file_path_metab_expAll <- file.path(demo_data_pathAll, "Metab_exp.csv")
   file_path_metab_annotAll <- file.path(demo_data_pathAll, "Metab_annot.csv")
   file_path_RNA_expAll <- file.path(demo_data_pathAll, "Prot_exp.csv")

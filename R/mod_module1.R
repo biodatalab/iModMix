@@ -14,12 +14,6 @@ options(shiny.maxRequestSize=100*1024^2)
 #mod_module1_ui <- function(id, input, output, session) {
 mod_module1_ui <- function(id) {
   ns <- NS(id)
-  library(shiny)
-  library(ggplot2)
-  library(plotly)
-  library(visNetwork)
-  library(shinyWidgets)
-  library(shinyBS)
 
   tagList(
 
@@ -120,7 +114,7 @@ mod_module1_ui <- function(id) {
                             h4("Metabolomics annotation data",
                                bsButton("surf-infoMAD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             bsPopover(id = "surf-infoMAD", title = "More information",
-                                      content = HTML(paste0("Table reflecting the uploaded file <i>Metabolomics Annotation Data</i>. Check if the total number of entries at bottom of table matches the total number of features in the “Metabolomics Abundance Data”. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a metabolomic feature of interest.")),
+                                      content = HTML(paste0("Table reflecting the uploaded file <i>Metabolomics Annotation Data</i>. Check if the total number of entries at bottom of table matches the total number of features in the \u201cMetabolomics Abundance Data\u201d. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a metabolomic feature of interest.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
                                ),
                             DT::DTOutput(ns("table3"))
@@ -704,7 +698,6 @@ mod_module1_server <- function(id){
     })
 
     output$PCA1 <- renderPlot({
-      library(ggfortify)
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
       if(is.null(metadata())){
@@ -717,8 +710,8 @@ mod_module1_server <- function(id){
         color_column <- input$phenotypeSelectorPCA
 
         if (!is.null(color_column) && color_column != "") {
-          ggplot(combined_data, aes_string(x = "PC1", y = "PC2", color = color_column)) +
-            geom_point()
+          ggplot2::ggplot(combined_data, aes_string(x = "PC1", y = "PC2", color = color_column)) +
+            ggplot2::geom_point()
         } else {
           print("Select a phenotype.")
         }
@@ -788,7 +781,6 @@ mod_module1_server <- function(id){
     })
 
     output$PCA2 <- renderPlot({
-      library(ggfortify)
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
       if(is.null(metadata())){
@@ -802,8 +794,8 @@ mod_module1_server <- function(id){
         color_column <- input$phenotypeSelectorPCA2
 
         if (!is.null(color_column) && color_column != "") {
-          ggplot(combined_data, aes_string(x = "PC1", y = "PC2", color = color_column)) +
-            geom_point()
+          ggplot2::ggplot(combined_data, aes_string(x = "PC1", y = "PC2", color = color_column)) +
+            ggplot2::geom_point()
         } else {
           print("Select a phenotype.")
         }
@@ -903,7 +895,7 @@ mod_module1_server <- function(id){
     })
 
     output$matrizTable <- renderPrint({
-      partial_cors1()$par_cor1[1:5,1:5]
+      as.matrix(partial_cors1()$par_cor1[1:5,1:5])
     })
 
     # Render the download handler
@@ -917,7 +909,7 @@ mod_module1_server <- function(id){
     )
 
     hierarchical_cluster1 <- reactive({
-      par_cor2 = partial_cors1()$par_cor1
+      par_cor2 = as.matrix(partial_cors1()$par_cor1)
       hc2 = hierarchical_cluster(parcor_mat = par_cor2, tom = TRUE, min_module_size = 10)
       hclusterTree2 = hc2$hclustTree
       hcDynMods2 = hc2$dynamicMods_numeric
@@ -943,7 +935,7 @@ mod_module1_server <- function(id){
 
     output$hc_plot <- renderPlot({
       hcClu = hierarchical_cluster1()$hclusterTree2
-      hcMod = hierarchical_cluster1()$hcDynMods2
+      hcMod = as.matrix(hierarchical_cluster1()$hcDynMods2)
       WGCNA::plotDendroAndColors(dendro = hcClu,
                                  colors = hcMod,
                                  dendroLabels = FALSE,
@@ -1192,7 +1184,6 @@ mod_module1_server <- function(id){
     )
 
     output$Loadings1 <- renderPlot({
-      library(ggfortify)
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
         ggplot2::autoplot(loadings_metab()$pca_res, data = metadata(), colour = input$phenotypeSelector, loadings = TRUE)
@@ -1379,7 +1370,7 @@ mod_module1_server <- function(id){
     )
 
     databaseSelectorList <- reactive({
-      gene_set_library = readxl::read_excel("Example_data/Gene_set_Library.xlsx", col_names = FALSE) # Willy Aug 15, 2024
+      gene_set_library = readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE) # Willy Aug 15, 2024
       choices <- gene_set_library[[1]]
       data.frame(choices = choices)
     })
@@ -1390,7 +1381,7 @@ mod_module1_server <- function(id){
 
     # curl::has_internet()
     assign("has_internet_via_proxy", TRUE, environment(curl::has_internet))
-    library(enrichR)
+    requireNamespace("enrichR", quietly = TRUE)
     enrichR::listEnrichrSites()
 
     Genes_Prot_enrich <- reactive({
@@ -1635,7 +1626,6 @@ mod_module1_server <- function(id){
     )
 
     output$Loadings2 <- renderPlot({
-      library(ggfortify)
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
       ggplot2::autoplot(loadings_Prot()$pca_res, data = metadata(), colour = input$phenotypeSelector2, loadings = TRUE)
@@ -1729,11 +1719,9 @@ mod_module1_server <- function(id){
 
       #if (is.null(filedata4())) {
       if (is.null(filedata4()) | is.null(Genes_Prot_enrich()$cluster_assignments_Prot_enrich)) {
-        # Si filedata4 es NULL, calcular la correlación usando cor() directamente
         cor_Prot_metab_WGCNA <- cor(eigengenes_Prot, eigengenes_metab, method = 'spearman', use = "pairwise.complete.obs")
         cor_Prot_metab_list <- reshape2::melt(cor_Prot_metab_WGCNA, varnames = c("Prot_module", "Metab_module"))
         colnames(cor_Prot_metab_list) <- c("Prot_module", "Metab_module", "Correlation")
-        #Top_cor_Prot_metab <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
         cor_Prot_metab_list1 <- cor_Prot_metab_list[order(abs(cor_Prot_metab_list$Correlation), decreasing = TRUE), ][1:5, ]
         cor_Prot_metab_list2 <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
 

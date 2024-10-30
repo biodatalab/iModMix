@@ -6,6 +6,7 @@
 #' @param eigengenes_metab A feature matrix with the first principal component of each metabolomic cluster
 #' @param cluster_assignments_Prot data frame containing cluster_assignments and Enrichr terms
 #' @param cluster_assignments_metab data frame containing cluster_assignments
+#' @param threshold A numeric value to filter correlations. Default is 0.5
 #' @return  Return the Top_correlations between Prot and metab eigengenes, graph of red, correlation plot
 #' @export
 Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assignments_Prot, cluster_assignments_metab, threshold = 0.5) {

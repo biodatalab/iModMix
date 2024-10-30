@@ -2,7 +2,7 @@
 #'
 #' @description Perform hierarchical clustering of a partial correlation matrix. By default uses the topological overlap measure (TOM)
 #' @param parcor_mat A partial correlation matrix from glassoFast$wi: Estimated inverse covariance matrix
-#' @param TOM TRUE: topological overlap measure; FALSE: partial correlation matrix; default is TRUE.
+#' @param tom TRUE: topological overlap measure; FALSE: partial correlation matrix; default is TRUE.
 #' @param min_module_size Smallest modules to be generated; default is 10
 #' @return result_list List containing TOM_diss (TOM dissimilarity; NA if argument TOM = FALSE), hclustTree (hierarchical clustering object), dynamicMods (index of module membership for features), and mod_count (number of modules).
 #'

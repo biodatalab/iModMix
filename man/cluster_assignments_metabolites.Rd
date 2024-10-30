@@ -7,12 +7,12 @@
 cluster_assignments_metabolites(cluster_metabolites, metab_annotation = NULL)
 }
 \arguments{
-\item{hclustTree}{(hierarchical clustering object)}
+\item{cluster_metabolites}{A data frame containing cluster assignments for metabolites}
 
-\item{Metabolites_annotation}{(data frame with de annotation names of the metabolites: Should have a column called HMDB)}
+\item{metab_annotation}{A data frame with the annotation names of the metabolites. Should have a column called Feature_ID.}
 }
 \value{
-result_list data frame containing cluster_assignments and HMDB/Symbol
+A data frame containing cluster assignments and HMDB/Symbol.
 }
 \description{
 cluster Assignments for metabolites

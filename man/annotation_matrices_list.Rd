@@ -14,23 +14,21 @@ annotation_matrices_list(
 )
 }
 \arguments{
-\item{Cor_Prot_Metab}{A feature matrix with the first principal component of each protein cluster}
+\item{Cor_Prot_Metab}{A data frame with the first principal component of each protein cluster and their correlations.}
 
-\item{cluster_assignments_Prot}{data frame containing cluster_assignments and Enrichr terms}
+\item{cluster_assignments_Prot}{A data frame containing cluster assignments and Enrichr terms for proteins.}
 
-\item{cluster_assignments_metab}{data frame containing cluster_assignments}
+\item{cluster_assignments_metab}{A data frame containing cluster assignments for metabolites.}
 
-\item{Prot_annotation}{data frame with de annotation names of the proteins: Should have a column called Symbol}
+\item{Prot_annotation}{A data frame with the annotation names of the proteins. Should have a column called Symbol.}
 
-\item{Metabolites_annotation}{(data frame with de annotation names of the metabolites: Should have a column called HMDB)}
+\item{metab_annotation}{A data frame with the annotation names of the metabolites. Should have a column called HMDB.}
 
-\item{Prot_t}{A feature matrix (e.g. gene expression) with samples in columns and features (e.g. genes) in rows Row names must be unique.}
-
-\item{metab_t}{A feature matrix (e.g. gene expression) with samples in columns and features (e.g. metabolites) in rows Row names must be unique.}
+\item{top_n}{The number of top correlations to select. Default is 5.}
 }
 \value{
-Important features
+A list containing annotation matrices for the top correlated modules.
 }
 \description{
-Calculate correlation between the features of top correlated modules
+Calculate correlation between the features of top correlated modules.
 }

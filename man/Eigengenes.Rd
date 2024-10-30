@@ -9,9 +9,17 @@ Eigengenes(
   cluster_assignments = cluster_assignments
 )
 }
+\arguments{
+\item{Expression_mat}{A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.}
+
+\item{cluster_assignments}{A vector of cluster assignments for each feature.}
+}
 \value{
-A feature matrix with the first principal component of each metabolomic/protein cluster
+A list containing:
+\item{module_eigenmetab_List_Me}{The full result from WGCNA::moduleEigengenes.}
+\item{module_eigenmetab_Me}{The matrix of module eigengenes.}
+\item{feature_mat_t}{The filtered and scaled feature matrix.}
 }
 \description{
-moduleEigengenes function by WGCNA
+Calculates module eigengenes using the WGCNA package.
 }

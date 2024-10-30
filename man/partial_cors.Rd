@@ -7,7 +7,7 @@
 partial_cors(Expression_mat)
 }
 \arguments{
-\item{feature_mat_t}{A feature matrix (e.g. gene expression) with samples in rows and features (e.g. genes) in columns. Row names must be unique.}
+\item{Expression_mat}{A feature matrix (e.g. gene expression) with samples in columns and features (e.g. genes) in rows. Row names must be unique.}
 }
 \value{
 partial_cor_mat A partial correlation matrix with NA's in the diagonal.

@@ -7,13 +7,13 @@
 cluster_assignments_genes(cluster_genes, Prot_annotation = NULL)
 }
 \arguments{
-\item{hclustTree}{(hierarchical clustering object)}
+\item{cluster_genes}{A data frame containing cluster assignments for genes.}
 
-\item{Genes_Annotation}{(data frame with de symbol genes of the Proteins or RNAseq: Should have a column called Feature_ID}
+\item{Prot_annotation}{A data frame with the annotation names of the proteins. Should have a column called Feature_ID.}
 }
 \value{
-result_list data frame containing cluster_assignments and HMDB/Symbol
+A data frame containing cluster assignments and HMDB/Symbol.
 }
 \description{
-cluster Assignments for proteins and genes
+Cluster assignments for proteins and genes.
 }

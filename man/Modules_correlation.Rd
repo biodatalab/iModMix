@@ -20,6 +20,8 @@ Modules_correlation(
 \item{cluster_assignments_Prot}{data frame containing cluster_assignments and Enrichr terms}
 
 \item{cluster_assignments_metab}{data frame containing cluster_assignments}
+
+\item{threshold}{A numeric value to filter correlations. Default is 0.5}
 }
 \value{
 Return the Top_correlations between Prot and metab eigengenes, graph of red, correlation plot

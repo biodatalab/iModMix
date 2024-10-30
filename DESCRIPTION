@@ -7,14 +7,41 @@ Authors@R:
            role = c("aut", "cre"),
            email = "isis.narvaez-bandera@moffitt.org")
 Description: The iModMix network-based method offers an integrated framework for analyzing multi-omics data, including metabolomics, proteomics, and transcriptomics data, enabling the exploration of intricate molecular associations within heterogeneous biological systems.
-License: What license is it under?
+License: MIT + file LICENSE
 Imports: 
     config (>= 0.3.2),
     golem (>= 0.4.1),
-    shiny (>= 1.7.5)
+    shiny (>= 1.7.5),
+    ComplexHeatmap,
+    DT,
+    RColorBrewer,
+    WGCNA,
+    corrplot,
+    cowplot,
+    curl,
+    dynamicTreeCut,
+    enrichR,
+    ggplot2,
+    glassoFast,
+    igraph,
+    impute,
+    purrr,
+    readxl,
+    reshape2,
+    stringr,
+    tidyr,
+    viridis,
+    visNetwork,
+    vroom
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    ggfortify,
+    plotly,
+    shinyBS,
+    shinyWidgets,
+    pROC,
+    tuneR
 Config/testthat/edition: 3

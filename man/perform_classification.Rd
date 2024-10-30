@@ -18,6 +18,8 @@ perform_classification(
 \item{metadata}{A data frame containing metadata, with a column call "Sample" that matches patient IDs in eigengene_data.}
 
 \item{phenotype_variable}{The variable selected by the user in the Shiny app (response variable).}
+
+\item{significance_threshold}{A numeric value to filter p-value. Default is 00.5.}
 }
 \value{
 A data frame with metrics such as AUC, Accuracy, and Error Rate for each binary classification.

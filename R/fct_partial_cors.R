@@ -1,7 +1,7 @@
 #' partial_cors
 #'
 #' @description Calculates partial correlations based on graphical lasso (https://www.rdocumentation.org/packages/glassoFast/versions/1.0/topics/glassoFast).
-#' @param feature_mat_t A feature matrix (e.g. gene expression) with samples in rows and features (e.g. genes) in columns. Row names must be unique.
+#' @param Expression_mat A feature matrix (e.g. gene expression) with samples in columns and features (e.g. genes) in rows. Row names must be unique.
 #' @return partial_cor_mat A partial correlation matrix with NA's in the diagonal.
 #'
 #' @export
@@ -14,6 +14,12 @@ partial_cors = function(Expression_mat) {
   feature_mat_t <- t(feature_mat[, -c(1, ncol(feature_mat))])
   colnames(feature_mat_t) <- features
   feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
+
+  # Ensure all columns are numeric
+  feature_mat_t <- as.data.frame(feature_mat_t)
+  feature_mat_t[] <- lapply(feature_mat_t, as.numeric)
+  feature_mat_t <- as.matrix(feature_mat_t)
+
   feature_mat_t <- as.matrix(scale(feature_mat_t))
 
   sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
@@ -26,7 +32,7 @@ partial_cors = function(Expression_mat) {
   }
 
   # generate covariance matrix
-  cov_mat = cov(feature_mat_t, use = "pairwise.complete.obs")
+  cov_mat = cov(as.matrix(feature_mat_t), use = "pairwise.complete.obs")
   # calculate partial correlations
   glassoFast_result = glassoFast::glassoFast(cov_mat, .25, thr = 1e-04,
                                              maxIt = 10000, start = "cold",
@@ -40,5 +46,4 @@ partial_cors = function(Expression_mat) {
   colnames(partial_cor_mat) = colnames(feature_mat_t)
   # return the resulting partial correlations
   return(partial_cor_mat)
-  #return(list(partial_cor_mat=partial_cor_mat))
 }

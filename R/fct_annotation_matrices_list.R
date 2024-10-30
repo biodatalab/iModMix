@@ -1,16 +1,14 @@
 #' annotation_matrices_list
 #'
-#' @description Calculate correlation between the features of top correlated modules
-#' @param Cor_Prot_Metab A feature matrix with the first principal component of each protein cluster
-#' @param cluster_assignments_Prot data frame containing cluster_assignments and Enrichr terms
-#' @param cluster_assignments_metab data frame containing cluster_assignments
-#' @param Prot_annotation data frame with de annotation names of the proteins: Should have a column called Symbol
-#' @param Metabolites_annotation (data frame with de annotation names of the metabolites: Should have a column called HMDB)
-#' @param Prot_t A feature matrix (e.g. gene expression) with samples in columns and features (e.g. genes) in rows Row names must be unique.
-#' @param metab_t A feature matrix (e.g. gene expression) with samples in columns and features (e.g. metabolites) in rows Row names must be unique.
-#' @return Important features
+#' @description Calculate correlation between the features of top correlated modules.
+#' @param Cor_Prot_Metab A data frame with the first principal component of each protein cluster and their correlations.
+#' @param cluster_assignments_Prot A data frame containing cluster assignments and Enrichr terms for proteins.
+#' @param cluster_assignments_metab A data frame containing cluster assignments for metabolites.
+#' @param Prot_annotation A data frame with the annotation names of the proteins. Should have a column called Symbol.
+#' @param metab_annotation A data frame with the annotation names of the metabolites. Should have a column called HMDB.
+#' @param top_n The number of top correlations to select. Default is 5.
+#' @return A list containing annotation matrices for the top correlated modules.
 #' @export
-#'
 annotation_matrices_list <- function(Cor_Prot_Metab, cluster_assignments_Prot, cluster_assignments_metab, Prot_annotation = NULL, metab_annotation = NULL, top_n = 5) {
   # Select the top n correlations
   Top_correlations <- Cor_Prot_Metab[order(-abs(Cor_Prot_Metab$Correlation)), ][1:top_n, ]

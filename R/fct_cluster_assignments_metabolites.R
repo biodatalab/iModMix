@@ -1,10 +1,9 @@
 #' cluster_assignments_metabolites
 #'
 #' @description cluster Assignments for metabolites
-#' @param hclustTree (hierarchical clustering object)
-#' @param Metabolites_annotation (data frame with de annotation names of the metabolites: Should have a column called HMDB)
-#' @return result_list data frame containing cluster_assignments and HMDB/Symbol
-#'
+#' @param cluster_metabolites A data frame containing cluster assignments for metabolites
+#' @param metab_annotation A data frame with the annotation names of the metabolites. Should have a column called Feature_ID.
+#' @return A data frame containing cluster assignments and HMDB/Symbol.
 #' @export
 cluster_assignments_metabolites <- function(cluster_metabolites, metab_annotation = NULL) {
   if (is.null(metab_annotation)) {
