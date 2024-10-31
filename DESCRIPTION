@@ -32,6 +32,7 @@ Imports:
     tidyr,
     viridis,
     visNetwork,
+    shinyBS,
     vroom
 Encoding: UTF-8
 LazyData: true
@@ -40,7 +41,6 @@ Suggests:
     testthat (>= 3.0.0),
     ggfortify,
     plotly,
-    shinyBS,
     shinyWidgets,
     pROC,
     tuneR
