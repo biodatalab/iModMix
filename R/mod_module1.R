@@ -93,15 +93,15 @@ mod_module1_ui <- function(id) {
                    type = "tabs",
                    tabPanel("Data Input",
                             h4("Metabolomics abundance matrix",
-                               bsButton("surf-infoMAM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMAM", title = "More information",
+                               shinyBS::bsButton("surf-infoMAM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMAM", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file <i>Metabolomics Abundance Data</i>. Check if the number of samples and the number of metabolomic features are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a metabolomic feature of interest. ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("infotable")),
                             DT::DTOutput(ns("table")),
                             h4("Principal component analysis for each phenotype",
-                               bsButton("surf-infoMPCAPh", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMPCAPh", title = "More information",
+                               shinyBS::bsButton("surf-infoMPCAPh", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMPCAPh", title = "More information",
                                       content = HTML(paste0("Drop-down menu displays conditions or sample descriptions provided with uploaded <i>Metadata</i>. Graph below displays Principal Component Analysis (PCA) plots representing each of your phenotype descriptions.")),
                                       placement = "right", trigger = "hover", options = list(container = "body") ),
                             selectInput(ns("phenotypeSelectorPCA"),
@@ -112,39 +112,39 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadPCA"),
                                            "Principal component analysis"),
                             h4("Metabolomics annotation data",
-                               bsButton("surf-infoMAD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMAD", title = "More information",
+                               shinyBS::bsButton("surf-infoMAD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMAD", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file <i>Metabolomics Annotation Data</i>. Check if the total number of entries at bottom of table matches the total number of features in the \u201cMetabolomics Abundance Data\u201d. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a metabolomic feature of interest.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
                                ),
                             DT::DTOutput(ns("table3"))
                    ),
                    tabPanel("Module Assignments",
-                            h4("Sparse partial correlations: Metabolites", bsButton("surfInfoMPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surfInfoMPC", title = "More information",
+                            h4("Sparse partial correlations: Metabolites", shinyBS::bsButton("surfInfoMPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surfInfoMPC", title = "More information",
                               content = HTML("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimate the partial correlation and captures only direct associations.</p> <p>Below is a preview of the sparse partial correlation of the first five metabolomic features. The full .csv file for the sparse partial correlation calculations for all the metabolomic features can be downloaded at the bottom of the table.</p>"),
                               placement = "right", trigger = "hover", options = list(container = "body")),
                             verbatimTextOutput(ns("matrizTable")),
                             downloadButton(ns("downloadParCor"),
                                            "Partial correlation matrix"),
-                            h4("Hierarchical clustering", bsButton("surfInfoMHC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surfInfoMHC", title = "More information",
+                            h4("Hierarchical clustering", shinyBS::bsButton("surfInfoMHC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surfInfoMHC", title = "More information",
                                       content = HTML("<p>Hierarchical clustering is used to identify common neighbors between the metabolomic features. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram.</p> <p> Axes: The vertical axis (y-axis) represents the dissimilarity between genes or modules, while the horizontal axis (x-axis) shows the genes or modules. Branches: Each line in the dendrogram represents a gene or module. Genes that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles.</p>"),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             plotOutput(ns("hc_plot")),
                             downloadButton(ns("downloadhc_plot"),
                                            "Hierarchical clustering Image (.png)"),
                             h4("Cluster assignments",
-                               bsButton("surf-infoMAC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMAC", title = "More information",
+                               shinyBS::bsButton("surf-infoMAC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMAC", title = "More information",
                                       content = HTML(paste0("<p> Hierarchical clustering generates multiple modules (clusters) to which each metabolomic feature is assigned. The table below details the following columns: </p> <ul> <li>  Feature: metabolite ID </li> <li> module_id: The module where the metabolite is assigned and the color used on the hierarchical clustering dendrogram </li> <li> If annotation data is available, it also shows the KEGG ID and the metabolite name </li></ul> <p>The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a metabolomic feature of interest. The full .csv file of Cluster Assignments for all the metabolomic features can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("tableClusterAssig")),
                             downloadButton(ns("downloadClusterAssig"),
                                            "Cluster assigment table"),
                             h4("First principal component from each module (Eigenfeatures)",
-                               bsButton("surf-infoMEF", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMEF", title = "More information",
+                               shinyBS::bsButton("surf-infoMEF", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMEF", title = "More information",
                                       content = HTML(paste0("<p>The first principal component (PC1) is calculated for each module, referred to as an eigenfeature. Eigenfeatures are useful for: </p> <ol> <li>  Relating the modules to the phenotypes. </li> <li> Obtaining the correlation between omics datasets (integration). </li> </ol> <p> The full .csv file of calculations for PC1 for metabolomics modules can be downloaded at the bottom of the table. </p> <p> The heatmap below shows eigenfeatures across samples. The vertical axis (y-axis) represents the eigenfeatures, and the horizontal axis (x-axis) displays the sample conditions. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("tableEigengene")),
@@ -157,16 +157,16 @@ mod_module1_ui <- function(id) {
                    ),
                    tabPanel("Phenotype",
                             h4("Metadata",
-                               bsButton("surf-infoMPD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMPD", title = "More information",
+                               shinyBS::bsButton("surf-infoMPD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMPD", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file <i>Metadata</i>. Check if the number of samples and the number of entries listed at the bottom of the table are the same. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a sample.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             helpText(
                               "Note: Upload the metadata data to be able to run phenotype analysis."),
                             DT::DTOutput(ns("table5")),
                             h4("Classification between phenotypes by eigenfeatures",
-                               bsButton("surf-infoMCPEf", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMCPEf", title = "More information",
+                               shinyBS::bsButton("surf-infoMCPEf", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMCPEf", title = "More information",
                                       content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> Variable: Represents the ID of the module. </li> <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> Result_t: The t-statistic value. </li> <li> Result_pValue: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             fluidRow(
@@ -196,8 +196,8 @@ mod_module1_ui <- function(id) {
                                                   "Boxplot classification Image (.png)")
                             ),
                             h4("Module screening",
-                               bsButton("surf-infoMMS", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMMS", title = "More information",
+                               shinyBS::bsButton("surf-infoMMS", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMMS", title = "More information",
                                       content = HTML(paste0("The drop-down menu displays all modules generated by iModMix. Users can view the features within a selected module. If annotation data is available, it also shows the KEGG ID and metabolite name. PCA loading and heatmap plots are generated to visualize the behavior of each specific module across the phenotype.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             selectInput(ns("moduleSelector"),
@@ -224,15 +224,15 @@ mod_module1_ui <- function(id) {
                    type = "tabs",
                    tabPanel("Data Input",
                             h4("Proteomics/Genomics expression matrix",
-                               bsButton("surf-info_PGEM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_PGEM", title = "More information",
+                               shinyBS::bsButton("surf-info_PGEM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGEM", title = "More information",
                                       content = HTML(paste0("Table reflecting uploaded file <i>Proteomics/Genomics Expression data</i>. Check if the number of samples and the number of protein/genes are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a protein/gene of interest. ")),
                                       placement = "right", trigger = "hover", options = list(container = "body") ),
                             DT::DTOutput(ns("infotable2")),
                             DT::DTOutput(ns("table2")),
                             h4("Principal component analysis for each phenotype",
-                               bsButton("surf-info_PGPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_PGPC", title = "More information",
+                               shinyBS::bsButton("surf-info_PGPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGPC", title = "More information",
                                       content = HTML(paste0("Drop-down menu displays conditions or sample descriptions provided with uploaded <i>Metadata</i>. Graph below displays Principal Component Analysis (PCA) plots representing each of your phenotype descriptions. ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             selectInput(ns("phenotypeSelectorPCA2"),
@@ -243,16 +243,16 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadPCA2"),
                                            "Principal component analysis"),
                             h4("Proteomics/Genomics annotation data",
-                               bsButton("surf-info_PGAD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_PGAD", title = "More information",
+                               shinyBS::bsButton("surf-info_PGAD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGAD", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file <i>Proteomics/Genomics Annotation Data</i>. Check if the total number of entries at bottom of table matches the total number of features in the <i>Proteomics/Genomics Expression Data</i>. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a protein/gene of interest. ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("table4"))
                    ),
                    tabPanel("Module Assignments",
                             h4("Sparse partial correlations: Proteins/Genes",
-                               bsButton("surf-info_SPCforPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_SPCforPG", title = "More information",
+                               shinyBS::bsButton("surf-info_SPCforPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_SPCforPG", title = "More information",
                                       content = HTML(paste0("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimated the partial correlation and captures only direct associations.  </p> <p> Preview of the sparse partial correlation of the first five proteins/genes. The full .csv file for the sparse partial correlation calculations for all the proteins/genes can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
                                ),
@@ -260,8 +260,8 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadParCor2"),
                                            "Partial correlation"),
                             h4("Hierarchical clustering",
-                               bsButton("surf-info_PGHC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_PGHC", title = "More information",
+                               shinyBS::bsButton("surf-info_PGHC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGHC", title = "More information",
                                       content = HTML(paste0("<p>Hierarchical clustering is used to identify common neighbors between the proteins/genes. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram. </p> <p> Axes: The vertical axis (y-axis) represents the dissimilarity between metabolites or modules, while the horizontal axis (x-axis) shows the modules. </p> <p>Branches: Each line in the dendrogram represents a module. Modules that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
                             ),
@@ -269,16 +269,16 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadhc_plot2"),
                                            "Hierarchical clustering Image (.png)"),
                             h4("Cluster assignments",
-                               bsButton("surf-info_PGCA", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_PGCA", title = "More information",
+                               shinyBS::bsButton("surf-info_PGCA", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGCA", title = "More information",
                                       content = HTML(paste0("<p>Hierarchical clustering generates multiple modules (clusters) to which each proteins/genes are assigned. The table below details the following columns:  </p> <ul> <li> Feature: proteins/genes ID </li>  <li>  module_id: The module where the protein/gene is assigned and the color used on the hierarchical clustering dendrogram </li> <li> Gene_symbol: If annotation data is available, it also shows the gene symbol. </li> </ul> <p> The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a protein/gene of interest.</p> <p> The full .csv file of Cluster Assignments for all the proteins/genes features can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("tableClusterAssig4")),
                             downloadButton(ns("downloadClusterAssig2"),
                                            "Cluster assigment"),
                             h4("Cluster assignments enriched",
-                               bsButton("surf-info_PGCAE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_PGCAE", title = "More information",
+                               shinyBS::bsButton("surf-info_PGCAE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGCAE", title = "More information",
                                       content = HTML(paste0("Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the Proteomics/Genomics cluster descriptions on table below. Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr. The search bar can also be used to find the details of a protein/gene or module of interest. The full .csv file of Cluster Enrichments for Proteomics/Genomics can be downloaded at the bottom of the table.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             helpText(
@@ -291,8 +291,8 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadEnrichment"),
                                            "Enrichment analysis"),
                             h4("First principal component from each module (Eigenfeatures)",
-                               bsButton("surf-info_PGPC1ef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_PGPC1ef", title = "More information",
+                               shinyBS::bsButton("surf-info_PGPC1ef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGPC1ef", title = "More information",
                                       content = HTML(paste0("<p> The first principal component (PC1) is calculated for each module, referred to as eigenfeatures. Eigenfeatures are useful for: </p> <ol> <li> Relating the modules to the phenotypes. </li> <li>  Obtaining the correlation between omics datasets (integration). </li> </ol> <p> The full .csv file of calculations for PC1 for proteomics/genomics modules can be downloaded at the bottom of the table. </p> <p> The heatmap below shows eigenfeatures across samples. The vertical axis (y-axis) represents the eigenfeatures, and the horizontal axis (x-axis) displays the sample conditions. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body") ),
                             DT::DTOutput(ns("tableEigengene2")),
@@ -305,14 +305,14 @@ mod_module1_ui <- function(id) {
                    ),
                    tabPanel("Phenotype",
                             h4("Metadata",
-                               bsButton("surf-info_PGPData", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_PGPData", title = "More information",
+                               shinyBS::bsButton("surf-info_PGPData", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGPData", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file <i> Metadata</i>. Check if the number of samples and the number of entries listed at the bottom of the table are the same. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a sample.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("table6")),
                             h4("Classification between phenotypes by eigenfeatures",
-                               bsButton("surf-info_PGCPef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_PGCPef", title = "More information",
+                               shinyBS::bsButton("surf-info_PGCPef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGCPef", title = "More information",
                                       content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> Variable: Represents the ID of the module. </li> <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> Result_t: The t-statistic value. </li> <li> Result_pValue: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             fluidRow(
@@ -344,8 +344,8 @@ mod_module1_ui <- function(id) {
                               )
                             ),
                             h4("Module screening",
-                               bsButton("surf-infoMS", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMS", title = "More information",
+                               shinyBS::bsButton("surf-infoMS", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMS", title = "More information",
                                       content = HTML(paste0("The drop-down menu displays all modules generated by iModMix. Users can view the features within a selected module. If annotation data is available, it also shows the Gene Symbol. PCA loading and heatmap plots are generated to visualize the behavior of each specific module across the phenotype.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             selectInput(ns("moduleSelector2"),
@@ -372,8 +372,8 @@ mod_module1_ui <- function(id) {
                    type = "tabs",
                    tabPanel("Modules correlation",
                             h4("Correlation: Metabolites and Proteins/Genes",
-                               bsButton("surf-infoMC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMC", title = "More information",
+                               shinyBS::bsButton("surf-infoMC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMC", title = "More information",
                                       content = HTML(paste0("Histogram depicting the correlation between eigen-metabolites and eigen-genes using Spearman correlation")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             plotOutput(ns("Correlation_plot")),
@@ -387,18 +387,18 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadOmicsCorrelation"),
                                            "Omics correlation"),
                             h4("Module Network of Metabolites and Proteins/Genes",
-                               bsButton("surf-info_MMPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_MMPG", title = "More information",
+                               shinyBS::bsButton("surf-info_MMPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_MMPG", title = "More information",
                                       content = HTML(paste0("An interactive module network showing each proteins/gene module as a green triangle  and metabolite modules as a yellow diamond. Clicking directly on the triangle or diamond identifies the module number. Correlation coefficients are seen on arrows connecting modules. Modules can be fluidly switched into different order and moved on the screen. The network can be downloaded as an html for saving. ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             #plotOutput(ns("Network_plot")),
-                            visNetworkOutput(ns("network")),
+                            visNetwork::visNetworkOutput(ns("network")),
                             downloadLink(ns("downloadNetwork"),
                                          "Network as .html")),
                    tabPanel("Important features",
                             h4("Top Multi-omics modules correlations",
-                               bsButton("surf-infoT5MM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoT5MM", title = "More information",
+                               shinyBS::bsButton("surf-infoT5MM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoT5MM", title = "More information",
                                       content = HTML(paste0("Table of the top 5 highly correlated modules, with the number of features within each module, the correlation between modules, and the enriched term for the proteins/genomics modules.   ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             numericInput(ns("TopModules"),
@@ -409,8 +409,8 @@ mod_module1_ui <- function(id) {
                                          value = 5),
                             DT::DTOutput(ns("ImportantVariables")),
                             h4("Top module correlation details",
-                               bsButton("surf-infoTMCD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoTMCD", title = "More information",
+                               shinyBS::bsButton("surf-infoTMCD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoTMCD", title = "More information",
                                       content = HTML(paste0("The drop-down menu displays the details for each of the top 5 highly correlated modules. Select one option to see the features within each module and the correlation between each feature (Corrplot and table). The arrows to the right of each column title can be used to sort data from increasing or decreasing values. Users can also use the search bar to find the details of a protein/gene or metabolites of interest. The user can download the full .csv file of Module correlations at the bottom of the table. ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             selectInput(ns("visualization_list"),
@@ -421,8 +421,8 @@ mod_module1_ui <- function(id) {
                                                     "Top_4" = 4,
                                                     "Top_5" = 5)),
                             h4("List of Metabolites",
-                               bsButton("surf-info_LofMet", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_LofMet", title = "More information",
+                               shinyBS::bsButton("surf-info_LofMet", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_LofMet", title = "More information",
                                       content = HTML(paste0("<p> Displays the list of metabolites within a metabolomic module that is highly correlated with a protein module. The metabolomic module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
 
@@ -430,8 +430,8 @@ mod_module1_ui <- function(id) {
                             verbatimTextOutput(ns("Important_features_2")),
 
                             h4("List of Proteins/Genes",
-                               bsButton("surf-info_LofPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-info_LofPG", title = "More information",
+                               shinyBS::bsButton("surf-info_LofPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_LofPG", title = "More information",
                                       content = HTML(paste0("Displays the list of proteins/genes within a proteomic/genomic module that is highly correlated with a metabolomic module. The module ID is first specified, along with its enriched term, enriched genes, and p-value. This is followed by the list of constituent proteins/genes. This information enables further pathway analysis and provides valuable insights into the relationships between metabolites, proteins, and genes.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
 
@@ -442,8 +442,8 @@ mod_module1_ui <- function(id) {
                             plotOutput(ns("CorplotImp")),
 
                             h4("Modules correlation: Metabolites and Proteins/Genes",
-                               bsButton("surf-infoMCMPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMCMPG", title = "More information",
+                               shinyBS::bsButton("surf-infoMCMPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMCMPG", title = "More information",
                                       content = HTML(paste0("Displays the list of proteins/genes within a proteomic/genomic module that is highly correlated with a metabolomic module. The module ID is first specified, along with its enriched term, enriched genes, and p-value. This is followed by the list of constituent proteins/genes. This information enables further pathway analysis and provides valuable insights into the relationships between metabolites, proteins, and genes.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("Correlation_mod")),
@@ -451,8 +451,8 @@ mod_module1_ui <- function(id) {
                                            "Modules correlation"),
 
                             h4("Metabolites from top module",
-                               bsButton("surf-infoMTopM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMTopM", title = "More information",
+                               shinyBS::bsButton("surf-infoMTopM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMTopM", title = "More information",
                                       content = HTML(paste0("<p> Displays the list of metabolites within a metabolomic module that is highly correlated with a protein module. The metabolomic module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("cluster_assignments_summary2")),
@@ -461,8 +461,8 @@ mod_module1_ui <- function(id) {
                                            "Metabolites_TopModule"),
 
                             h4("Classification between phenotypes by Metabolites",
-                               bsButton("surf-infoMCPM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMCPM", title = "More information",
+                               shinyBS::bsButton("surf-infoMCPM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMCPM", title = "More information",
                                       content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The feactures of top correlated module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a boxplot </p>  <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> </li> </ul> <p> Dots marking outliers and a legend describing the compared phenotype. </p> ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             fluidRow(
@@ -492,8 +492,8 @@ mod_module1_ui <- function(id) {
 
 
                             h4("Classification between phenotypes by Proteins/Genes",
-                               bsButton("surf-infoMCPPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            bsPopover(id = "surf-infoMCPPG", title = "More information",
+                               shinyBS::bsButton("surf-infoMCPPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMCPPG", title = "More information",
                                       content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The feactures of top correlated module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a boxplot </p>  <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> </li> </ul> <p> Dots marking outliers and a legend describing the compared phenotype. </p> ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             fluidRow(
@@ -710,7 +710,7 @@ mod_module1_server <- function(id){
         color_column <- input$phenotypeSelectorPCA
 
         if (!is.null(color_column) && color_column != "") {
-          ggplot2::ggplot(combined_data, aes_string(x = "PC1", y = "PC2", color = color_column)) +
+          ggplot2::ggplot(combined_data, ggplot2::aes_string(x = "PC1", y = "PC2", color = color_column)) +
             ggplot2::geom_point()
         } else {
           print("Select a phenotype.")
@@ -794,7 +794,7 @@ mod_module1_server <- function(id){
         color_column <- input$phenotypeSelectorPCA2
 
         if (!is.null(color_column) && color_column != "") {
-          ggplot2::ggplot(combined_data, aes_string(x = "PC1", y = "PC2", color = color_column)) +
+          ggplot2::ggplot(combined_data, ggplot2::aes_string(x = "PC1", y = "PC2", color = color_column)) +
             ggplot2::geom_point()
         } else {
           print("Select a phenotype.")
@@ -1861,31 +1861,38 @@ mod_module1_server <- function(id){
      })
 
     mynetwork <- reactive({
+      requireNamespace("dplyr", quietly = TRUE)
       dfnodes <- as.data.frame(Cor_Prot_Metab1()$nodes)
       dfedges <- as.data.frame(Cor_Prot_Metab1()$edges)
-
-      visNetwork::visNetwork(
+      network <- visNetwork::visNetwork(
         nodes = dfnodes,
         edges = dfedges,
         #main = "Protein-Metabolite Network",
         width = "100%",
         height = "800px"
-      ) %>%
-        visLegend(
-          useGroups = FALSE,
-          addNodes = data.frame(
-            label = c("Genes Modules", "Metabolites Modules"),
-            shape = c("triangle", "diamond"),
-            color = c("darkgreen", "orange")),
-          addEdges = data.frame(
-            label = "Correlation",
-            shape = "line",
-            length = 200,
-            color = "darkgreen")
-        ) %>%
-        visInteraction(navigationButtons = TRUE)
+      )
+      network <- visNetwork::visLegend(
+        network,
+        useGroups = FALSE,
+        addNodes = data.frame(
+          label = c("Genes Modules", "Metabolites Modules"),
+          shape = c("triangle", "diamond"),
+          color = c("darkgreen", "orange")
+        ),
+        addEdges = data.frame(
+          label = "Correlation",
+          shape = "line",
+          length = 200,
+          color = "darkgreen"
+        )
+      )
+      network <- visNetwork::visInteraction(
+        network,
+        navigationButtons = TRUE
+      )
+      return(network)
     })
-    output$network <- renderVisNetwork({
+    output$network <- visNetwork::renderVisNetwork({
       mynetwork()
     })
 
@@ -1894,7 +1901,8 @@ mod_module1_server <- function(id){
         paste('network-', Sys.Date(), '.html', sep='')
       },
       content = function(con) {
-        mynetwork() %>% visSave(con)
+        network <- mynetwork()
+        visNetwork::visSave(network, con)
       }
     )
 
@@ -2002,9 +2010,10 @@ mod_module1_server <- function(id){
       df_list <- Important_Features()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
       df <- df_list[[selected_index]]$df1_2
-      df_features <- df %>%
-        select(feature, feature_name, feature_map, Metabolite) %>%
-        distinct()
+
+      df_features <- dplyr::select(df, feature, feature_name, feature_map, Metabolite)
+      df_features <- dplyr::distinct(df_features)
+
       DT::datatable(df_features)
     })
 
@@ -2084,9 +2093,10 @@ mod_module1_server <- function(id){
       df_list <- Important_Features()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
       df <- df_list[[selected_index]]$df1_1
-      df_features <- df %>%
-        select(feature, feature_name) %>%
-        distinct()
+
+      df_features <- dplyr::select(df, feature, feature_name)
+      df_features <- dplyr::distinct(df_features)
+
       DT::datatable(df_features)
     })
 
@@ -2094,17 +2104,17 @@ mod_module1_server <- function(id){
       df_list <- Important_Features()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
       df <- df_list[[selected_index]]$df1_1
-      df_summary <- df %>%
-        group_by(cluster, col) %>%
-        summarise(
-          enriched_Term = unique(enriched_Term),
-          enriched_Overlap = unique(enriched_Overlap),
-          enriched_Genes = unique(enriched_Genes),
-          enriched_P.value = unique(enriched_P.value),
-          enriched_Adjusted_P.value = unique(enriched_Adjusted.P.value),
-          enriched_GO = unique(enriched_GO)
-        ) %>%
-        ungroup()
+      df_summary <- dplyr::group_by(df, cluster, col)
+      df_summary <- dplyr::summarise(
+        df_summary,
+        enriched_Term = unique(enriched_Term),
+        enriched_Overlap = unique(enriched_Overlap),
+        enriched_Genes = unique(enriched_Genes),
+        enriched_P.value = unique(enriched_P.value),
+        enriched_Adjusted_P.value = unique(enriched_Adjusted.P.value),
+        enriched_GO = unique(enriched_GO)
+      )
+      df_summary <- dplyr::ungroup(df_summary)
 
       DT::datatable(df_summary)
     })

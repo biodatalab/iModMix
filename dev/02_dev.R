@@ -47,6 +47,8 @@ usethis::use_package("corrplot")
 usethis::use_package("reshape2")
 usethis::use_package("preprocessCore")
 usethis::use_package("GO.db")
+usethis::use_package("magrittr")
+
 
 
 ## install.packages('attachment') # if needed.
