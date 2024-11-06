@@ -5,5 +5,6 @@
 pkgload::load_all(export_all = FALSE, helpers = FALSE, attach_testthat = FALSE)
 options(golem.app.prod = TRUE)
 options(shiny.autoload.r=FALSE)
+options(shiny.sanitize.errors = FALSE)
 options(shiny.maxRequestSize=100*1024^2)
 iModMix::run_app()
