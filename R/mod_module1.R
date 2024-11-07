@@ -7,7 +7,10 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-#'
+#' @importFrom grDevices colorRampPalette dev.off png
+#' @importFrom graphics hist legend
+#' @importFrom stats as.dist cor cov hclust na.omit prcomp quantile sd setNames t.test
+#' @importFrom utils read.csv str unzip write.csv
 
 options(shiny.maxRequestSize=100*1024^2)
 
@@ -1379,8 +1382,7 @@ mod_module1_server <- function(id){
       updateSelectInput(session, "databaseSelector", choices = databaseSelectorList()$choices)
     })
 
-    curl::has_internet()
-    library(enrichR)
+    #curl::has_internet()
     assign("has_internet_via_proxy", TRUE, environment(curl::has_internet))
     requireNamespace("enrichR", quietly = TRUE)
     enrichR::listEnrichrSites()
