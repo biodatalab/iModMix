@@ -20,10 +20,10 @@ partial_cors = function(Expression_mat) {
   feature_mat_t[] <- lapply(feature_mat_t, as.numeric)
   feature_mat_t <- as.matrix(feature_mat_t)
 
-  feature_mat_t <- as.matrix(scale(feature_mat_t))
-
   sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
   filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
+
+  feature_mat_t <- as.matrix(scale(feature_mat_t))
 
   feature_mat_t <- if (length(filtered_indices) > 20000) {
     feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]

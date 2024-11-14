@@ -15,7 +15,7 @@ remotes::install_github("biodatalab/iModmix", auth_token = "your GitHub token")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to analyse a metabolomics and proteomics datasets:
 
 ``` r
 ### Run app

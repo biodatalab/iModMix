@@ -54,10 +54,10 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
     metab_t <- t(featureMetab_mat[, -c(1, ncol(featureMetab_mat))])
     colnames(metab_t) <- featuresMetab
     metab_t <- metab_t[, apply(metab_t, 2, function(x) length(unique(x)) > 1)]
-    metab_t <- as.matrix(scale(metab_t))
 
     sd_values_metab <- apply(metab_t, 2, function(x) sd(x, na.rm = TRUE))
     filtered_indices <- which(sd_values_metab > quantile(sd_values_metab, 0.25))
+    metab_t <- as.matrix(scale(metab_t))
 
     metab_t <- if (length(filtered_indices) > 20000) {
       metab_t[, order(sd_values_metab[filtered_indices], decreasing = TRUE)[1:20000]]
@@ -73,10 +73,10 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
     Prot_t <- t(featureProt_mat[, -c(1, ncol(featureProt_mat))])
     colnames(Prot_t) <- featuresProt
     Prot_t <- Prot_t[, apply(Prot_t, 2, function(x) length(unique(x)) > 1)]
-    Prot_t <- as.matrix(scale(Prot_t))
 
     sd_values_Prot <- apply(Prot_t, 2, function(x) sd(x, na.rm = TRUE))
     filtered_indices <- which(sd_values_Prot > quantile(sd_values_Prot, 0.25))
+    Prot_t <- as.matrix(scale(Prot_t))
 
     Prot_t <- if (length(filtered_indices) > 20000) {
       Prot_t[, order(sd_values_Prot[filtered_indices], decreasing = TRUE)[1:20000]]
