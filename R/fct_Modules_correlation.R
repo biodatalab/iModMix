@@ -55,7 +55,8 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
   unique_from <- unique(edges$from)
   label_from <- unique_from
   #label_from <- paste0("Module", seq_along(unique_from))
-  value_from <- Count_Prot[match(unique_from, names(Count_Prot))]
+  value_from <- Count_Prot[match(sub("^Prot_Genes_", "", unique_from), names(Count_Prot))]
+  #value_from <- Count_Prot[match(unique_from, names(Count_Prot))]
   shape_from <- "triangle"
   title_from0 = paste(value_from, "genes", sep = " ")
   color_from <- "darkgreen"
@@ -69,7 +70,8 @@ Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assig
   unique_to <- unique(edges$to)
   label_to <- unique_to
   #label_to <- paste0("Module", seq_along(unique_to))
-  value_to <- Count_Metab[match(unique_to, names(Count_Metab))]
+  value_to <- Count_Metab[match(sub("^Metab_", "", unique_to), names(Count_Metab))]
+  #value_to <- Count_Metab[match(unique_to, names(Count_Metab))]
   shape_to <- "diamond"
   title_to = paste(value_to, "metabolites", sep = " ")
   color_to <- "orange"

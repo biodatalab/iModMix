@@ -57,13 +57,26 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
 
     sd_values_metab <- apply(metab_t, 2, function(x) sd(x, na.rm = TRUE))
     filtered_indices <- which(sd_values_metab > quantile(sd_values_metab, 0.25))
-    metab_t <- as.matrix(scale(metab_t))
 
-    metab_t <- if (length(filtered_indices) > 20000) {
-      metab_t[, order(sd_values_metab[filtered_indices], decreasing = TRUE)[1:20000]]
+    # metab_t <- if (length(sd_values_metab) > 20000) {
+    #   metab_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+    # } else {
+    #   metab_t[, ]
+    # }
+    metab_t <- if (length(sd_values_metab) > 20000) {
+      if (length(filtered_indices) > 20000) {
+        metab_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      } else {
+        metab_t[, filtered_indices]
+      }
     } else {
-      metab_t[, filtered_indices]
+      metab_t[, ]
     }
+
+    metab_t = impute::impute.knn(metab_t, k = min(10, nrow(metab_t)))
+    metab_t= metab_t$data
+
+    metab_t <- as.matrix(scale(metab_t))
 
     ExpressionProt_mat = ExpressionProt_mat
     ExpressionProt_mat$missing_count <- rowSums(is.na(ExpressionProt_mat))
@@ -76,13 +89,27 @@ FeaturesAnnot_correlation <- function(Cor_Prot_Metab, cluster_assignments_Prot, 
 
     sd_values_Prot <- apply(Prot_t, 2, function(x) sd(x, na.rm = TRUE))
     filtered_indices <- which(sd_values_Prot > quantile(sd_values_Prot, 0.25))
-    Prot_t <- as.matrix(scale(Prot_t))
 
-    Prot_t <- if (length(filtered_indices) > 20000) {
-      Prot_t[, order(sd_values_Prot[filtered_indices], decreasing = TRUE)[1:20000]]
+    # Prot_t <- if (length(sd_values_Prot) > 20000) {
+    #   Prot_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+    # } else {
+    #   Prot_t[, ]
+    # }
+
+    Prot_t <- if (length(sd_values_Prot) > 20000) {
+      if (length(filtered_indices) > 20000) {
+        Prot_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      } else {
+        Prot_t[, filtered_indices]
+      }
     } else {
-      Prot_t[, filtered_indices]
+      Prot_t[, ]
     }
+
+    Prot_t = impute::impute.knn(Prot_t, k = min(10, nrow(Prot_t)))
+    Prot_t= Prot_t$data
+
+    Prot_t <- as.matrix(scale(Prot_t))
 
     cluster_expression_matrix_Prot <- Prot_t[, colnames(Prot_t) %in% cluster_variables_Prot, drop = FALSE]
     cluster_expression_matrix_Metab <- metab_t[, colnames(metab_t) %in% cluster_variables_Metab, drop = FALSE]

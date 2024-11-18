@@ -648,7 +648,7 @@ mod_module1_server <- function(id){
         enrich_loaded(FALSE)
         enrich_loadedAll(TRUE)
         updateSelectInput(session, "databaseSelector", selected = "KEGG_2019_Mouse")
-        updateSliderInput(session, "pValueThreshold3", value = 0.90)
+        updateSliderInput(session, "pValueThreshold3", value = 0.91)
         updateSliderInput(session, "pValueThreshold_imp_metab", value = 0.5)
         updateSliderInput(session, "pValueThreshold_imp_Prot", value = 0.5)
         incProgress(100, detail = 'Complete!')
@@ -686,16 +686,22 @@ mod_module1_server <- function(id){
 
       sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
       filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
-      feature_mat_t <- as.matrix(scale(feature_mat_t))
 
-      feature_mat_t <- if (length(filtered_indices) > 20000) {
-        feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      feature_mat_t <- if (length(sd_values) > 20000) {
+        if (length(filtered_indices) > 20000) {
+          feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+        } else {
+          feature_mat_t[, filtered_indices]
+        }
       } else {
-        feature_mat_t[, filtered_indices]
+        feature_mat_t[, ]
       }
 
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
+
+      feature_mat_t_imp_data <- as.matrix(scale(feature_mat_t_imp_data))
+
       pca_res <- prcomp(feature_mat_t_imp_data)
       return(list(pca_res = pca_res))
     })
@@ -769,16 +775,22 @@ mod_module1_server <- function(id){
 
       sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
       filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
-      feature_mat_t <- as.matrix(scale(feature_mat_t))
 
-      feature_mat_t <- if (length(filtered_indices) > 20000) {
-        feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      feature_mat_t <- if (length(sd_values) > 20000) {
+        if (length(filtered_indices) > 20000) {
+          feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+        } else {
+          feature_mat_t[, filtered_indices]
+        }
       } else {
-        feature_mat_t[, filtered_indices]
+        feature_mat_t[, ]
       }
 
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
+
+      feature_mat_t_imp_data <- as.matrix(scale(feature_mat_t_imp_data))
+
       pca_res <- prcomp(feature_mat_t_imp_data)
       return(list(pca_res = pca_res))
     })
@@ -1138,16 +1150,22 @@ mod_module1_server <- function(id){
 
       sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
       filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
-      feature_mat_t <- as.matrix(scale(feature_mat_t))
 
-      feature_mat_t <- if (length(filtered_indices) > 20000) {
-        feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      feature_mat_t <- if (length(sd_values) > 20000) {
+        if (length(filtered_indices) > 20000) {
+          feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+        } else {
+          feature_mat_t[, filtered_indices]
+        }
       } else {
-        feature_mat_t[, filtered_indices]
+        feature_mat_t[, ]
       }
 
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
+
+      feature_mat_t_imp_data <- as.matrix(scale(feature_mat_t_imp_data))
+
       cluster_Metab <- subset(hierarchical_cluster1()$hcCluster_assignments2, col == input$moduleSelector)
       cluster_variables_Metab <- cluster_Metab$feature
       cluster_variables_MetabKEGG <- cluster_variables_Metab
@@ -1579,16 +1597,22 @@ mod_module1_server <- function(id){
 
       sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
       filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
-      feature_mat_t <- as.matrix(scale(feature_mat_t))
 
-      feature_mat_t <- if (length(filtered_indices) > 20000) {
-        feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      feature_mat_t <- if (length(sd_values) > 20000) {
+        if (length(filtered_indices) > 20000) {
+          feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+        } else {
+          feature_mat_t[, filtered_indices]
+        }
       } else {
-        feature_mat_t[, filtered_indices]
+        feature_mat_t[, ]
       }
 
       feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
       feature_mat_t_imp_data= feature_mat_t_imp$data
+
+      feature_mat_t_imp_data <- as.matrix(scale(feature_mat_t_imp_data))
+
       cluster_Prot <- subset(hierarchical_cluster2()$hcCluster_assignments, col == input$moduleSelector2)
       #cluster_Metab <- subset(cluster_assignments_metabolites1()$cluster_assignments_metab, cluster == "cluster_000011")
       cluster_variables_Prot <- cluster_Prot$feature
@@ -1755,7 +1779,8 @@ mod_module1_server <- function(id){
         unique_from <- unique(edges$from)
         label_from <- unique_from
         #label_from <- paste0("Module", seq_along(unique_from))
-        value_from <- Count_Prot[match(unique_from, names(Count_Prot))]
+        value_from <- Count_Prot[match(sub("^Prot_Genes_", "", unique_from), names(Count_Prot))]
+        #value_from <- Count_Prot[match(unique_from, names(Count_Prot))]
         shape_from <- "triangle"
         title_from0 = paste(value_from, "genes", sep = " ")
         color_from <- "darkgreen"
@@ -1763,7 +1788,7 @@ mod_module1_server <- function(id){
         unique_to <- unique(edges$to)
         label_to <- unique_to
         #label_to <- paste0("Module", seq_along(unique_to))
-        value_to <- Count_Metab[match(unique_to, names(Count_Metab))]
+        value_to <- Count_Metab[match(sub("^Metab_", "", unique_to), names(Count_Metab))]
         shape_to <- "diamond"
         title_to = paste(value_to, "metabolites", sep = " ")
         color_to <- "orange"
@@ -1867,6 +1892,7 @@ mod_module1_server <- function(id){
       requireNamespace("dplyr", quietly = TRUE)
       dfnodes <- as.data.frame(Cor_Prot_Metab1()$nodes)
       dfedges <- as.data.frame(Cor_Prot_Metab1()$edges)
+
       network <- visNetwork::visNetwork(
         nodes = dfnodes,
         edges = dfedges,

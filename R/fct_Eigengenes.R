@@ -22,14 +22,21 @@ Eigengenes = function(Expression_mat = Expression_mat, cluster_assignments=clust
 
   sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
   filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
-  feature_mat_t <- as.matrix(scale(feature_mat_t))
 
-  feature_mat_t <- if (length(filtered_indices) > 20000) {
-    feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+  feature_mat_t <- if (length(sd_values) > 20000) {
+    if (length(filtered_indices) > 20000) {
+      feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+    } else {
+      feature_mat_t[, filtered_indices]
+    }
   } else {
-    feature_mat_t[, filtered_indices]
+    feature_mat_t[, ]
   }
 
+  feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
+  feature_mat_t_imp_data= feature_mat_t_imp$data
+
+  feature_mat_t <- as.matrix(scale(feature_mat_t_imp_data))
   module_eigenmetab_List_Me = WGCNA::moduleEigengenes(expr = as.matrix(feature_mat_t) , colors = cluster_assignments)
   module_eigenmetab_Me = module_eigenmetab_List_Me$eigengenes
   return(list(module_eigenmetab_List_Me = module_eigenmetab_List_Me, module_eigenmetab_Me = module_eigenmetab_Me, feature_mat_t = feature_mat_t))
