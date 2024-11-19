@@ -648,7 +648,7 @@ mod_module1_server <- function(id){
         enrich_loaded(FALSE)
         enrich_loadedAll(TRUE)
         updateSelectInput(session, "databaseSelector", selected = "KEGG_2019_Mouse")
-        updateSliderInput(session, "pValueThreshold3", value = 0.91)
+        updateSliderInput(session, "pValueThreshold3", value = 0.90)
         updateSliderInput(session, "pValueThreshold_imp_metab", value = 0.5)
         updateSliderInput(session, "pValueThreshold_imp_Prot", value = 0.5)
         incProgress(100, detail = 'Complete!')
@@ -1391,7 +1391,7 @@ mod_module1_server <- function(id){
     )
 
     databaseSelectorList <- reactive({
-      gene_set_library = readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE) # Willy Aug 15, 2024
+      gene_set_library = readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE)
       choices <- gene_set_library[[1]]
       data.frame(choices = choices)
     })
@@ -1407,7 +1407,7 @@ mod_module1_server <- function(id){
 
     Genes_Prot_enrich <- reactive({
       withProgress(message = 'Performing enrichment analysis...', value = 0, {
-        if (is.null(enrich_loaded()) && is.null(enrich_loadedAll())) {
+       if (is.null(enrich_loaded()) && is.null(enrich_loadedAll())) {
           req(input$databaseSelector)
           selected_database <- input$databaseSelector
           cluster_assignments_ProtGenes <- cluster_assignments_genes1()$cluster_assignments_Prot
@@ -2053,6 +2053,10 @@ mod_module1_server <- function(id){
       cluster <- unique(df$cluster)
       col <- unique(df$col)
       SummaryData <- data.frame(cluster = cluster, col = col, stringsAsFactors = FALSE)
+
+      SummaryData <- dplyr::select(SummaryData, -cluster)
+      SummaryData <- dplyr::rename(SummaryData, `Metabolites_module_id` = col)
+
       DT::datatable(SummaryData)
     })
 
@@ -2144,7 +2148,8 @@ mod_module1_server <- function(id){
         enriched_GO = unique(enriched_GO)
       )
       df_summary <- dplyr::ungroup(df_summary)
-
+      df_summary <- dplyr::select(df_summary, -cluster)
+      df_summary <- dplyr::rename(df_summary, `Prot/Genes_module_id` = col)
       DT::datatable(df_summary)
     })
 
