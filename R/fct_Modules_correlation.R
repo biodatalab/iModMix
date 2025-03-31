@@ -2,126 +2,108 @@
 #'
 #' @description Calculates correlations between omic modules.
 #'
-#' @param eigengenes_Prot A feature matrix with the first principal component of each protein cluster
-#' @param eigengenes_metab A feature matrix with the first principal component of each metabolomic cluster
-#' @param cluster_assignments_Prot data frame containing cluster_assignments and Enrichr terms
-#' @param cluster_assignments_metab data frame containing cluster_assignments
+#' @param eigengenes A feature matrix with the first principal component of each cluster
+#' @param cluster_assignments data frame containing cluster_assignments
 #' @param threshold A numeric value to filter correlations. Default is 0.5
 #' @return  Return the Top_correlations between Prot and metab eigengenes, graph of red, correlation plot
 #' @export
-Modules_correlation <- function(eigengenes_Prot, eigengenes_metab, cluster_assignments_Prot, cluster_assignments_metab, threshold = 0.5) {
-  # Calculate correlation
-  cor_Prot_metab_WGCNA <- cor(eigengenes_Prot, eigengenes_metab, method = 'spearman', use = "pairwise.complete.obs")
+Modules_correlation <- function(eigengenes_list, cluster_list, threshold = 0.50) {
+  n <- length(eigengenes_list)
+  eigengenes <- eigengenes_list
+  clusters <- cluster_list
 
-  # Create a histogram of correlation
-  hist(cor_Prot_metab_WGCNA, main = "Histogram of Correlation")
-
-  # Convert the correlation matrix to a long format
-  cor_Prot_metab_list <- reshape2::melt(cor_Prot_metab_WGCNA, id.var = "Correlation")
-
-  colnames(cor_Prot_metab_list) <- c("Prot_module", "Metab_module", "Correlation")
-
-  # Filter the correlation list
-  Top_cor_Prot_metab <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
-
-  cor_Prot_metab_list1 <- cor_Prot_metab_list[order(abs(cor_Prot_metab_list$Correlation), decreasing = TRUE), ][1:5, ]
-  cor_Prot_metab_list2 <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
-  Top_cor_Prot_metab <- if (nrow(cor_Prot_metab_list1) >= nrow(cor_Prot_metab_list2)) {
-    cor_Prot_metab_list1
-  } else {
-    cor_Prot_metab_list2
+  cor_list <- list()
+  for (i in 1:(n-1)) {
+    for (j in (i+1):n) {
+      cor_matrix <- cor(eigengenes[[i]], eigengenes[[j]], method = 'spearman', use = "pairwise.complete.obs")
+      cor_df <- reshape2::melt(cor_matrix, varnames = c("from", "to"))
+      cor_df$from <- sub("^ME", paste0("D", i), cor_df$from)
+      cor_df$to <- sub("^ME", paste0("D", j), cor_df$to)
+      cor_df <-  cor_df[order(abs(cor_df$value), decreasing = TRUE), ]
+      cor_df$value <- round(cor_df$value, 4)
+      cor_list[[paste0("cor_Data", i, "_Data", j)]] <- cor_df
+    }
   }
 
-  Top_cor_Prot_metab$Correlation <- round(Top_cor_Prot_metab$Correlation, 2)
+  cor_listPlot <- list()
+  for (i in 1:(n-1)) {
+    for (j in (i+1):n) {
+      cor_matrix <- cor(eigengenes[[i]], eigengenes[[j]], method = 'spearman', use = "pairwise.complete.obs")
+      cor_listPlot[[paste0("cor_Data", i, "_Data", j)]] <- cor_matrix
+    }
+  }
 
-  # Remove the "ME" prefix from Prot_module and Metab_module columns
-  Top_cor_Prot_metab[c("Prot_module", "Metab_module")] <- lapply(Top_cor_Prot_metab[c("Prot_module", "Metab_module")], function(x) sub("^ME", "", x))
+  cor_top_list <- lapply(cor_list, function(cor_df) {
+    cor_top_list1 <- cor_df[1:3, ]
+    cor_top_list2 <- subset(cor_df, abs(value) >= threshold)
+    if (nrow(cor_top_list1) >= nrow(cor_top_list2)) {
+      cor_top_list1
+    } else {
+      cor_top_list2
+    }
+  })
 
-  # Edges to funcion visnetwork
-  edges <- Top_cor_Prot_metab[1:min(nrow(Top_cor_Prot_metab), 30), ]
-  edges$label <-as.character(edges$Correlation)
-  #edges$length = (1-abs(edges$Correlation))*10000 #
-  edges$dashes = ifelse(abs(edges$Correlation) < 0.50, TRUE, FALSE)
-  edges$title <-as.character(edges$Correlation)
-  edges$smooth = ifelse(abs(edges$Correlation) < 0.50, TRUE, FALSE)
-  edges$shadow = TRUE
-  edges <- subset(edges, select = -c(Correlation))
-  #colnames(edges) <- c("Prot_module" = "from", "Metab_module" = "to", "label", "length", "dashes", "title", "smooth", "shadow")
-  colnames(edges) <- c("Prot_module" = "from", "Metab_module" = "to", "label", "dashes", "title", "smooth", "shadow")
+  cor_top <- do.call(rbind, cor_top_list)
 
-  Count_Prot <- table(cluster_assignments_Prot$col)
-  Count_Metab <- table(cluster_assignments_metab$col)
+  edges <- cor_top
+  edges$label <- as.character(round(edges$value, 2))
+  edges$dashes <- ifelse(abs(edges$value) < threshold, TRUE, FALSE)
+  edges$title <- as.character(edges$value)
+  edges$smooth <- ifelse(abs(edges$value) < threshold, TRUE, FALSE)
+  edges$shadow <- TRUE
+  edges <- subset(edges, select = -c(value))
 
-  unique_from <- unique(edges$from)
-  label_from <- unique_from
-  #label_from <- paste0("Module", seq_along(unique_from))
-  value_from <- Count_Prot[match(sub("^Prot_Genes_", "", unique_from), names(Count_Prot))]
-  #value_from <- Count_Prot[match(unique_from, names(Count_Prot))]
-  shape_from <- "triangle"
-  title_from0 = paste(value_from, "genes", sep = " ")
-  color_from <- "darkgreen"
+  nodes <- data.frame()
+  shapes <- c("diamond", "triangle", "dot")
+  colors <- c("orange", "darkgreen", "darkblue")
 
-  Enriched_Term_net <- cluster_assignments_Prot$enriched_Term[match(unique_from, cluster_assignments_Prot$col)]
-  Enriched_Term_net <- ifelse(nchar(Enriched_Term_net) > 20, paste0(substring(Enriched_Term_net, 1, 20), "..."), Enriched_Term_net)
-  title_from <- paste(title_from0, Enriched_Term_net, sep = "\n")
+  for (k in 1:length(cor_top_list)) {
+    if (length(cor_top_list) == 1) {
+      i <- 1
+      j <- 2
+    } else if (length(cor_top_list) == 3) {
+      if (k == 1) {
+        i <- 1
+        j <- 2
+      } else if (k == 2) {
+        i <- 1
+        j <- 3
+      } else if (k == 3) {
+        i <- 2
+        j <- 3
+      }
+    }
 
+    unique_from <- unique(as.character(cor_top_list[[k]]$from))
+    title_from <- unique_from
+    value_from <- table(clusters[[i]]$col)[match(sub(paste0("^D", i), "", unique_from), names(table(clusters[[i]]$col)))]
+    label_from <- paste(value_from, "var", sep = " ")
+    shape_from <- shapes[i]
+    color_from <- colors[i]
 
+    unique_to <- unique(as.character(cor_top_list[[k]]$to))
+    title_to <- unique_to
+    value_to <- table(clusters[[j]]$col)[match(sub(paste0("^D", j), "", unique_to), names(table(clusters[[j]]$col)))]
+    label_to <- paste(value_to, "var", sep = " ")
+    shape_to <- shapes[j]
+    color_to <- colors[j]
 
-  unique_to <- unique(edges$to)
-  label_to <- unique_to
-  #label_to <- paste0("Module", seq_along(unique_to))
-  value_to <- Count_Metab[match(sub("^Metab_", "", unique_to), names(Count_Metab))]
-  #value_to <- Count_Metab[match(unique_to, names(Count_Metab))]
-  shape_to <- "diamond"
-  title_to = paste(value_to, "metabolites", sep = " ")
-  color_to <- "orange"
+    nodes <- rbind(nodes, data.frame(id = c(unique_from, unique_to),
+                                     label = c(label_from, label_to),
+                                     value = c(value_from, value_to),
+                                     shape = c(rep(shape_from, length(unique_from)), rep(shape_to, length(unique_to))),
+                                     title = c(title_from, title_to),
+                                     color = c(rep(color_from, length(unique_from)), rep(color_to, length(unique_to))),
+                                     shadow = TRUE))
+  }
+  nodes <- unique(nodes)
 
-  #nodes to function Visnetwork
-  nodes <- data.frame(id = c(unique_from, unique_to),
-                      label = c(title_from, title_to),
-                      value = c(value_from, value_to),
-                      shape = c(rep(shape_from, length(unique_from)), rep(shape_to, length(unique_to))),
-                      #title = c(title_from, title_to),
-                      title = c(label_from, label_to),
-                      color = c(rep(color_from, length(unique_from)), rep(color_to, length(unique_to))),
-                      shadow = TRUE)
-  nodes <- nodes[,c("id", "label", "value", "shape", "title", "color", "shadow")]
-
-
-
-  edges[["from"]] <- sub("^#", "", edges[["from"]])
-  edges[["to"]] <- sub("^#", "", edges[["to"]])
-
-  rownames(nodes) <- NULL
-  nodes[["id"]] <- sub("^#", "", nodes[["id"]])
-
-
-
-  Top_cor_Prot_metab$Prot_count <- paste(Count_Prot[Top_cor_Prot_metab$Prot_module], "genes", sep = " ")
-  Top_cor_Prot_metab$Metab_count <- paste(Count_Metab[Top_cor_Prot_metab$Metab_module], "metabolites", sep = " ")
-  Top_cor_Prot_metab$Prot_Module_id <- paste("Module", as.numeric(factor(Top_cor_Prot_metab$Prot_module)), sep = " ")
-  Top_cor_Prot_metab$Metab_Module_id <- paste("Module", as.numeric(factor(Top_cor_Prot_metab$Metab_module)), sep = " ")
-  Top_cor_Prot_metab$Prot_label0 <- paste(Top_cor_Prot_metab$Prot_Module_id, Top_cor_Prot_metab$Prot_count, sep = "\n")
-  Top_cor_Prot_metab$Metab_label <- paste(Top_cor_Prot_metab$Metab_Module_id, Top_cor_Prot_metab$Metab_count, sep = "\n")
-  Top_cor_Prot_metab$Enriched_Term_Genes <- cluster_assignments_Prot$enriched_Term[match(Top_cor_Prot_metab$Prot_module, cluster_assignments_Prot$col)]
-  Top_cor_Prot_metab$Prot_label <- paste(Top_cor_Prot_metab$Prot_label0, Top_cor_Prot_metab$Enriched_Term_Genes, sep = "\n")
-
-  Top_cor_Prot_metab$Enriched_Overlap <- cluster_assignments_Prot$enriched_Overlap[match(Top_cor_Prot_metab$Prot_module, cluster_assignments_Prot$col)]
-  Top_cor_Prot_metab$Enriched_Genes <- cluster_assignments_Prot$enriched_Genes[match(Top_cor_Prot_metab$Prot_module, cluster_assignments_Prot$col)]
-  Top_cor_Prot_metab$Enriched_P.value <- cluster_assignments_Prot$enriched_P.value[match(Top_cor_Prot_metab$Prot_module, cluster_assignments_Prot$col)]
-  Top_cor_Prot_metab$Enriched_Adjusted.P.value <- cluster_assignments_Prot$enriched_Adjusted.P.value[match(Top_cor_Prot_metab$Prot_module, cluster_assignments_Prot$col)]
-  Top_cor_Prot_metab$Enriched_GO <- cluster_assignments_Prot$enriched_GO[match(Top_cor_Prot_metab$Prot_module, cluster_assignments_Prot$col)]
-
-  # Create the network graph
-  filtered_cor_Prot_metab_list = Top_cor_Prot_metab[, c("Prot_label", "Metab_label", "Correlation")]
-
-  Top_cor_Prot_metab = Top_cor_Prot_metab[,c("Metab_Module_id" ,  "Metab_module", "Metab_count",   "Prot_Module_id",  "Prot_module", "Prot_count",   "Correlation",  'Enriched_Term_Genes',   "Enriched_Overlap" ,   "Enriched_Genes",  "Enriched_P.value",  "Enriched_Adjusted.P.value", "Enriched_GO")]
-
-  return(list(Top_cor_Prot_metab = Top_cor_Prot_metab,
-              filtered_cor_Prot_metab_list = filtered_cor_Prot_metab_list,
-              cor_Prot_metab_WGCNA = cor_Prot_metab_WGCNA,
+  return(list(Top_cor_Prot_metab = cor_top, #reemplazo Top_cor_Prot_metab y a filtered_cor_Prot_metab_list
+              Cor_list = cor_list,
+              Correlation_Plot = cor_listPlot, #reemplazo cor_Prot_metab_WGCNA. Debo hacer plot for each correlation
               nodes = nodes,
-              edges = edges))
-  }
+              edges = edges,
+              n = n))
+}
 
 

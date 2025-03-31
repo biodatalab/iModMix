@@ -25,7 +25,7 @@ app_ui <- function(request) {
                  tabPanel("Run iModMix", icon = icon("tasks", lib = "glyphicon"),
                           div(style = "background-color: #DEEBF7; width: 100%;",
                               navbarMenu(" ",
-                                         "Upload dataset",
+                                         "Upload Data Files",
                                          tabPanel(" ", mod_module1_ui("module1_1"))
                               )
                           )

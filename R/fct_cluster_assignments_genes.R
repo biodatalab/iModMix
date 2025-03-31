@@ -1,21 +1,35 @@
 #' cluster_assignments_genes
 #'
-#' @description Cluster assignments for proteins and genes.
-#' @param cluster_genes A data frame containing cluster assignments for genes.
-#' @param Prot_annotation A data frame with the annotation names of the proteins. Should have a column called Feature_ID.
-#' @return A data frame containing cluster assignments and HMDB/Symbol.
+#' @description Cluster assignments with annotation.
+#' @param cluster A data frame containing cluster assignments.
+#' @param PhenoData A data frame with the annotation names of the Dataset. Should have a column called Feature_ID.
+#' @return A data frame containing cluster assignments and selected columns by user.
 #' @export
-cluster_assignments_genes <- function(cluster_genes, Prot_annotation = NULL) {
-  if (!is.null(Prot_annotation)) {
-    try_cluster_assigment_Prot <- merge(cluster_genes, Prot_annotation, by.x = "feature", by.y = "Feature_ID", all.x = TRUE)
-    try_cluster_assigment_Prot$feature_name <- ifelse(is.na(try_cluster_assigment_Prot$Symbol) | try_cluster_assigment_Prot$Symbol == "", try_cluster_assigment_Prot$feature, try_cluster_assigment_Prot$Symbol)
-    try_cluster_assigment_Prot$feature_map <- ifelse(is.na(try_cluster_assigment_Prot$Symbol) | try_cluster_assigment_Prot$Symbol == "", "", try_cluster_assigment_Prot$Symbol)
-    try_cluster_assigment_Prot <- try_cluster_assigment_Prot[, c("feature", "cluster", "col", "feature_name", "feature_map")]
+cluster_assignments_genes <- function(cluster, PhenoData = NULL, selected_columns = NULL) {
+  if (is.null(PhenoData)) {
+    cluster_annot <- cluster
+    cluster_annot$feature_name <- cluster_annot$feature
+    cluster_annot <- cluster_annot[, c("feature", "cluster", "col", "feature_name")]
   } else {
-    try_cluster_assigment_Prot <- cluster_genes
-    try_cluster_assigment_Prot$feature_name <- try_cluster_assigment_Prot$feature
-    try_cluster_assigment_Prot$feature_map <- ""
-    try_cluster_assigment_Prot <- try_cluster_assigment_Prot[, c("feature", "cluster", "col", "feature_name", "feature_map")]
+    if (is.null(selected_columns)) {
+      cluster_annot <- merge(cluster, PhenoData, by.x = "feature", by.y = "Feature_ID", all.x = TRUE)
+      if ("Symbol" %in% colnames(cluster_annot)) {
+        cluster_annot$feature_name <- ifelse(is.na(cluster_annot$Symbol) | cluster_annot$Symbol == "", cluster_annot$feature, cluster_annot$Symbol)
+      } else {
+        cluster_annot$feature_name <- cluster_annot$feature
+      }
+      cluster_annot <- cluster_annot[, c("feature", "cluster", "col", "feature_name")]
+    } else {
+      cluster_annot <- merge(cluster, PhenoData, by.x = "feature", by.y = "Feature_ID", all.x = TRUE)
+      if ("Symbol" %in% colnames(cluster_annot)) {
+        cluster_annot$feature_name <- ifelse(is.na(cluster_annot$Symbol) | cluster_annot$Symbol == "", cluster_annot$feature, cluster_annot$Symbol)
+      } else {
+        cluster_annot$feature_name <- cluster_annot$feature
+      }
+      cluster_annot <- cluster_annot[, c("feature", "cluster", "col", "feature_name", selected_columns)]
+    }
   }
-  return(try_cluster_assigment_Prot)
+  return(cluster_annot)
 }
+
+

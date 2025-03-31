@@ -24,41 +24,61 @@ mod_module1_ui <- function(id) {
       width = 4,
 
       fileInput(
-        ns("DataSet"),
+        ns("Data1"),
         accept = c('text/csv',
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Upload Metabolomics Abundance Data")
+        label = h5("Upload Expression Data 1")
       ),
 
       fileInput(
-        ns("DataSet3"),
+        ns("PhenoData1"),
         accept = c('text/csv',
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Upload Metabolomics Annotation Data")
+        label = h5("Upload Annotation Data 1")
       ),
 
       div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
 
       fileInput(
-        ns("DataSet2"),
+        ns("Data2"),
         accept = c('text/csv',
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Upload Proteomics/Genomics Expression Data")
+        label = h5("Upload Expression Data 2")
       ),
 
       fileInput(
-        ns("DataSet4"),
+        ns("PhenoData2"),
         accept = c('text/csv',
                    'text/comma-separated-values',
                    'text/plain',
                    '.csv'),
-        label = h5("Upload Proteomics/Genomics Annotation data")
+        label = h5("Upload Annotation Data 2")
+      ),
+
+      div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
+
+      fileInput(
+        ns("Data3"),
+        accept = c('text/csv',
+                   'text/comma-separated-values',
+                   'text/plain',
+                   '.csv'),
+        label = h5("Upload Expression Data 3")
+      ),
+
+      fileInput(
+        ns("PhenoData3"),
+        accept = c('text/csv',
+                   'text/comma-separated-values',
+                   'text/plain',
+                   '.csv'),
+        label = h5("Upload Annotation Data 3")
       ),
 
       div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
@@ -74,7 +94,7 @@ mod_module1_ui <- function(id) {
 
       div(style = "border-top: 1px solid #ccc; margin-top: 10px; margin-bottom: 10px;"),
 
-      label = h5("Upload Metadata"),
+      label = h5("Upload Sample Metadata"),
 
       helpText(
         "Example data is available to help you get started with iModMix. You can use this data to run the application and explore its features."),
@@ -91,14 +111,14 @@ mod_module1_ui <- function(id) {
     mainPanel(
       tabsetPanel(
         type = "tabs",
-        tabPanel("Metabolomics",
+        tabPanel("Data 1",
                  tabsetPanel(
                    type = "tabs",
                    tabPanel("Data Input",
-                            h4("Metabolomics abundance matrix",
+                            h4("Expression data 1",
                                shinyBS::bsButton("surf-infoMAM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-infoMAM", title = "More information",
-                                      content = HTML(paste0("Table reflecting the uploaded file <i>Metabolomics Abundance Data</i>. Check if the number of samples and the number of metabolomic features are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a metabolomic feature of interest. ")),
+                                      content = HTML(paste0("Table reflecting the uploaded file <i> Abundance Data 1</i>. Check if the number of samples and the number of data_1 features are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a feature of interest. ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("infotable")),
                             DT::DTOutput(ns("table")),
@@ -114,25 +134,25 @@ mod_module1_ui <- function(id) {
                             plotOutput(ns("PCA1")),
                             downloadButton(ns("downloadPCA"),
                                            "Principal component analysis"),
-                            h4("Metabolomics annotation data",
+                            h4("Annotation data 1",
                                shinyBS::bsButton("surf-infoMAD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-infoMAD", title = "More information",
-                                      content = HTML(paste0("Table reflecting the uploaded file <i>Metabolomics Annotation Data</i>. Check if the total number of entries at bottom of table matches the total number of features in the \u201cMetabolomics Abundance Data\u201d. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a metabolomic feature of interest.")),
+                                      content = HTML(paste0("Table reflecting the uploaded file <i> Annotation Data 1</i>. Check if the total number of entries at bottom of table matches the total number of features in the \u201c Abundance Data 1\u201d. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a feature of interest.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
                                ),
-                            DT::DTOutput(ns("table3"))
+                            DT::DTOutput(ns("tableAnnot1"))
                    ),
                    tabPanel("Module Assignments",
-                            h4("Sparse partial correlations: Metabolites", shinyBS::bsButton("surfInfoMPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            h4("Sparse partial correlations: data 1", shinyBS::bsButton("surfInfoMPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surfInfoMPC", title = "More information",
-                              content = HTML("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimate the partial correlation and captures only direct associations.</p> <p>Below is a preview of the sparse partial correlation of the first five metabolomic features. The full .csv file for the sparse partial correlation calculations for all the metabolomic features can be downloaded at the bottom of the table.</p>"),
+                              content = HTML("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimate the partial correlation and captures only direct associations.</p> <p>Below is a preview of the sparse partial correlation of the first five features. The full .csv file for the sparse partial correlation calculations for all the features can be downloaded at the bottom of the table.</p>"),
                               placement = "right", trigger = "hover", options = list(container = "body")),
                             verbatimTextOutput(ns("matrizTable")),
                             downloadButton(ns("downloadParCor"),
                                            "Partial correlation matrix"),
                             h4("Hierarchical clustering", shinyBS::bsButton("surfInfoMHC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surfInfoMHC", title = "More information",
-                                      content = HTML("<p>Hierarchical clustering is used to identify common neighbors between the metabolomic features. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram.</p> <p> Axes: The vertical axis (y-axis) represents the dissimilarity between genes or modules, while the horizontal axis (x-axis) shows the genes or modules. Branches: Each line in the dendrogram represents a gene or module. Genes that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles.</p>"),
+                                      content = HTML("<p>Hierarchical clustering is used to identify common neighbors between the features. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram.</p> <p> Axes: The vertical axis (y-axis) represents the dissimilarity between genes or modules, while the horizontal axis (x-axis) shows the genes or modules. Branches: Each line in the dendrogram represents a gene or module. Genes that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles.</p>"),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             plotOutput(ns("hc_plot")),
                             downloadButton(ns("downloadhc_plot"),
@@ -140,8 +160,13 @@ mod_module1_ui <- function(id) {
                             h4("Cluster assignments",
                                shinyBS::bsButton("surf-infoMAC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-infoMAC", title = "More information",
-                                      content = HTML(paste0("<p> Hierarchical clustering generates multiple modules (clusters) to which each metabolomic feature is assigned. The table below details the following columns: </p> <ul> <li>  Feature: metabolite ID </li> <li> module_id: The module where the metabolite is assigned and the color used on the hierarchical clustering dendrogram </li> <li> If annotation data is available, it also shows the KEGG ID and the metabolite name </li></ul> <p>The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a metabolomic feature of interest. The full .csv file of Cluster Assignments for all the metabolomic features can be downloaded at the bottom of the table. </p>")),
+                                      content = HTML(paste0("<p> Hierarchical clustering generates multiple modules (clusters) to which each feature is assigned. The table below details the following columns: </p> <ul> <li>  Feature: metabolite ID </li> <li> module_id: The module where the metabolite is assigned and the color used on the hierarchical clustering dendrogram </li> <li> If annotation data is available, it also shows the KEGG ID and the metabolite name </li></ul> <p>The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a metabolomic feature of interest. The full .csv file of Cluster Assignments for all the metabolomic features can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
+                            selectInput(
+                              ns("Mapping1"),
+                              label = "If you uploaded annotation data, select columns to view",
+                              choices = NULL,
+                              multiple = TRUE),
                             DT::DTOutput(ns("tableClusterAssig")),
                             downloadButton(ns("downloadClusterAssig"),
                                            "Cluster assigment table"),
@@ -156,7 +181,22 @@ mod_module1_ui <- function(id) {
                             h4("Eigenfeatures heatmap"),
                             plotOutput(ns("heatmapEigenMetab")),
                             downloadButton(ns("downloadheatmapEigenMetab"),
-                                           "Eigenfeatures heatmap Image (.png)")
+                                           "Eigenfeatures heatmap Image (.png)"),
+                            h4("Cluster assignments enriched",
+                               shinyBS::bsButton("surf-info_PGCAE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGCAE", title = "More information",
+                                               content = HTML(paste0("Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the dataset cluster descriptions on table below. Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr. The search bar can also be used to find the details of a protein/gene or module of interest. The full .csv file of Cluster Enrichments for dataset can be downloaded at the bottom of the table.")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            helpText(
+                              "Note: Upload the Annotation data to be able to run enrichment analysis."),
+                            selectInput(
+                              ns("databaseSelector1"),
+                              label = "Select Library",
+                              choices = NULL),
+                            checkboxInput(ns("runEnrichment1"),  label = "Run Enrichment Analysis", value = FALSE),
+                            DT::DTOutput(ns("tableClusterAssigAnnot1")),
+                            downloadButton(ns("downloadEnrichment1"),
+                                           "Enrichment analysis Data 1")
                    ),
                    tabPanel("Phenotype",
                             h4("Metadata",
@@ -166,7 +206,7 @@ mod_module1_ui <- function(id) {
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             helpText(
                               "Note: Upload the metadata data to be able to run phenotype analysis."),
-                            DT::DTOutput(ns("table5")),
+                            DT::DTOutput(ns("tableM1")),
                             h4("Classification between phenotypes by eigenfeatures",
                                shinyBS::bsButton("surf-infoMCPEf", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-infoMCPEf", title = "More information",
@@ -203,12 +243,23 @@ mod_module1_ui <- function(id) {
                             shinyBS::bsPopover(id = "surf-infoMMS", title = "More information",
                                       content = HTML(paste0("The drop-down menu displays all modules generated by iModMix. Users can view the features within a selected module. If annotation data is available, it also shows the KEGG ID and metabolite name. PCA loading and heatmap plots are generated to visualize the behavior of each specific module across the phenotype.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
+                            fluidRow(
+                              column(6,
                             selectInput(ns("moduleSelector"),
                                         label = "Select the module of interest",
                                         choices = NULL,
-                                        selected = NULL),
-                            DT::DTOutput(ns("ModuleFeaturesAnnot")),
-                            downloadButton(ns("downloadModuleFeaturesAnnot"),
+                                        selected = NULL)
+                              ),
+                            column(6,
+                            selectInput(
+                              ns("Screening1"),
+                              label = "If you uploaded annotation data, select columns to view",
+                              choices = NULL,
+                              multiple = TRUE)
+                            )
+                            ),
+                            DT::DTOutput(ns("ModuleFeaturesAnnot1")),
+                            downloadButton(ns("downloadModuleFeaturesAnnot1"),
                                            "Module Features"),
                             h4("PCA loading by module"),
                             plotOutput(ns("Loadings1")),
@@ -222,14 +273,14 @@ mod_module1_ui <- function(id) {
                  )
         ),
 
-        tabPanel("Proteomics/Genomics",
+        tabPanel("Data 2",
                  tabsetPanel(
                    type = "tabs",
                    tabPanel("Data Input",
-                            h4("Proteomics/Genomics expression matrix",
+                            h4("Expression data 2",
                                shinyBS::bsButton("surf-info_PGEM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-info_PGEM", title = "More information",
-                                      content = HTML(paste0("Table reflecting uploaded file <i>Proteomics/Genomics Expression data</i>. Check if the number of samples and the number of protein/genes are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a protein/gene of interest. ")),
+                                      content = HTML(paste0("Table reflecting uploaded file <i>data Expression data</i>. Check if the number of samples and the number of protein/genes are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a protein/gene of interest. ")),
                                       placement = "right", trigger = "hover", options = list(container = "body") ),
                             DT::DTOutput(ns("infotable2")),
                             DT::DTOutput(ns("table2")),
@@ -245,15 +296,15 @@ mod_module1_ui <- function(id) {
                             plotOutput(ns("PCA2")),
                             downloadButton(ns("downloadPCA2"),
                                            "Principal component analysis"),
-                            h4("Proteomics/Genomics annotation data",
+                            h4("Annotation data 2",
                                shinyBS::bsButton("surf-info_PGAD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-info_PGAD", title = "More information",
-                                      content = HTML(paste0("Table reflecting the uploaded file <i>Proteomics/Genomics Annotation Data</i>. Check if the total number of entries at bottom of table matches the total number of features in the <i>Proteomics/Genomics Expression Data</i>. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a protein/gene of interest. ")),
+                                      content = HTML(paste0("Table reflecting the uploaded file <i>data Annotation Data</i>. Check if the total number of entries at bottom of table matches the total number of features in the <i>data Expression Data</i>. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a protein/gene of interest. ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
-                            DT::DTOutput(ns("table4"))
+                            DT::DTOutput(ns("tableAnnot2"))
                    ),
                    tabPanel("Module Assignments",
-                            h4("Sparse partial correlations: Proteins/Genes",
+                            h4("Sparse partial correlations: data 2",
                                shinyBS::bsButton("surf-info_SPCforPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-info_SPCforPG", title = "More information",
                                       content = HTML(paste0("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimated the partial correlation and captures only direct associations.  </p> <p> Preview of the sparse partial correlation of the first five proteins/genes. The full .csv file for the sparse partial correlation calculations for all the proteins/genes can be downloaded at the bottom of the table. </p>")),
@@ -276,27 +327,19 @@ mod_module1_ui <- function(id) {
                             shinyBS::bsPopover(id = "surf-info_PGCA", title = "More information",
                                       content = HTML(paste0("<p>Hierarchical clustering generates multiple modules (clusters) to which each proteins/genes are assigned. The table below details the following columns:  </p> <ul> <li> Feature: proteins/genes ID </li>  <li>  module_id: The module where the protein/gene is assigned and the color used on the hierarchical clustering dendrogram </li> <li> Gene_symbol: If annotation data is available, it also shows the gene symbol. </li> </ul> <p> The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a protein/gene of interest.</p> <p> The full .csv file of Cluster Assignments for all the proteins/genes features can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
-                            DT::DTOutput(ns("tableClusterAssig4")),
+                            selectInput(
+                              ns("Mapping2"),
+                              label = "If you uploaded annotation data, select columns to view",
+                              choices = NULL,
+                              multiple = TRUE
+                            ),
+                            DT::DTOutput(ns("tableClusterAssig2")),
                             downloadButton(ns("downloadClusterAssig2"),
                                            "Cluster assigment"),
-                            h4("Cluster assignments enriched",
-                               shinyBS::bsButton("surf-info_PGCAE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            shinyBS::bsPopover(id = "surf-info_PGCAE", title = "More information",
-                                      content = HTML(paste0("Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the Proteomics/Genomics cluster descriptions on table below. Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr. The search bar can also be used to find the details of a protein/gene or module of interest. The full .csv file of Cluster Enrichments for Proteomics/Genomics can be downloaded at the bottom of the table.")),
-                                      placement = "right", trigger = "hover", options = list(container = "body")),
-                            helpText(
-                              "Note: Upload the Annotation data to be able to run enrichment analysis."),
-                            selectInput(
-                              ns("databaseSelector"),
-                              label = "Select Library",
-                              choices = NULL),
-                            DT::DTOutput(ns("tableClusterAssig3")),
-                            downloadButton(ns("downloadEnrichment"),
-                                           "Enrichment analysis"),
                             h4("First principal component from each module (Eigenfeatures)",
                                shinyBS::bsButton("surf-info_PGPC1ef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-info_PGPC1ef", title = "More information",
-                                      content = HTML(paste0("<p> The first principal component (PC1) is calculated for each module, referred to as eigenfeatures. Eigenfeatures are useful for: </p> <ol> <li> Relating the modules to the phenotypes. </li> <li>  Obtaining the correlation between omics datasets (integration). </li> </ol> <p> The full .csv file of calculations for PC1 for proteomics/genomics modules can be downloaded at the bottom of the table. </p> <p> The heatmap below shows eigenfeatures across samples. The vertical axis (y-axis) represents the eigenfeatures, and the horizontal axis (x-axis) displays the sample conditions. </p>")),
+                                      content = HTML(paste0("<p> The first principal component (PC1) is calculated for each module, referred to as eigenfeatures. Eigenfeatures are useful for: </p> <ol> <li> Relating the modules to the phenotypes. </li> <li>  Obtaining the correlation between omics datasets (integration). </li> </ol> <p> The full .csv file of calculations for PC1 for data modules can be downloaded at the bottom of the table. </p> <p> The heatmap below shows eigenfeatures across samples. The vertical axis (y-axis) represents the eigenfeatures, and the horizontal axis (x-axis) displays the sample conditions. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body") ),
                             DT::DTOutput(ns("tableEigengene2")),
                             downloadButton(ns("downloadtableEigengene2"),
@@ -304,7 +347,22 @@ mod_module1_ui <- function(id) {
                             h4("Eigenfeatures heatmap"),
                             plotOutput(ns("heatmapEigenProt")),
                             downloadButton(ns("downloadheatmapEigenProt"),
-                                           "Eigenfeatures heatmap Image (.png)")
+                                           "Eigenfeatures heatmap Image (.png)"),
+                            h4("Cluster assignments enriched",
+                               shinyBS::bsButton("surf-info_PGCAE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGCAE", title = "More information",
+                                               content = HTML(paste0("Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the data cluster descriptions on table below. Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr. The search bar can also be used to find the details of a protein/gene or module of interest. The full .csv file of Cluster Enrichments for data can be downloaded at the bottom of the table.")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            helpText(
+                              "Note: Upload the Annotation data to be able to run enrichment analysis."),
+                            selectInput(
+                              ns("databaseSelector2"),
+                              label = "Select Library",
+                              choices = NULL),
+                            checkboxInput(ns("runEnrichment2"),  label = "Run Enrichment Analysis", value = FALSE),
+                            DT::DTOutput(ns("tableClusterAssigAnnot2")),
+                            downloadButton(ns("downloadEnrichment2"),
+                                           "Enrichment analysis Data 2")
                    ),
                    tabPanel("Phenotype",
                             h4("Metadata",
@@ -312,7 +370,7 @@ mod_module1_ui <- function(id) {
                             shinyBS::bsPopover(id = "surf-info_PGPData", title = "More information",
                                       content = HTML(paste0("Table reflecting the uploaded file <i> Metadata</i>. Check if the number of samples and the number of entries listed at the bottom of the table are the same. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a sample.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
-                            DT::DTOutput(ns("table6")),
+                            DT::DTOutput(ns("tableM2")),
                             h4("Classification between phenotypes by eigenfeatures",
                                shinyBS::bsButton("surf-info_PGCPef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-info_PGCPef", title = "More information",
@@ -351,12 +409,23 @@ mod_module1_ui <- function(id) {
                             shinyBS::bsPopover(id = "surf-infoMS", title = "More information",
                                       content = HTML(paste0("The drop-down menu displays all modules generated by iModMix. Users can view the features within a selected module. If annotation data is available, it also shows the Gene Symbol. PCA loading and heatmap plots are generated to visualize the behavior of each specific module across the phenotype.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
-                            selectInput(ns("moduleSelector2"),
-                                        label = "Select the module of interest",
-                                        choices = NULL,
-                                        selected = NULL),
-                            DT::DTOutput(ns("ModuleFeatures2Annot")),
-                            downloadButton(ns("downloadModuleFeatures2Annot"),
+                            fluidRow(
+                              column(6,
+                                     selectInput(ns("moduleSelector2"),
+                                                 label = "Select the module of interest",
+                                                 choices = NULL,
+                                                 selected = NULL)
+                              ),
+                              column(6,
+                              selectInput(
+                                ns("Screening2"),
+                                label = "If you uploaded annotation data, select columns to view",
+                                choices = NULL,
+                                multiple = TRUE)
+                              )
+                            ),
+                            DT::DTOutput(ns("ModuleFeaturesAnnot2")),
+                            downloadButton(ns("downloadModuleFeaturesAnnot2"),
                                            "Module Features"),
                             h4("PCA loading by module"),
                             plotOutput(ns("Loadings2")),
@@ -370,18 +439,184 @@ mod_module1_ui <- function(id) {
                  )
                  ),
 
+         tabPanel("Data 3",
+                 tabsetPanel(
+                   type = "tabs",
+                   tabPanel("Data Input",
+                            h4("Expression data 3",
+                               shinyBS::bsButton("surf-info_PGEM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGEM", title = "More information",
+                                      content = HTML(paste0("Table reflecting uploaded file <i>Genomics Expression data</i>. Check if the number of samples and the number of genes are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a gene of interest.")),
+                                      placement = "right", trigger = "hover", options = list(container = "body") ),
+                            DT::DTOutput(ns("infotable3")),
+                            DT::DTOutput(ns("table3")),
+                            h4("Principal component analysis for each phenotype",
+                               shinyBS::bsButton("surf-info_PGPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGPC", title = "More information",
+                                      content = HTML(paste0("Drop-down menu displays conditions or sample descriptions provided with uploaded <i>Metadata</i>. Graph below displays Principal Component Analysis (PCA) plots representing each of your phenotype descriptions. ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
+                            selectInput(ns("phenotypeSelectorPCA3"),
+                                        label = "Select the phenotype of interest",
+                                        choices = NULL,
+                                        selected = NULL),
+                            plotOutput(ns("PCA3")),
+                            downloadButton(ns("downloadPCA3"),
+                                           "Principal component analysis"),
+                            h4("Annotation data 3",
+                               shinyBS::bsButton("surf-info_PGAD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGAD", title = "More information",
+                                      content = HTML(paste0("Table reflecting the uploaded file <i>Genomics Annotation Data</i>. Check if the total number of entries at bottom of table matches the total number of features in the <i>Genomics Expression Data</i>. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a protein/gene of interest. ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
+                            DT::DTOutput(ns("tableAnnot3"))
+                   ),
+                   tabPanel("Module Assignments",
+                            h4("Sparse partial correlations: data 3",
+                               shinyBS::bsButton("surf-info_SPCforPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_SPCforPG", title = "More information",
+                                      content = HTML(paste0("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimated the partial correlation and captures only direct associations.  </p> <p> Preview of the sparse partial correlation of the first five proteins/genes. The full .csv file for the sparse partial correlation calculations for all the proteins/genes can be downloaded at the bottom of the table. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+                               ),
+                            verbatimTextOutput(ns("matrizTable3")),
+                            downloadButton(ns("downloadParCor3"),
+                                           "Partial correlation"),
+                            h4("Hierarchical clustering",
+                               shinyBS::bsButton("surf-info_PGHC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGHC", title = "More information",
+                                      content = HTML(paste0("<p>Hierarchical clustering is used to identify common neighbors between the proteins/genes. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram. </p> <p> Axes: The vertical axis (y-axis) represents the dissimilarity between metabolites or modules, while the horizontal axis (x-axis) shows the modules. </p> <p>Branches: Each line in the dendrogram represents a module. Modules that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")
+                            ),
+                            plotOutput(ns("hc_plot3")),
+                            downloadButton(ns("downloadhc_plot3"),
+                                           "Hierarchical clustering Image (.png)"),
+                            h4("Cluster assignments",
+                               shinyBS::bsButton("surf-info_PGCA", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGCA", title = "More information",
+                                      content = HTML(paste0("<p>Hierarchical clustering generates multiple modules (clusters) to which each proteins/genes are assigned. The table below details the following columns:  </p> <ul> <li> Feature: proteins/genes ID </li>  <li>  module_id: The module where the protein/gene is assigned and the color used on the hierarchical clustering dendrogram </li> <li> Gene_symbol: If annotation data is available, it also shows the gene symbol. </li> </ul> <p> The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a protein/gene of interest.</p> <p> The full .csv file of Cluster Assignments for all the proteins/genes features can be downloaded at the bottom of the table. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
+                            selectInput(
+                              ns("Mapping3"),
+                              label = "If you uploaded annotation data, select columns to view",
+                              choices = NULL,
+                              multiple = TRUE
+                            ),
+                            DT::DTOutput(ns("tableClusterAssig3")),
+                            downloadButton(ns("downloadClusterAssig3"),
+                                           "Cluster assigment"),
+                            h4("First principal component from each module (Eigenfeatures)",
+                               shinyBS::bsButton("surf-info_PGPC1ef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGPC1ef", title = "More information",
+                                      content = HTML(paste0("<p> The first principal component (PC1) is calculated for each module, referred to as eigenfeatures. Eigenfeatures are useful for: </p> <ol> <li> Relating the modules to the phenotypes. </li> <li>  Obtaining the correlation between omics datasets (integration). </li> </ol> <p> The full .csv file of calculations for PC1 for genomics modules can be downloaded at the bottom of the table. </p> <p> The heatmap below shows eigenfeatures across samples. The vertical axis (y-axis) represents the eigenfeatures, and the horizontal axis (x-axis) displays the sample conditions. </p>")),
+                                      placement = "right", trigger = "hover", options = list(container = "body") ),
+                            DT::DTOutput(ns("tableEigengene3")),
+                            downloadButton(ns("downloadtableEigengene3"),
+                                           "Eigenfeatures table"),
+                            h4("Eigenfeatures heatmap"),
+                            plotOutput(ns("heatmapEigenGene")),
+                            downloadButton(ns("downloadheatmapEigenGene"),
+                                           "Eigenfeatures heatmap Image (.png)"),
+                            h4("Cluster assignments enriched",
+                               shinyBS::bsButton("surf-info_PGCAE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGCAE", title = "More information",
+                                               content = HTML(paste0("Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the Genomics cluster descriptions on table below. Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr. The search bar can also be used to find the details of a protein/gene or module of interest. The full .csv file of Cluster Enrichments for Genomics can be downloaded at the bottom of the table.")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            helpText(
+                              "Note: Upload the Annotation data to be able to run enrichment analysis."),
+                            selectInput(
+                              ns("databaseSelector3"),
+                              label = "Select Library",
+                              choices = NULL),
+                            checkboxInput(ns("runEnrichment3"),  label = "Run Enrichment Analysis", value = FALSE),
+                            DT::DTOutput(ns("tableClusterAssigAnnot3")),
+                            downloadButton(ns("downloadEnrichment3"),
+                                           "Enrichment analysis data 3")
+                   ),
+                   tabPanel("Phenotype",
+                            h4("Metadata",
+                               shinyBS::bsButton("surf-info_PGPData", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGPData", title = "More information",
+                                      content = HTML(paste0("Table reflecting the uploaded file <i> Metadata</i>. Check if the number of samples and the number of entries listed at the bottom of the table are the same. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a sample.")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
+                            DT::DTOutput(ns("tableM3")),
+                            h4("Classification between phenotypes by eigenfeatures",
+                               shinyBS::bsButton("surf-info_PGCPef", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_PGCPef", title = "More information",
+                                      content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> Variable: Represents the ID of the module. </li> <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> Result_t: The t-statistic value. </li> <li> Result_pValue: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> ")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
+                            fluidRow(
+                              column(6,
+                                     selectInput(ns("phenotypeSelector3"),
+                                                 label = "Select the phenotype of interest",
+                                                 choices = NULL,
+                                                 selected = NULL)
+                              ),
+                              column(6,
+                                     numericInput(ns("pValueThreshold3"),
+                                                 label = "Select p-value Threshold",
+                                                 min = 0,
+                                                 max = 1,
+                                                 step = 0.0001,
+                                                 value = 0.05)
+                              )
+                            ),
+                            DT::DTOutput(ns("classification_results3")),
+                            plotOutput(ns("classification_plot_3_all")),
+                            fluidRow(
+                              column(6,
+                                     downloadButton(ns("downloadClassification_results3"),
+                                                    "Classification table")
+                              ),
+                              column(6,
+                                     downloadButton(ns("downloadClassification_plot_3_all"),
+                                                    "Boxplot classification Image (.png)")
+                              )
+                            ),
+                            h4("Module screening",
+                               shinyBS::bsButton("surf-infoMS", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMS", title = "More information",
+                                      content = HTML(paste0("The drop-down menu displays all modules generated by iModMix. Users can view the features within a selected module. If annotation data is available, it also shows the Gene Symbol. PCA loading and heatmap plots are generated to visualize the behavior of each specific module across the phenotype.")),
+                                      placement = "right", trigger = "hover", options = list(container = "body")),
+                            fluidRow(
+                              column(6,
+                                     selectInput(ns("moduleSelector3"),
+                                                 label = "Select the module of interest",
+                                                 choices = NULL,
+                                                 selected = NULL)
+                              ),
+                              column(6,
+                              selectInput(
+                                ns("Screening3"),
+                                label = "If you uploaded annotation data, select columns to view",
+                                choices = NULL,
+                                multiple = TRUE)
+                              )
+                            ),
+                            DT::DTOutput(ns("ModuleFeaturesAnnot3")),
+                            downloadButton(ns("downloadModuleFeaturesAnnot3"),
+                                           "Module Features"),
+                            h4("PCA loading by module"),
+                            plotOutput(ns("Loadings3")),
+                            downloadButton(ns("downloadLoadings3"),
+                                           "PCA_Loadings"),
+                            h4("Heatmap by module"),
+                            plotOutput(ns("heatmap3")),
+                            downloadButton(ns("downloadHeatmap3"),
+                                           "Heatmap")
+                   )
+                 )
+                 ),
+
         tabPanel("Multi-omics Analysis",
                  tabsetPanel(
                    type = "tabs",
-                   tabPanel("Modules correlation",
-                            h4("Correlation: Metabolites and Proteins/Genes",
+                   tabPanel("Modules Integration",
+                            h4("Correlation between datasets",
                                shinyBS::bsButton("surf-infoMC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-infoMC", title = "More information",
-                                      content = HTML(paste0("Histogram depicting the correlation between eigen-metabolites and eigen-genes using Spearman correlation")),
+                                      content = HTML(paste0("Histogram depicting the correlation between datasets using Spearman correlation")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
-                            plotOutput(ns("Correlation_plot")),
-                            numericInput(ns("pValueThreshold3"),
-                                        label = "Select Correlation Threshold",
+                            plotOutput(ns("Correlation_plot12")),
+                            numericInput(ns("pValueThresholdcor"),
+                                        label = "Select correlation threshold",
                                         min = 0,
                                         max = 1,
                                         step = 0.0001,
@@ -389,94 +624,99 @@ mod_module1_ui <- function(id) {
                             DT::DTOutput(ns("tableCorrelation")),
                             downloadButton(ns("downloadOmicsCorrelation"),
                                            "Omics correlation"),
-                            h4("Module Network of Metabolites and Proteins/Genes",
+                            h4("Module network between datasets",
                                shinyBS::bsButton("surf-info_MMPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-info_MMPG", title = "More information",
-                                      content = HTML(paste0("An interactive module network showing each proteins/gene module as a green triangle  and metabolite modules as a yellow diamond. Clicking directly on the triangle or diamond identifies the module number. Correlation coefficients are seen on arrows connecting modules. Modules can be fluidly switched into different order and moved on the screen. The network can be downloaded as an html for saving. ")),
+                                      content = HTML(paste0("An interactive module network showing each Data2 module as a green triangle  and Data1 modules as a yellow diamond. Clicking directly on the triangle or diamond identifies the module number. Correlation coefficients are seen on arrows connecting modules. Modules can be fluidly switched into different order and moved on the screen. The network can be downloaded as an html for saving. ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             #plotOutput(ns("Network_plot")),
                             visNetwork::visNetworkOutput(ns("network")),
                             downloadLink(ns("downloadNetwork"),
                                          "Network as .html")),
-                   tabPanel("Important features",
-                            h4("Top Multi-omics modules correlations",
+                   tabPanel("Data 1 - Data 2",
+                            h4("Top modules correlations",
                                shinyBS::bsButton("surf-infoT5MM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-infoT5MM", title = "More information",
-                                      content = HTML(paste0("Table of the top 5 highly correlated modules, with the number of features within each module, the correlation between modules, and the enriched term for the proteins/genomics modules.   ")),
+                                      content = HTML(paste0("Table of the top 5 highly correlated modules, with the number of features within each module, the correlation between modules, and the enriched term for the proteins modules.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
-                            numericInput(ns("TopModules"),
-                                         label = "Select the number of top modules to visualize",
+                            numericInput(ns("TopModules_12"),
+                                         label = "Select the number of correlated modules to display",
                                          min = 1,
                                          max = 50,
                                          step = 1,
                                          value = 5),
-                            DT::DTOutput(ns("ImportantVariables")),
+                            DT::DTOutput(ns("ImportantVariables_12")),
                             h4("Top module correlation details",
                                shinyBS::bsButton("surf-infoTMCD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-infoTMCD", title = "More information",
                                       content = HTML(paste0("The drop-down menu displays the details for each of the top 5 highly correlated modules. Select one option to see the features within each module and the correlation between each feature (Corrplot and table). The arrows to the right of each column title can be used to sort data from increasing or decreasing values. Users can also use the search bar to find the details of a protein/gene or metabolites of interest. The user can download the full .csv file of Module correlations at the bottom of the table. ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
-                            selectInput(ns("visualization_list"),
-                                        label = "Select Lists to Visualize",
+                            selectInput(ns("visualization_list_12"),
+                                        label = "Select the correlated modules to display",
                                         choices = c("Top_1" = 1,
                                                     "Top_2" = 2,
                                                     "Top_3" = 3,
                                                     "Top_4" = 4,
                                                     "Top_5" = 5)),
-                            h4("List of Metabolites",
+                            h4("Features from data 1",
                                shinyBS::bsButton("surf-info_LofMet", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-info_LofMet", title = "More information",
-                                      content = HTML(paste0("<p> Displays the list of metabolites within a metabolomic module that is highly correlated with a protein module. The metabolomic module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
+                                      content = HTML(paste0("<p> Displays the list of features within a Data 1 module that is highly correlated with a Data 2 module. The Data 1 module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
 
                             ),
-                            verbatimTextOutput(ns("Important_features_2")),
+                            verbatimTextOutput(ns("Important_features_12_1")),
 
-                            h4("List of Proteins/Genes",
+                            h4("Features from data 2",
                                shinyBS::bsButton("surf-info_LofPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-info_LofPG", title = "More information",
-                                      content = HTML(paste0("Displays the list of proteins/genes within a proteomic/genomic module that is highly correlated with a metabolomic module. The module ID is first specified, along with its enriched term, enriched genes, and p-value. This is followed by the list of constituent proteins/genes. This information enables further pathway analysis and provides valuable insights into the relationships between metabolites, proteins, and genes.")),
+                                      content = HTML(paste0("Displays the list of features within a Data 2 module that is highly correlated with a Data 1 module. The module ID is first specified, along with its enriched term, enriched genes, and p-value. This is followed by the list of constituent proteins/genes. This information enables further pathway analysis and provides valuable insights into the relationships between metabolites, proteins, and genes.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
 
                             ),
-                            verbatimTextOutput(ns("Important_features_1")),
+                            verbatimTextOutput(ns("Important_features_12_2")),
 
-                            h4("Corrplot: Metabolites and Proteins/Genes"),
-                            plotOutput(ns("CorplotImp")),
+                            h4("Corrplot: Data 1 and Data 2"),
+                            plotOutput(ns("CorplotImp12")),
 
-                            h4("Modules correlation: Metabolites and Proteins/Genes",
+                            h4("Modules correlation: Data 1 and Data 2",
                                shinyBS::bsButton("surf-infoMCMPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-infoMCMPG", title = "More information",
-                                      content = HTML(paste0("Displays the list of proteins/genes within a proteomic/genomic module that is highly correlated with a metabolomic module. The module ID is first specified, along with its enriched term, enriched genes, and p-value. This is followed by the list of constituent proteins/genes. This information enables further pathway analysis and provides valuable insights into the relationships between metabolites, proteins, and genes.")),
+                                      content = HTML(paste0("Displays the list of features within a Data 2 module that is highly correlated with a Data 1 module. The module ID is first specified, along with its enriched term, enriched genes, and p-value. This is followed by the list of constituent proteins/genes. This information enables further pathway analysis and provides valuable insights into the relationships between metabolites, proteins, and genes.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
-                            DT::DTOutput(ns("Correlation_mod")),
-                            downloadButton(ns("downloadModCorrelation"),
-                                           "Modules correlation"),
+                            DT::DTOutput(ns("Correlation_mod12")),
+                            downloadButton(ns("downloadModCorrelation12"),
+                                           "Modules_1-2_correlation"),
 
-                            h4("Metabolites from top module",
+                            h4("Data 1: Features from top module",
                                shinyBS::bsButton("surf-infoMTopM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-infoMTopM", title = "More information",
-                                      content = HTML(paste0("<p> Displays the list of metabolites within a metabolomic module that is highly correlated with a protein module. The metabolomic module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
+                                      content = HTML(paste0("<p> Displays the list of features within a Data 1 module that is highly correlated with a Data 2 module. The Data 1 module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
-                            DT::DTOutput(ns("cluster_assignments_summary2")),
-                            DT::DTOutput(ns("cluster_assignments_features2")),
-                            downloadButton(ns("downloadcluster_assignments_2"),
-                                           "Metabolites_TopModule"),
+                            DT::DTOutput(ns("cluster_assignments_summary12_1")),
+                            selectInput(
+                              ns("Screening12_1"),
+                              label = "If you uploaded annotation data, select columns to view",
+                              choices = NULL,
+                              multiple = TRUE),
+                            DT::DTOutput(ns("cluster_assignments_features12_1")),
+                            downloadButton(ns("downloadcluster_assignments12_1"),
+                                           "Data1_Features_TopModule12"),
 
-                            h4("Classification between phenotypes by Metabolites",
+                            h4("Classification between phenotypes by Data 1",
                                shinyBS::bsButton("surf-infoMCPM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-infoMCPM", title = "More information",
                                       content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The feactures of top correlated module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a boxplot </p>  <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> </li> </ul> <p> Dots marking outliers and a legend describing the compared phenotype. </p> ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             fluidRow(
                               column(6,
-                                     selectInput(ns("phenotypeSelector_imp_metab"),
+                                     selectInput(ns("phenotypeSelector_imp_12_1"),
                                                  label = "Select the phenotype of interest",
                                                  choices = NULL,
                                                  selected = NULL)
                               ),
                               column(6,
-                                     numericInput(ns("pValueThreshold_imp_metab"),
+                                     numericInput(ns("pValueThreshold_imp_12_1"),
                                                   label = "Select p-value Threshold",
                                                   min = 0,
                                                   max = 1,
@@ -484,30 +724,35 @@ mod_module1_ui <- function(id) {
                                                   value = 0.05)
                               )
                             ),
-                            DT::DTOutput(ns("classification_results_imp_metab")),
-                            plotOutput(ns("classification_plot_1_all_imp_metab")),
+                            DT::DTOutput(ns("classification_results_imp_12_1")),
+                            plotOutput(ns("classification_plot_1_all_imp_12_1")),
 
-                            h4("Proteins/Genes from top module"),
-                            DT::DTOutput(ns("cluster_assignments_summary")),
-                            DT::DTOutput(ns("cluster_assignments_features")),
-                            downloadButton(ns("downloadcluster_assignments_1"),
-                                           "Proteins_Genes_TopModule"),
+                            h4("Data 2: Features from top module"),
+                            DT::DTOutput(ns("cluster_assignments_summary12_2")),
+                            selectInput(
+                              ns("Screening12_2"),
+                              label = "If you uploaded annotation data, select columns to view",
+                              choices = NULL,
+                              multiple = TRUE),
+                            DT::DTOutput(ns("cluster_assignments_features12_2")),
+                            downloadButton(ns("downloadcluster_assignments12_2"),
+                                           "Data2_Features_TopModule12"),
 
 
-                            h4("Classification between phenotypes by Proteins/Genes",
+                            h4("Classification between phenotypes by Data 2",
                                shinyBS::bsButton("surf-infoMCPPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-infoMCPPG", title = "More information",
                                       content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The feactures of top correlated module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a boxplot </p>  <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> </li> </ul> <p> Dots marking outliers and a legend describing the compared phenotype. </p> ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             fluidRow(
                               column(6,
-                                     selectInput(ns("phenotypeSelector_imp_Prot"),
+                                     selectInput(ns("phenotypeSelector_imp_12_2"),
                                                  label = "Select the phenotype of interest",
                                                  choices = NULL,
                                                  selected = NULL)
                               ),
                               column(6,
-                                     numericInput(ns("pValueThreshold_imp_Prot"),
+                                     numericInput(ns("pValueThreshold_imp_12_2"),
                                                   label = "Select p-value Threshold",
                                                   min = 0,
                                                   max = 1,
@@ -515,10 +760,272 @@ mod_module1_ui <- function(id) {
                                                   value = 0.05)
                               )
                             ),
-                            DT::DTOutput(ns("classification_results_imp_Prot")),
-                            plotOutput(ns("classification_plot_1_all_imp_Prot"))
+                            DT::DTOutput(ns("classification_results_imp_12_2")),
+                            plotOutput(ns("classification_plot_1_all_imp_12_2"))
 
-                            )
+                            ),
+                   tabPanel("Data 1 - Data 3",
+                            h4("Top modules correlations",
+                               shinyBS::bsButton("surf-infoT5MM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoT5MM", title = "More information",
+                                               content = HTML(paste0("Table of the top 5 highly correlated modules, with the number of features within each module, the correlation between modules, and the enriched term for the proteins modules.")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            numericInput(ns("TopModules_13"),
+                                         label = "Select the number of correlated modules to display",
+                                         min = 1,
+                                         max = 50,
+                                         step = 1,
+                                         value = 5),
+                            DT::DTOutput(ns("ImportantVariables_13")),
+                            h4("Top module correlation details",
+                               shinyBS::bsButton("surf-infoTMCD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoTMCD", title = "More information",
+                                               content = HTML(paste0("The drop-down menu displays the details for each of the top 5 highly correlated modules. Select one option to see the features within each module and the correlation between each feature (Corrplot and table). The arrows to the right of each column title can be used to sort data from increasing or decreasing values. Users can also use the search bar to find the details of a protein/gene or metabolites of interest. The user can download the full .csv file of Module correlations at the bottom of the table. ")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            selectInput(ns("visualization_list_13"),
+                                        label = "Select the correlated modules to display",
+                                        choices = c("Top_1" = 1,
+                                                    "Top_2" = 2,
+                                                    "Top_3" = 3,
+                                                    "Top_4" = 4,
+                                                    "Top_5" = 5)),
+                            h4("Features from data 1",
+                               shinyBS::bsButton("surf-info_LofMet", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_LofMet", title = "More information",
+                                               content = HTML(paste0("<p> Displays the list of features within a Data 1 module that is highly correlated with a Data 2 module. The Data 1 module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
+                            verbatimTextOutput(ns("Important_features_13_1")),
+
+                            h4("Features from data 3",
+                               shinyBS::bsButton("surf-info_LofPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_LofPG", title = "More information",
+                                               content = HTML(paste0("Displays the list of features within a Data 2 module that is highly correlated with a Data 1 module. The module ID is first specified, along with its enriched term, enriched genes, and p-value. This is followed by the list of constituent proteins/genes. This information enables further pathway analysis and provides valuable insights into the relationships between metabolites, proteins, and genes.")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
+                            verbatimTextOutput(ns("Important_features_13_3")),
+
+                            h4("Corrplot: Data 1 and Data 3"),
+                            plotOutput(ns("CorplotImp13")),
+
+                            h4("Modules correlation: Data 1 and Data 3",
+                               shinyBS::bsButton("surf-infoMCMPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMCMPG", title = "More information",
+                                               content = HTML(paste0("Displays the list of features within a Data 2 module that is highly correlated with a Data 1 module. The module ID is first specified, along with its enriched term, enriched genes, and p-value. This is followed by the list of constituent proteins/genes. This information enables further pathway analysis and provides valuable insights into the relationships between metabolites, proteins, and genes.")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            DT::DTOutput(ns("Correlation_mod13")),
+                            downloadButton(ns("downloadModCorrelation13"),
+                                           "Modules_1-3_correlation"),
+
+                            h4("Data 1: Features from top module",
+                               shinyBS::bsButton("surf-infoMTopM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMTopM", title = "More information",
+                                               content = HTML(paste0("<p> Displays the list of features within a Data 1 module that is highly correlated with a Data 2 module. The Data 1 module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            DT::DTOutput(ns("cluster_assignments_summary13_1")),
+                            selectInput(
+                              ns("Screening13_1"),
+                              label = "If you uploaded annotation data, select columns to view",
+                              choices = NULL,
+                              multiple = TRUE),
+                            DT::DTOutput(ns("cluster_assignments_features13_1")),
+                            downloadButton(ns("downloadcluster_assignments13_1"),
+                                           "Data1_Features_TopModule13"),
+
+                            h4("Classification between phenotypes by Data 1",
+                               shinyBS::bsButton("surf-infoMCPM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMCPM", title = "More information",
+                                               content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The feactures of top correlated module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a boxplot </p>  <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> </li> </ul> <p> Dots marking outliers and a legend describing the compared phenotype. </p> ")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            fluidRow(
+                              column(6,
+                                     selectInput(ns("phenotypeSelector_imp_13_1"),
+                                                 label = "Select the phenotype of interest",
+                                                 choices = NULL,
+                                                 selected = NULL)
+                              ),
+                              column(6,
+                                     numericInput(ns("pValueThreshold_imp_13_1"),
+                                                  label = "Select p-value Threshold",
+                                                  min = 0,
+                                                  max = 1,
+                                                  step = 0.001,
+                                                  value = 0.05)
+                              )
+                            ),
+                            DT::DTOutput(ns("classification_results_imp_13_1")),
+                            plotOutput(ns("classification_plot_1_all_imp_13_1")),
+
+                            h4("Data 3: Features from top module"),
+                            DT::DTOutput(ns("cluster_assignments_summary13_3")),
+                            selectInput(
+                              ns("Screening13_3"),
+                              label = "If you uploaded annotation data, select columns to view",
+                              choices = NULL,
+                              multiple = TRUE),
+                            DT::DTOutput(ns("cluster_assignments_features13_3")),
+                            downloadButton(ns("downloadcluster_assignments13_3"),
+                                           "Data3_Features_TopModule13"),
+
+
+                            h4("Classification between phenotypes by Data 3",
+                               shinyBS::bsButton("surf-infoMCPPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMCPPG", title = "More information",
+                                               content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The feactures of top correlated module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a boxplot </p>  <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> </li> </ul> <p> Dots marking outliers and a legend describing the compared phenotype. </p> ")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            fluidRow(
+                              column(6,
+                                     selectInput(ns("phenotypeSelector_imp_13_3"),
+                                                 label = "Select the phenotype of interest",
+                                                 choices = NULL,
+                                                 selected = NULL)
+                              ),
+                              column(6,
+                                     numericInput(ns("pValueThreshold_imp_13_3"),
+                                                  label = "Select p-value Threshold",
+                                                  min = 0,
+                                                  max = 1,
+                                                  step = 0.001,
+                                                  value = 0.05)
+                              )
+                            ),
+                            DT::DTOutput(ns("classification_results_imp_13_3")),
+                            plotOutput(ns("classification_plot_1_all_imp_13_3"))
+
+                   ),
+                   tabPanel("Data 2 - Data 3",
+                            h4("Top modules correlations",
+                               shinyBS::bsButton("surf-infoT5MM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoT5MM", title = "More information",
+                                               content = HTML(paste0("Table of the top 5 highly correlated modules, with the number of features within each module, the correlation between modules, and the enriched term for the proteins modules.")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            numericInput(ns("TopModules_23"),
+                                         label = "Select the number of correlated modules to display",
+                                         min = 1,
+                                         max = 50,
+                                         step = 1,
+                                         value = 5),
+                            DT::DTOutput(ns("ImportantVariables_23")),
+                            h4("Top module correlation details",
+                               shinyBS::bsButton("surf-infoTMCD", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoTMCD", title = "More information",
+                                               content = HTML(paste0("The drop-down menu displays the details for each of the top 5 highly correlated modules. Select one option to see the features within each module and the correlation between each feature (Corrplot and table). The arrows to the right of each column title can be used to sort data from increasing or decreasing values. Users can also use the search bar to find the details of a protein/gene or metabolites of interest. The user can download the full .csv file of Module correlations at the bottom of the table. ")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            selectInput(ns("visualization_list_23"),
+                                        label = "Select the correlated modules to display",
+                                        choices = c("Top_1" = 1,
+                                                    "Top_2" = 2,
+                                                    "Top_3" = 3,
+                                                    "Top_4" = 4,
+                                                    "Top_5" = 5)),
+                            h4("Features from data 2",
+                               shinyBS::bsButton("surf-info_LofMet", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_LofMet", title = "More information",
+                                               content = HTML(paste0("<p> Displays the list of features within a Data 1 module that is highly correlated with a Data 2 module. The Data 1 module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
+                            verbatimTextOutput(ns("Important_features_23_2")),
+
+                            h4("Features from data 3",
+                               shinyBS::bsButton("surf-info_LofPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_LofPG", title = "More information",
+                                               content = HTML(paste0("Displays the list of features within a Data 2 module that is highly correlated with a Data 1 module. The module ID is first specified, along with its enriched term, enriched genes, and p-value. This is followed by the list of constituent proteins/genes. This information enables further pathway analysis and provides valuable insights into the relationships between metabolites, proteins, and genes.")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")
+
+                            ),
+                            verbatimTextOutput(ns("Important_features_23_3")),
+
+                            h4("Corrplot: Data 2 and Data 3"),
+                            plotOutput(ns("CorplotImp23")),
+
+                            h4("Modules correlation: Data 2 and Data 3",
+                               shinyBS::bsButton("surf-infoMCMPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMCMPG", title = "More information",
+                                               content = HTML(paste0("Displays the list of features within a Data 2 module that is highly correlated with a Data 1 module. The module ID is first specified, along with its enriched term, enriched genes, and p-value. This is followed by the list of constituent proteins/genes. This information enables further pathway analysis and provides valuable insights into the relationships between metabolites, proteins, and genes.")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            DT::DTOutput(ns("Correlation_mod23")),
+                            downloadButton(ns("downloadModCorrelation23"),
+                                           "Modules_2-3_correlation"),
+
+                            h4("Data 2: Features from top module",
+                               shinyBS::bsButton("surf-infoMTopM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMTopM", title = "More information",
+                                               content = HTML(paste0("<p> Displays the list of features within a Data 1 module that is highly correlated with a Data 2 module. The Data 1 module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            DT::DTOutput(ns("cluster_assignments_summary23_2")),
+                            selectInput(
+                              ns("Screening23_2"),
+                              label = "If you uploaded annotation data, select columns to view",
+                              choices = NULL,
+                              multiple = TRUE),
+                            DT::DTOutput(ns("cluster_assignments_features23_2")),
+                            downloadButton(ns("downloadcluster_assignments23_2"),
+                                           "Data2_Features_TopModule23"),
+
+                            h4("Classification between phenotypes by Data 2",
+                               shinyBS::bsButton("surf-infoMCPM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMCPM", title = "More information",
+                                               content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The feactures of top correlated module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a boxplot </p>  <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> </li> </ul> <p> Dots marking outliers and a legend describing the compared phenotype. </p> ")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            fluidRow(
+                              column(6,
+                                     selectInput(ns("phenotypeSelector_imp_23_2"),
+                                                 label = "Select the phenotype of interest",
+                                                 choices = NULL,
+                                                 selected = NULL)
+                              ),
+                              column(6,
+                                     numericInput(ns("pValueThreshold_imp_23_2"),
+                                                  label = "Select p-value Threshold",
+                                                  min = 0,
+                                                  max = 1,
+                                                  step = 0.001,
+                                                  value = 0.05)
+                              )
+                            ),
+                            DT::DTOutput(ns("classification_results_imp_23_2")),
+                            plotOutput(ns("classification_plot_1_all_imp_23_2")),
+
+                            h4("Data 3: Features from top module"),
+                            DT::DTOutput(ns("cluster_assignments_summary23_3")),
+                            selectInput(
+                              ns("Screening23_3"),
+                              label = "If you uploaded annotation data, select columns to view",
+                              choices = NULL,
+                              multiple = TRUE),
+                            DT::DTOutput(ns("cluster_assignments_features23_3")),
+                            downloadButton(ns("downloadcluster_assignments23_3"),
+                                           "Data3_Features_TopModule23"),
+
+
+                            h4("Classification between phenotypes by Data 3",
+                               shinyBS::bsButton("surf-infoMCPPG", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMCPPG", title = "More information",
+                                               content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The feactures of top correlated module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a boxplot </p>  <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li> </li> </ul> <p> Dots marking outliers and a legend describing the compared phenotype. </p> ")),
+                                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            fluidRow(
+                              column(6,
+                                     selectInput(ns("phenotypeSelector_imp_23_3"),
+                                                 label = "Select the phenotype of interest",
+                                                 choices = NULL,
+                                                 selected = NULL)
+                              ),
+                              column(6,
+                                     numericInput(ns("pValueThreshold_imp_23_3"),
+                                                  label = "Select p-value Threshold",
+                                                  min = 0,
+                                                  max = 1,
+                                                  step = 0.001,
+                                                  value = 0.05)
+                              )
+                            ),
+                            DT::DTOutput(ns("classification_results_imp_23_3")),
+                            plotOutput(ns("classification_plot_1_all_imp_23_3"))
+
+                   )
                    )
                  )
       )
@@ -533,132 +1040,55 @@ mod_module1_server <- function(id){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
 
-    filedata <- reactiveVal(NULL)
-    filedata3 <- reactiveVal(NULL)
-    filedata2 <- reactiveVal(NULL)
-    filedata4 <- reactiveVal(NULL)
+    # Variables
+    Metab_exp <- reactiveVal(NULL)
+    Metab_annot <- reactiveVal(NULL)
     metadata <- reactiveVal(NULL)
-    demo_loaded <- reactiveVal(NULL)
-    demo_loaded2 <- reactiveVal(NULL)
-    enrich_loaded <- reactiveVal(NULL)
-    demo_loadedAll <- reactiveVal(NULL)
-    demo_loaded2All <- reactiveVal(NULL)
-    enrich_loadedAll <- reactiveVal(NULL)
-    classification_plot <- reactiveVal()
-    classification_plot2 <- reactiveVal()
 
-    observeEvent(input$DataSet, {
-      req(input$DataSet)
-      filedata_value <- read.csv(input$DataSet$datapath)
-      filedata(filedata_value)
+    Prot_exp <- reactiveVal(NULL)
+    Prot_annot <- reactiveVal(NULL)
+
+    Gene_exp <- reactiveVal(NULL)
+    Gene_annot <- reactiveVal(NULL)
+
+    classification_Metab <- reactiveVal()
+    classification_Metab_imp <- reactiveVal()
+    classification_Prot <- reactiveVal()
+    classification_Prot_imp <- reactiveVal()
+    classification_Gene <- reactiveVal()
+    classification_Gene_imp <- reactiveVal()
+
+    demo_par_cor_Metab <- reactiveVal(NULL)
+    demo_par_cor_Prot <- reactiveVal(NULL)
+    demo_par_cor_Gene <- reactiveVal(NULL)
+    demo_enrich_Prot <- reactiveVal(NULL)
+    demo_enrich_Gene <- reactiveVal(NULL)
+
+    demo_par_cor_Metab_All <- reactiveVal(NULL)
+    demo_par_cor_Prot_All <- reactiveVal(NULL)
+    demo_par_cor_Gene_All <- reactiveVal(NULL)
+    demo_enrich_Prot_All <- reactiveVal(NULL)
+    demo_enrich_Gene_All  <- reactiveVal(NULL)
+
+    ###### Data1
+    # Data Input
+
+    observeEvent(input$Data1, {
+      req(input$Data1)
+      filedata_value <- read.csv(input$Data1$datapath)
+      Metab_exp(filedata_value)
     })
 
-    observeEvent(input$DataSet3, {
-      req(input$DataSet3)
-      filedata_value <- read.csv(input$DataSet3$datapath)
-      filedata3(filedata_value)
-    })
-
-    observeEvent(input$DataSet2, {
-      req(input$DataSet2)
-      filedata_value <- read.csv(input$DataSet2$datapath)
-      filedata2(filedata_value)
-    })
-
-    observeEvent(input$DataSet4, {
-      req(input$DataSet4)
-      filedata_value <- read.csv(input$DataSet4$datapath)
-      filedata4(filedata_value)
-    })
-
-    observeEvent(input$metadata, {
-      req(input$metadata)
-      filedata_metadata <- read.csv(input$metadata$datapath)
-      metadata(filedata_metadata)
-    })
-
-    observeEvent(input$TopModules, {
-      n <- input$TopModules
-      choices <- setNames(as.list(1:n), paste0("Top_", 1:n))
-      updateSelectInput(session, "visualization_list", choices = choices)
-    })
-
-    observeEvent(input$runDemo, {
-      withProgress(message = 'Loading example data...', value = 0, {
-        incProgress(0, detail = 'Loading Metab_exp.csv')
-        filedata(load_metab_exp())
-        Sys.sleep(5)
-
-        incProgress(10, detail = 'Loading Metab_annot.csv')
-        filedata3(load_metab_annot())
-        Sys.sleep(3)
-
-        incProgress(20, detail = 'Loading Prot_exp.csv')
-        filedata2(load_RNA_exp())
-        Sys.sleep(6)
-
-        incProgress(30, detail = 'Loading Prot_annot.csv')
-        filedata4(load_RNA_annot())
-        Sys.sleep(3)
-
-        incProgress(50, detail = 'Loading Metadata.csv...')
-        metadata(load_metadata())
-        Sys.sleep(2)
-
-        demo_loaded(TRUE)
-        demo_loadedAll(FALSE)
-        demo_loaded2(TRUE)
-        demo_loaded2All(FALSE)
-        enrich_loaded(TRUE)
-        enrich_loadedAll(FALSE)
-        updateSelectInput(session, "databaseSelector", selected = "GO_Biological_Process_2023")
-        updateSliderInput(session, "pValueThreshold3", value = 0.60)
-        updateSliderInput(session, "pValueThreshold_imp_metab", value = 0.05)
-        updateSliderInput(session, "pValueThreshold_imp_Prot", value = 0.05)
-        incProgress(100, detail = 'Complete!')
-      })
-    })
-
-    observeEvent(input$runDemoAll, {
-      withProgress(message = 'Loading example data...', value = 0, {
-        incProgress(0, detail = 'Loading Metab_exp.csv')
-        filedata(load_metab_expAll())
-        Sys.sleep(5)
-
-        incProgress(10, detail = 'Loading Metab_annot.csv')
-        filedata3(load_metab_annotAll())
-        Sys.sleep(3)
-
-        incProgress(20, detail = 'Loading Prot_exp.csv')
-        filedata2(load_RNA_expAll())
-        Sys.sleep(6)
-
-        incProgress(30, detail = 'Loading Prot_annot.csv')
-        filedata4(load_RNA_annotAll())
-        Sys.sleep(3)
-
-        incProgress(50, detail = 'Loading Metadata.csv...')
-        metadata(load_metadataAll())
-        Sys.sleep(2)
-
-        demo_loaded(FALSE)
-        demo_loadedAll(TRUE)
-        demo_loaded2(FALSE)
-        demo_loaded2All(TRUE)
-        enrich_loaded(FALSE)
-        enrich_loadedAll(TRUE)
-        updateSelectInput(session, "databaseSelector", selected = "KEGG_2019_Mouse")
-        updateSliderInput(session, "pValueThreshold3", value = 0.90)
-        updateSliderInput(session, "pValueThreshold_imp_metab", value = 0.5)
-        updateSliderInput(session, "pValueThreshold_imp_Prot", value = 0.5)
-        incProgress(100, detail = 'Complete!')
-      })
+    observeEvent(input$PhenoData1, {
+      req(input$PhenoData1)
+      filedata_value <- read.csv(input$PhenoData1$datapath)
+      Metab_annot(filedata_value)
     })
 
     data_info <- reactive({
-      req(filedata())
-      Nobservations <- nrow(filedata())
-      Ncells <- ncol(filedata())-1
+      req(Metab_exp())
+      Nobservations <- nrow(Metab_exp())
+      Ncells <- ncol(Metab_exp())-1
       SummaryData <- as.data.frame(list(Number = c(Ncells, Nobservations)))
       rownames(SummaryData) <- c("Samples", "Features")
       list(SummaryData = SummaryData)
@@ -668,41 +1098,45 @@ mod_module1_server <- function(id){
       DT::datatable(df)
     })
     output$table <- DT::renderDataTable({
-      df <- filedata()
+      df <- Metab_exp()
       df[] <- lapply(df, function(x) if(is.numeric(x)) round(x, digits = 2) else x)
       DT::datatable(df)
     })
 
+    variables_mapping1 <- reactive({
+      names(Metab_annot())[-which(names(Metab_annot()) == "Feature_ID")]
+    })
+
+    observe({
+      updateSelectInput(session, "Mapping1", choices = variables_mapping1())
+    })
+
+    pheno_variablesPCA <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
+
+    observe({
+      updateSelectInput(session, "phenotypeSelectorPCA", choices = pheno_variablesPCA())
+    })
+
+    variables_Screening1 <- reactive({
+      names(Metab_annot())[-which(names(Metab_annot()) == "Feature_ID")]
+    })
+
+    observe({
+      updateSelectInput(session, "Screening1", choices = variables_Screening1())
+    })
+
+    load_data1 <- reactive({
+      req(Metab_exp())
+      Expression_mat = Metab_exp()
+      feature_mat_t_imp_data = load_data(Expression_mat = Expression_mat)
+      return(list(feature_mat_t_imp_data = feature_mat_t_imp_data))
+    })
+
+
     pca1 <- reactive({
-      req(filedata())
-      data = filedata()
-      data$missing_count = rowSums(is.na(data))
-      feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
-
-      features <- feature_mat$Feature_ID
-      feature_mat_t <- t(feature_mat[, -c(1, ncol(feature_mat))])
-      colnames(feature_mat_t) <- features
-      feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
-
-      sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
-      filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
-
-      feature_mat_t <- if (length(sd_values) > 20000) {
-        if (length(filtered_indices) > 20000) {
-          feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
-        } else {
-          feature_mat_t[, filtered_indices]
-        }
-      } else {
-        feature_mat_t[, ]
-      }
-
-      feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
-      feature_mat_t_imp_data= feature_mat_t_imp$data
-
-      feature_mat_t_imp_data <- as.matrix(scale(feature_mat_t_imp_data))
-
-      pca_res <- prcomp(feature_mat_t_imp_data)
+      pca_res <- prcomp(load_data1()$feature_mat_t_imp_data)
       return(list(pca_res = pca_res))
     })
 
@@ -710,8 +1144,8 @@ mod_module1_server <- function(id){
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
       if(is.null(metadata())){
-      ggplot2::autoplot(pca1()$pca_res)
-       } else {
+        ggplot2::autoplot(pca1()$pca_res)
+      } else {
         req(metadata())
 
         pca_data <- as.data.frame(pca1()$pca_res$x)
@@ -724,13 +1158,13 @@ mod_module1_server <- function(id){
         } else {
           print("Select a phenotype.")
         }
-       }
+      }
     })
 
     # Render the download handler
     output$downloadPCA <- downloadHandler(
       filename = function() {
-        "PCA_Metabolites.png"
+        "PCA_Data1.png"
       },
       content = function(file) {
         if (is.null(metadata())) {
@@ -743,164 +1177,24 @@ mod_module1_server <- function(id){
       }
     )
 
-    data_info2 <- reactive({
-      req(filedata2())
-      Nobservations <- nrow(filedata2())
-      Ncells <- ncol(filedata2())-1
-      SummaryData <- as.data.frame(list(Number = c(Ncells, Nobservations)))
-      rownames(SummaryData) <- c("Samples", "Features")
-      list(SummaryData = SummaryData)
-    })
-    output$infotable2 <- DT::renderDataTable({
-      df <- data_info2()$SummaryData
+
+    output$tableAnnot1 <- DT::renderDataTable({
+      df <- Metab_annot()
       DT::datatable(df)
     })
 
-    output$table2 <- DT::renderDataTable({
-      df <- filedata2()
-      df[] <- lapply(df, function(x) if(is.numeric(x)) round(x, digits = 2) else x)
-      DT::datatable(df)
-    })
-
-    pca2 <- reactive({
-      req(filedata2())
-      data = filedata2()
-      data$missing_count = rowSums(is.na(data))
-      feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
-
-      features <- feature_mat$Feature_ID
-      feature_mat_t <- t(feature_mat[, -c(1, ncol(feature_mat))])
-      colnames(feature_mat_t) <- features
-      feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
-
-      sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
-      filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
-
-      feature_mat_t <- if (length(sd_values) > 20000) {
-        if (length(filtered_indices) > 20000) {
-          feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
-        } else {
-          feature_mat_t[, filtered_indices]
-        }
-      } else {
-        feature_mat_t[, ]
-      }
-
-      feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
-      feature_mat_t_imp_data= feature_mat_t_imp$data
-
-      feature_mat_t_imp_data <- as.matrix(scale(feature_mat_t_imp_data))
-
-      pca_res <- prcomp(feature_mat_t_imp_data)
-      return(list(pca_res = pca_res))
-    })
-
-    output$PCA2 <- renderPlot({
-      requireNamespace("ggplot2", quietly = TRUE)
-      requireNamespace("ggfortify", quietly = TRUE)
-      if(is.null(metadata())){
-        ggplot2::autoplot(pca2()$pca_res)
-      } else {
-        #ggplot2::autoplot(pca2()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA2)
-        req(metadata())
-
-        pca_data <- as.data.frame(pca2()$pca_res$x)
-        combined_data <- cbind(pca_data, metadata())
-        color_column <- input$phenotypeSelectorPCA2
-
-        if (!is.null(color_column) && color_column != "") {
-          ggplot2::ggplot(combined_data, ggplot2::aes_string(x = "PC1", y = "PC2", color = color_column)) +
-            ggplot2::geom_point()
-        } else {
-          print("Select a phenotype.")
-        }
-      }
-    })
-
-    # Render the download handler
-    output$downloadPCA2 <- downloadHandler(
-      filename = function() {
-        "PCA_Proteins/Genes.png"
-      },
-      content = function(file) {
-        if (is.null(metadata())) {
-          p <- ggplot2::autoplot(pca2()$pca_res)
-        } else {
-          req(metadata())
-          p <- ggplot2::autoplot(pca2()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA2)
-        }
-        ggplot2::ggsave(file, plot = p, device = "png")
-      }
-    )
-
-    output$table3 <- DT::renderDataTable({
-      df <- filedata3()
-      DT::datatable(df)
-    })
-
-    output$table4 <- DT::renderDataTable({
-      df <- filedata4()
-      DT::datatable(df)
-    })
-
-    output$table5 <- DT::renderDataTable({
-      df <- metadata()
-      DT::datatable(df)
-    })
-
-    pheno_variablesPCA <- reactive({
-      names(metadata())[-which(names(metadata()) == "Sample")]
-    })
-
-    # For metabolites global PCA
-    observe({
-      updateSelectInput(session, "phenotypeSelectorPCA", choices = pheno_variablesPCA())
-    })
-
-    pheno_variables <- reactive({
-      names(metadata())[-which(names(metadata()) == "Sample")]
-    })
-
-    observe({
-      updateSelectInput(session, "phenotypeSelector", choices = pheno_variables())
-    })
-
-    pheno_variables2 <- reactive({
-      names(metadata())[-which(names(metadata()) == "Sample")]
-    })
-
-    observe({
-      updateSelectInput(session, "phenotypeSelector2", choices = pheno_variables2())
-    })
-
-    pheno_variables_imp_metab <- reactive({
-      names(metadata())[-which(names(metadata()) == "Sample")]
-    })
-
-    observe({
-      updateSelectInput(session, "phenotypeSelector_imp_metab", choices = pheno_variables_imp_metab())
-    })
-
-    pheno_variables_imp_Prot <- reactive({
-      names(metadata())[-which(names(metadata()) == "Sample")]
-    })
-
-    observe({
-      updateSelectInput(session, "phenotypeSelector_imp_Prot", choices = pheno_variables_imp_Prot())
-    })
-
-
+    # Module Assigments
     partial_cors1 <- reactive({
-      withProgress(message = 'Calculating partial correlations (Metabolites)...', value = 0, {
-        if (is.null(demo_loaded()) && is.null(demo_loadedAll())) {
-          req(filedata())
-          Expression_mat <- filedata()
+      withProgress(message = 'Calculating partial correlations Data 1...', value = 0, {
+        if (is.null(demo_par_cor_Metab()) && is.null(demo_par_cor_Metab_All())) {
+          req(Metab_exp())
+          Expression_mat <- Metab_exp()
           Sys.sleep(5)
           par_cor1 <- partial_cors(Expression_mat = Expression_mat)
-        } else if (demo_loaded()) {
+        } else if (demo_par_cor_Metab()) {
           Sys.sleep(5)
           par_cor1 <- load_partial_cor_metab()
-        } else if (demo_loadedAll()) {
+        } else if (demo_par_cor_Metab_All()) {
           Sys.sleep(5)
           par_cor1 <- load_partial_cor_metabAll()
         }
@@ -916,7 +1210,7 @@ mod_module1_server <- function(id){
     # Render the download handler
     output$downloadParCor <- downloadHandler(
       filename = function() {
-        "PartialCorMetabolites.csv"
+        "PartialCorData1.csv"
       },
       content = function(file) {
         write.csv(partial_cors1()$par_cor1, file, row.names = TRUE)
@@ -924,33 +1218,25 @@ mod_module1_server <- function(id){
     )
 
     hierarchical_cluster1 <- reactive({
-      par_cor2 = as.matrix(partial_cors1()$par_cor1)
-      hc2 = hierarchical_cluster(parcor_mat = par_cor2, tom = TRUE, min_module_size = 10)
-      hclusterTree2 = hc2$hclustTree
-      hcDynMods2 = hc2$dynamicMods_numeric
-      hcCluster_assignments2 = hc2$cluster_assignments
-      return(list(hclusterTree2 = hclusterTree2, hcDynMods2 = hcDynMods2, hcCluster_assignments2 = hcCluster_assignments2 ))
+      par_cor = as.matrix(partial_cors1()$par_cor1)
+      hc = hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
+      hclusterTree = hc$hclustTree
+      hcDynMods = hc$dynamicMods_numeric
+      hcCluster_assignments = hc$cluster_assignments
+      return(list(hclusterTree = hclusterTree, hcDynMods = hcDynMods, hcCluster_assignments = hcCluster_assignments))
     })
 
     unique_variables <- reactive({
-      unique(hierarchical_cluster1()$hcCluster_assignments2$col)
+      unique(hierarchical_cluster1()$hcCluster_assignments$col)
     })
 
     observe({
       updateSelectInput(session, "moduleSelector", choices = unique_variables())
     })
 
-    unique_variables2 <- reactive({
-      unique(hierarchical_cluster2()$hcCluster_assignments$col)
-    })
-
-    observe({
-      updateSelectInput(session, "moduleSelector2", choices = unique_variables2())
-    })
-
     output$hc_plot <- renderPlot({
-      hcClu = hierarchical_cluster1()$hclusterTree2
-      hcMod = as.matrix(hierarchical_cluster1()$hcDynMods2)
+      hcClu = hierarchical_cluster1()$hclusterTree
+      hcMod = as.matrix(hierarchical_cluster1()$hcDynMods)
       WGCNA::plotDendroAndColors(dendro = hcClu,
                                  colors = hcMod,
                                  dendroLabels = FALSE,
@@ -968,8 +1254,8 @@ mod_module1_server <- function(id){
       },
       content = function(file) {
         png(file)
-        hcClu = hierarchical_cluster1()$hclusterTree2
-        hcMod = hierarchical_cluster1()$hcDynMods2
+        hcClu = hierarchical_cluster1()$hclusterTree
+        hcMod = hierarchical_cluster1()$hcDynMods
         WGCNA::plotDendroAndColors(dendro = hcClu,
                                    colors = hcMod,
                                    dendroLabels = FALSE,
@@ -982,39 +1268,41 @@ mod_module1_server <- function(id){
       }
     )
 
-    cluster_assignments_metabolites1 <- reactive({
-      cluster_metabolites = as.data.frame(hierarchical_cluster1()$hcCluster_assignments2)
-      if (is.null(filedata3())) {
-        cluster_assignments_metab <- cluster_assignments_metabolites(cluster_metabolites = cluster_metabolites, metab_annotation = NULL)
+    cluster_assignments_Data1 <- reactive({
+      cluster = as.data.frame(hierarchical_cluster1()$hcCluster_assignments)
+      if (is.null(Metab_annot())) {
+        cluster_assignments_D1 <- cluster_assignments_genes(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
       } else {
-        filedata3 = filedata3()
-        filedata3_Uni <- filedata3[filedata3$Feature_ID %in% colnames(partial_cors1()$par_cor1), ]
-        cluster_assignments_metab <- cluster_assignments_metabolites(cluster_metabolites = cluster_metabolites, metab_annotation = filedata3_Uni)
+        Metab_annot = Metab_annot()
+        annot_Uni <- Metab_annot[Metab_annot$Feature_ID %in% colnames(partial_cors1()$par_cor), ]
+        cluster_assignments_D1 <- cluster_assignments_genes(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping1)
       }
-      return(list(cluster_assignments_metab = cluster_assignments_metab))
+      return(list(cluster_assignments_D1 = cluster_assignments_D1))
     })
 
     output$tableClusterAssig <- DT::renderDataTable({
-      df1 = cluster_assignments_metabolites1()$cluster_assignments_metab
+      df1 = cluster_assignments_Data1()$cluster_assignments_D1
       df1 = df1[, -which(names(df1) == "cluster")]
-      names(df1)[names(df1) == "col"] = "module_id"
+      df1 = df1[, -which(names(df1) == "feature_name")]
+      names(df1)[names(df1) == "feature"] = "Feature_ID"
+      names(df1)[names(df1) == "col"] = "Module_id"
       DT::datatable(df1)
     })
 
     # Render the download handler
     output$downloadClusterAssig <- downloadHandler(
       filename = function() {
-        "ClusterAssigMetabolites.csv"
+        "ClusterAssigData1.csv"
       },
       content = function(file) {
-        write.csv(cluster_assignments_metabolites1()$cluster_assignments_metab, file, row.names = TRUE)
+        write.csv(cluster_assignments_Data1()$cluster_assignments_D1, file, row.names = TRUE)
       }
     )
 
     Eigengene1 <- reactive({
-      req(filedata())
-      Expression_mat = filedata()
-      Cluster_assignments = hierarchical_cluster1()$hcCluster_assignments2[,3]
+      req(Metab_exp())
+      Expression_mat = Metab_exp()
+      Cluster_assignments = hierarchical_cluster1()$hcCluster_assignments[,3]
       Eigengenes = Eigengenes( Expression_mat = Expression_mat, cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
       return(list(Eigengenes = Eigengenes))
     })
@@ -1028,7 +1316,7 @@ mod_module1_server <- function(id){
     # Render the download handler
     output$downloadtableEigengene <- downloadHandler(
       filename = function() {
-        "EigenfeaturesMetabolites.csv"
+        "EigenfeaturesData1.csv"
       },
       content = function(file) {
         write.csv(Eigengene1()$Eigengenes, file, row.names = TRUE)
@@ -1050,7 +1338,7 @@ mod_module1_server <- function(id){
 
     output$downloadheatmapEigenMetab <- downloadHandler(
       filename = function() {
-        "HeatmapEigenMetabolites.png"
+        "HeatmapEigenData1.png"
       },
       content = function(file) {
         png(file)
@@ -1067,35 +1355,114 @@ mod_module1_server <- function(id){
       }
     )
 
-    Classification_Metabolites <- reactive({
+    databaseSelectorListData1 <- reactive({
+      gene_set_library = readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE)
+      choices <- gene_set_library[[1]]
+      data.frame(choices = choices)
+    })
+
+    observe({
+      updateSelectInput(session, "databaseSelector1", choices = databaseSelectorListData1()$choices)
+    })
+
+    #curl::has_internet()
+    assign("has_internet_via_proxy", TRUE, environment(curl::has_internet))
+    #httr::set_config(httr::config(ssl_verifypeer = 0L))
+    requireNamespace("enrichR", quietly = TRUE)
+    enrichR::listEnrichrSites()
+
+    Data1_enrich <- reactive({
+      req(input$runEnrichment1)
+      withProgress(message = 'Performing enrichment analysis...', value = 0, {
+        if (is.null(demo_enrich_Prot()) && is.null(demo_enrich_Prot_All())) {
+          req(input$databaseSelector1)
+          selected_database <- input$databaseSelector1
+          cluster_assignments_D1 <- cluster_assignments_Data1()$cluster_assignments_D1
+          cluster_assignments_enrich_D1 <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_D1,
+                                                                     database = selected_database)
+          Sys.sleep(1)
+        } else if (demo_enrich_Prot()) {
+          Sys.sleep(5)
+          cluster_assignments_enrich_D1 <- load_enrichment()
+        } else if (demo_enrich_Prot_All()) {
+          Sys.sleep(5)
+          cluster_assignments_enrich_D1 <- load_enrichmentAll()
+        }
+        incProgress(100, detail = 'Complete!')
+        list(cluster_assignments_enrich_D1 = cluster_assignments_enrich_D1)
+      })
+    })
+
+    output$tableClusterAssigAnnot1 <- DT::renderDataTable({
+      df3 = Data1_enrich()$cluster_assignments_enrich_D1
+      names(df3)[names(df3) == "col"] = "Module_id"
+      df3$enriched_P.value <- round(df3$enriched_P.value, digits = 4)
+      df3$enriched_Adjusted.P.value <- round(df3$enriched_Adjusted.P.value, digits = 4)
+      DT::datatable(df3)
+    })
+
+    # Render the download handler
+    output$downloadEnrichment1 <- downloadHandler(
+      filename = function() {
+        "EnrichmentbyModulesData1.csv"
+      },
+      content = function(file) {
+        write.csv(Data1_enrich()$cluster_assignments_enrich_D1, file, row.names = TRUE)
+      }
+    )
+
+    # Phenotype
+
+    observeEvent(input$metadata, {
+      req(input$metadata)
+      filedata_metadata <- read.csv(input$metadata$datapath)
+      metadata(filedata_metadata)
+    })
+
+    output$tableM1 <- DT::renderDataTable({
+      df <- metadata()
+      DT::datatable(df)
+    })
+
+    pheno_variables <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
+
+    observe({
+      updateSelectInput(session, "phenotypeSelector", choices = pheno_variables())
+    })
+
+
+    Classification_Data1 <- reactive({
       eigengenes_metab = as.data.frame(Eigengene1()$Eigengenes)
       metadata <- as.data.frame(metadata())
       phenotype_variable = input$phenotypeSelector
       significance_threshold = input$pValueThreshold
-      classification_metabolite <- perform_classification( eigengene_data = eigengenes_metab,
+      Classification_Data <- perform_classification( eigengene_data = eigengenes_metab,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
-                                                           significance_threshold = significance_threshold)
+                                                           significance_threshold = significance_threshold
+                                                     )
       return(list(
-        result = classification_metabolite$result,
-        plots = classification_metabolite$plots))
+        result = Classification_Data$result,
+        plots = Classification_Data$plots))
     })
 
 
     output$classification_results <- DT::renderDataTable({
-      df <- Classification_Metabolites()$result
+      df <- Classification_Data1()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "module_id"
+      names(df)[names(df) == "Variable"] = "Module_id"
       DT::datatable(df)
     })
 
     # Render the download handler
     output$downloadClassification_results <- downloadHandler(
       filename = function() {
-        "ClassByEigenfeatures_Metabolites.csv"
+        "ClassByEigenfeatures_Data1.csv"
       },
       content = function(file) {
-        write.csv(Classification_Metabolites()$result, file, row.names = TRUE)
+        write.csv(Classification_Data1()$result, file, row.names = TRUE)
       }
     )
 
@@ -1105,23 +1472,23 @@ mod_module1_server <- function(id){
       if (length(levels_selected_variable) < 3) {
         class_names <- levels_selected_variable
         class_label <- paste(class_names, collapse = " vs ")
-        plot <- Classification_Metabolites()$plots[[1]]
+        plot <- Classification_Data1()$plots[[1]]
         plot <- plot +
           ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
-               x = "Variables",
-               y = "Class") +
+                        x = "Variables",
+                        y = "Class") +
           ggplot2::theme(
             axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
           )
-        classification_plot(plot)
+        classification_Metab(plot)
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
         plots_list <- lapply(1:length(levels_selected_variable), function(i) {
-          Classification_Metabolites()$plots[[i]]
+          Classification_Data1()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)
-        classification_plot(plot)  # Store the plot in the reactive variable
+        classification_Metab(plot)  # Store the plot in the reactive variable
         return(plot)
       }
     })
@@ -1129,47 +1496,19 @@ mod_module1_server <- function(id){
     # Render the download handler
     output$downloadClassification_plot_1_all <- downloadHandler(
       filename = function() {
-        "Boxplot_classMetabolites.png"
+        "Boxplot_classData1.png"
       },
       content = function(file) {
-        ggplot2::ggsave(file, plot = classification_plot(), device = "png")
+        ggplot2::ggsave(file, plot = classification_Metab(), device = "png")
       }
     )
 
     loadings_metab <- reactive({
-      req(filedata())
-      data = filedata()
       selected_variable <- input$phenotypeSelector
-      data$missing_count = rowSums(is.na(data))
-      feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
-
-      features <- feature_mat$Feature_ID
-      feature_mat_t <- t(feature_mat[, -c(1, ncol(feature_mat))])
-      colnames(feature_mat_t) <- features
-      feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
-
-      sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
-      filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
-
-      feature_mat_t <- if (length(sd_values) > 20000) {
-        if (length(filtered_indices) > 20000) {
-          feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
-        } else {
-          feature_mat_t[, filtered_indices]
-        }
-      } else {
-        feature_mat_t[, ]
-      }
-
-      feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
-      feature_mat_t_imp_data= feature_mat_t_imp$data
-
-      feature_mat_t_imp_data <- as.matrix(scale(feature_mat_t_imp_data))
-
-      cluster_Metab <- subset(hierarchical_cluster1()$hcCluster_assignments2, col == input$moduleSelector)
+      cluster_Metab <- subset(hierarchical_cluster1()$hcCluster_assignments, col == input$moduleSelector)
       cluster_variables_Metab <- cluster_Metab$feature
       cluster_variables_MetabKEGG <- cluster_variables_Metab
-      cluster_expression_matrix_Metab <- feature_mat_t_imp_data[, colnames(feature_mat_t_imp_data) %in% cluster_variables_Metab, drop = FALSE]
+      cluster_expression_matrix_Metab <- load_data1()$feature_mat_t_imp_data[, colnames(load_data1()$feature_mat_t_imp_data) %in% cluster_variables_Metab, drop = FALSE]
       combined_data <- merge(metadata()[,c("Sample", selected_variable)], cluster_expression_matrix_Metab, by.x = "Sample", by.y = "row.names", all.x = TRUE)
       heatmap_data_sub_order <- combined_data[order(combined_data[[selected_variable]]), ]
       data_heat= t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
@@ -1177,27 +1516,28 @@ mod_module1_server <- function(id){
       return(list(pca_res = pca_res, data_heat= data_heat, heatmap_data_sub_order = heatmap_data_sub_order, cluster_variables_MetabKEGG = cluster_variables_MetabKEGG))
     })
 
-    output$ModuleFeaturesAnnot <- DT::renderDataTable({
-      req(loadings_metab())
-      df2 = as.data.frame(loadings_metab()$cluster_variables_MetabKEGG)
-      names(df2) = "Feature_ID"
-      if (!is.null(filedata3())) {
-        AnnoMeta = as.data.frame(filedata3())
-        df2 <- merge(df2, AnnoMeta[, c("Feature_ID", "KEGG", "Metabolite")], by = "Feature_ID", all.x = TRUE)
-      }
-      DT::datatable(df2, rownames = FALSE)
-    })
+  output$ModuleFeaturesAnnot1 <- DT::renderDataTable({
+    req(loadings_metab())
+    df2 <- as.data.frame(loadings_metab()$cluster_variables_MetabKEGG)
+    names(df2) <- "Feature_ID"
+    selected_columns <- input$Screening1
+    if (!is.null(Metab_annot()) && !is.null(selected_columns)) {
+      AnnoMeta <- as.data.frame(Metab_annot())
+      df2 <- merge(df2, AnnoMeta[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
+    }
+    DT::datatable(df2, rownames = FALSE)
+  })
 
     # Render the download handler
-    output$downloadModuleFeaturesAnnot <- downloadHandler(
+    output$downloadModuleFeaturesAnnot1 <- downloadHandler(
       filename = function() {
         "FeaturesOnMetabolomicsModule.csv"
       },
       content = function(file) {
         df2 = as.data.frame(loadings_metab()$cluster_variables_MetabKEGG)
         names(df2) = "Feature_ID"
-        if (!is.null(filedata3())) {
-          AnnoMeta = as.data.frame(filedata3())
+        if (!is.null(Metab_annot())) {
+          AnnoMeta = as.data.frame(Metab_annot())
           df2 <- merge(df2, AnnoMeta[, c("Feature_ID", "KEGG", "Metabolite")], by = "Feature_ID", all.x = TRUE)
         }
         write.csv(df2, file, row.names = FALSE)
@@ -1207,25 +1547,24 @@ mod_module1_server <- function(id){
     output$Loadings1 <- renderPlot({
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
-        ggplot2::autoplot(loadings_metab()$pca_res, data = metadata(), colour = input$phenotypeSelector, loadings = TRUE)
+      ggplot2::autoplot(loadings_metab()$pca_res, data = metadata(), colour = input$phenotypeSelector, loadings = TRUE)
     })
 
     # Render the download handler
     output$downloadLoadings1 <- downloadHandler(
       filename = function() {
-        "Loadings_Metabolites.png"
+        "Loadings_Data1.png"
       },
       content = function(file) {
         p <- ggplot2::autoplot(loadings_metab()$pca_res, data = metadata(), colour = input$phenotypeSelector, loadings = TRUE)
         ggplot2::ggsave(file, plot = p, device = "png")
-        }
+      }
     )
 
     output$heatmap1 <- renderPlot({
       selected_variable <- input$phenotypeSelector
       levels_selected_variable <- unique(metadata()[[selected_variable]])
       if (length(levels_selected_variable) == 2) {
-        # Usar una paleta diferente para dos niveles
         col_palette <- c("Level1" = "#1B9E77", "Level2" = "#D95F02")
       } else {
         col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
@@ -1243,7 +1582,7 @@ mod_module1_server <- function(id){
         show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
         #show_row_names = FALSE,
         show_column_names = FALSE,  top_annotation = column_anno
-        )
+      )
       ComplexHeatmap::draw(metab_heatmap_plot, heatmap_legend_side = "right",
                            annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
     })
@@ -1283,17 +1622,132 @@ mod_module1_server <- function(id){
       }
     )
 
+
+    ###### Data2
+    # Data Input
+
+    observeEvent(input$Data2, {
+      req(input$Data2)
+      filedata_value <- read.csv(input$Data2$datapath)
+      Prot_exp(filedata_value)
+    })
+
+    observeEvent(input$PhenoData2, {
+      req(input$PhenoData2)
+      filedata_value <- read.csv(input$PhenoData2$datapath)
+      Prot_annot(filedata_value)
+    })
+
+    data_info2 <- reactive({
+      req(Prot_exp())
+      Nobservations <- nrow(Prot_exp())
+      Ncells <- ncol(Prot_exp())-1
+      SummaryData <- as.data.frame(list(Number = c(Ncells, Nobservations)))
+      rownames(SummaryData) <- c("Samples", "Features")
+      list(SummaryData = SummaryData)
+    })
+    output$infotable2 <- DT::renderDataTable({
+      df <- data_info2()$SummaryData
+      DT::datatable(df)
+    })
+
+    output$table2 <- DT::renderDataTable({
+      df <- Prot_exp()
+      df[] <- lapply(df, function(x) if(is.numeric(x)) round(x, digits = 2) else x)
+      DT::datatable(df)
+    })
+
+    variables_mapping2 <- reactive({
+      names(Prot_annot())[-which(names(Prot_annot()) == "Feature_ID")]
+    })
+
+    observe({
+      updateSelectInput(session, "Mapping2", choices = variables_mapping2())
+    })
+
+    pheno_variablesPCA2 <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
+
+    observe({
+      updateSelectInput(session, "phenotypeSelectorPCA2", choices = pheno_variablesPCA2())
+    })
+
+    variables_Screening2 <- reactive({
+      names(Prot_annot())[-which(names(Prot_annot()) == "Feature_ID")]
+    })
+
+    observe({
+      updateSelectInput(session, "Screening2", choices = variables_Screening2())
+    })
+
+    load_data2 <- reactive({
+      req(Prot_exp())
+      Expression_mat = Prot_exp()
+      feature_mat_t_imp_data = load_data(Expression_mat = Expression_mat)
+      return(list(feature_mat_t_imp_data = feature_mat_t_imp_data))
+    })
+
+    pca2 <- reactive({
+      pca_res <- prcomp(load_data2()$feature_mat_t_imp_data)
+      return(list(pca_res = pca_res))
+    })
+
+    output$PCA2 <- renderPlot({
+      requireNamespace("ggplot2", quietly = TRUE)
+      requireNamespace("ggfortify", quietly = TRUE)
+      if(is.null(metadata())){
+        ggplot2::autoplot(pca2()$pca_res)
+      } else {
+        #ggplot2::autoplot(pca2()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA2)
+        req(metadata())
+
+        pca_data <- as.data.frame(pca2()$pca_res$x)
+        combined_data <- cbind(pca_data, metadata())
+        color_column <- input$phenotypeSelectorPCA2
+
+        if (!is.null(color_column) && color_column != "") {
+          ggplot2::ggplot(combined_data, ggplot2::aes_string(x = "PC1", y = "PC2", color = color_column)) +
+            ggplot2::geom_point()
+        } else {
+          print("Select a phenotype.")
+        }
+      }
+    })
+
+    # Render the download handler
+    output$downloadPCA2 <- downloadHandler(
+      filename = function() {
+        "PCA_Data2.png"
+      },
+      content = function(file) {
+        if (is.null(metadata())) {
+          p <- ggplot2::autoplot(pca2()$pca_res)
+        } else {
+          req(metadata())
+          p <- ggplot2::autoplot(pca2()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA2)
+        }
+        ggplot2::ggsave(file, plot = p, device = "png")
+      }
+    )
+
+    output$tableAnnot2 <- DT::renderDataTable({
+      df <- Prot_annot()
+      DT::datatable(df)
+    })
+
+    # Module Assigments
     partial_cors2 <- reactive({
-      withProgress(message = 'Calculating partial correlations (Proteins/Genes)...', value = 0, {
-        if (is.null(demo_loaded2()) && is.null(demo_loaded2All())) {
-          req(filedata2())
-          Expression_mat <- filedata2()
+      withProgress(message = 'Calculating partial correlations Data 2...', value = 0, {
+        if (is.null(demo_par_cor_Prot()) && is.null(demo_par_cor_Prot_All())) {
+          req(Prot_exp())
+          Expression_mat <- Prot_exp()
           Sys.sleep(5)
           par_cor <- partial_cors(Expression_mat = Expression_mat)
-        } else if (demo_loaded2()) {
+        } else if (demo_par_cor_Prot()) {
           Sys.sleep(5)
           par_cor <- load_partial_cor_RNA()
-        } else if (demo_loaded2All()) {
+        } else if (demo_par_cor_Prot_All()) {
           Sys.sleep(5)
           par_cor <- load_partial_cor_RNAAll()
         }
@@ -1309,7 +1763,7 @@ mod_module1_server <- function(id){
     # Render the download handler
     output$downloadParCor2 <- downloadHandler(
       filename = function() {
-        "PartialCorProteins/Genes.csv"
+        "PartialCorData2.csv"
       },
       content = function(file) {
         write.csv(partial_cors2()$par_cor, file, row.names = TRUE)
@@ -1325,6 +1779,14 @@ mod_module1_server <- function(id){
       return(list(hclusterTree = hclusterTree,
                   hcDynMods = hcDynMods,
                   hcCluster_assignments = hcCluster_assignments ))
+    })
+
+    unique_variables2 <- reactive({
+      unique(hierarchical_cluster2()$hcCluster_assignments$col)
+    })
+
+    observe({
+      updateSelectInput(session, "moduleSelector2", choices = unique_variables2())
     })
 
     output$hc_plot2 <- renderPlot({
@@ -1343,7 +1805,7 @@ mod_module1_server <- function(id){
     # Render the download handler
     output$downloadhc_plot2 <- downloadHandler(
       filename = function() {
-        "Hierarchical_clusterProtein/Genes.png"
+        "Hierarchical_clusterData2.png"
       },
       content = function(file) {
         png(file)
@@ -1361,93 +1823,40 @@ mod_module1_server <- function(id){
       }
     )
 
-    cluster_assignments_genes1 <- reactive({
-      cluster_genes = as.data.frame(hierarchical_cluster2()$hcCluster_assignments)
-      if (is.null(filedata4())) {
-        cluster_assignments_Prot <- cluster_assignments_genes(cluster_genes = cluster_genes, Prot_annotation = NULL)
+    cluster_assignments_Data2 <- reactive({
+      cluster = as.data.frame(hierarchical_cluster2()$hcCluster_assignments)
+      if (is.null(Prot_annot())) {
+        cluster_assignments_D2 <- cluster_assignments_genes(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
       } else {
-        filedata4 = filedata4()
-        filedata4_Uni <- filedata4[filedata4$Feature_ID %in% colnames(partial_cors2()$par_cor), ]
-        cluster_assignments_Prot <- cluster_assignments_genes(cluster_genes = cluster_genes, Prot_annotation = filedata4_Uni)
+        Prot_annot = Prot_annot()
+        annot_Uni <- Prot_annot[Prot_annot$Feature_ID %in% colnames(partial_cors2()$par_cor), ]
+        cluster_assignments_D2 <- cluster_assignments_genes(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping2)
       }
-      return(list(cluster_assignments_Prot = cluster_assignments_Prot))
+      return(list(cluster_assignments_D2 = cluster_assignments_D2))
     })
 
-    output$tableClusterAssig4 <- DT::renderDataTable({
-      df1 = cluster_assignments_genes1()$cluster_assignments_Prot
+    output$tableClusterAssig2 <- DT::renderDataTable({
+      df1 = cluster_assignments_Data2()$cluster_assignments_D2
       df1 = df1[, -which(names(df1) == "cluster")]
-      names(df1)[names(df1) == "col"] = "module_id"
+      df1 = df1[, -which(names(df1) == "feature_name")]
+      names(df1)[names(df1) == "feature"] = "Feature_ID"
+      names(df1)[names(df1) == "col"] = "Module_id"
       DT::datatable(df1)
     })
 
     # Render the download handler
     output$downloadClusterAssig2 <- downloadHandler(
       filename = function() {
-        "ClusterAssigGenes/Proteins.csv"
+        "ClusterAssigData2.csv"
       },
       content = function(file) {
-        write.csv(cluster_assignments_genes1()$cluster_assignments_Prot, file, row.names = TRUE)
-      }
-    )
-
-    databaseSelectorList <- reactive({
-      gene_set_library = readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE)
-      choices <- gene_set_library[[1]]
-      data.frame(choices = choices)
-    })
-
-    observe({
-      updateSelectInput(session, "databaseSelector", choices = databaseSelectorList()$choices)
-    })
-
-    #curl::has_internet()
-    assign("has_internet_via_proxy", TRUE, environment(curl::has_internet))
-    requireNamespace("enrichR", quietly = TRUE)
-    enrichR::listEnrichrSites()
-
-    Genes_Prot_enrich <- reactive({
-      withProgress(message = 'Performing enrichment analysis...', value = 0, {
-       if (is.null(enrich_loaded()) && is.null(enrich_loadedAll())) {
-          req(input$databaseSelector)
-          selected_database <- input$databaseSelector
-          cluster_assignments_ProtGenes <- cluster_assignments_genes1()$cluster_assignments_Prot
-          cluster_assignments_Prot_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
-                                                                     database = selected_database)
-          Sys.sleep(1)
-        } else if (enrich_loaded()) {
-          Sys.sleep(5)
-          cluster_assignments_Prot_enrich <- load_enrichment()
-        } else if (enrich_loadedAll()) {
-        Sys.sleep(5)
-        cluster_assignments_Prot_enrich <- load_enrichmentAll()
-      }
-        incProgress(100, detail = 'Complete!')
-        list(cluster_assignments_Prot_enrich = cluster_assignments_Prot_enrich)
-      })
-    })
-
-    output$tableClusterAssig3 <- DT::renderDataTable({
-      df3 = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
-      df3 = df3[, -which(names(df3) == "cluster")]
-      names(df3)[names(df3) == "col"] = "module_id"
-      df3$enriched_P.value <- round(df3$enriched_P.value, digits = 4)
-      df3$enriched_Adjusted.P.value <- round(df3$enriched_Adjusted.P.value, digits = 4)
-      DT::datatable(df3)
-    })
-
-    # Render the download handler
-    output$downloadEnrichment <- downloadHandler(
-      filename = function() {
-        "EnrichmentbyModules.csv"
-      },
-      content = function(file) {
-        write.csv(Genes_Prot_enrich()$cluster_assignments_Prot_enrich, file, row.names = TRUE)
+        write.csv(cluster_assignments_Data2()$cluster_assignments_D2, file, row.names = TRUE)
       }
     )
 
     Eigengene2 <- reactive({
-      req(filedata2())
-      Expression_mat = filedata2()
+      req(Prot_exp())
+      Expression_mat = Prot_exp()
       Cluster_assignments = hierarchical_cluster2()$hcCluster_assignments[,3]
       Eigengenes = Eigengenes(Expression_mat = Expression_mat,
                               cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
@@ -1463,7 +1872,7 @@ mod_module1_server <- function(id){
     # Render the download handler
     output$downloadtableEigengene2 <- downloadHandler(
       filename = function() {
-        "EigenfeaturesProteins_Genes.csv"
+        "EigenfeaturesData2.csv"
       },
       content = function(file) {
         write.csv(Eigengene2()$Eigengenes, file, row.names = TRUE)
@@ -1484,7 +1893,7 @@ mod_module1_server <- function(id){
 
     output$downloadheatmapEigenProt <- downloadHandler(
       filename = function() {
-        "HeatmapEigenProt.png"
+        "HeatmapEigenData2.png"
       },
       content = function(file) {
         png(file)
@@ -1501,48 +1910,102 @@ mod_module1_server <- function(id){
       }
     )
 
-    output$table6 <- DT::renderDataTable({
+
+    databaseSelectorListData2 <- reactive({
+      gene_set_library = readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE)
+      choices <- gene_set_library[[1]]
+      data.frame(choices = choices)
+    })
+
+    observe({
+      updateSelectInput(session, "databaseSelector2", choices = databaseSelectorListData2()$choices)
+    })
+
+
+    Data2_enrich <- reactive({
+      req(input$runEnrichment2)
+      withProgress(message = 'Performing enrichment analysis...', value = 0, {
+        if (is.null(demo_enrich_Prot()) && is.null(demo_enrich_Prot_All())) {
+          req(input$databaseSelector2)
+          selected_database <- input$databaseSelector2
+          cluster_assignments_ProtGenes <- cluster_assignments_Data2()$cluster_assignments_D2
+          cluster_assignments_Data2_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
+                                                                     database = selected_database)
+          Sys.sleep(1)
+        } else if (demo_enrich_Prot()) {
+          Sys.sleep(5)
+          cluster_assignments_Data2_enrich <- load_enrichment()
+        } else if (demo_enrich_Prot_All()) {
+          Sys.sleep(5)
+          cluster_assignments_Data2_enrich <- load_enrichmentAll()
+        }
+        incProgress(100, detail = 'Complete!')
+        list(cluster_assignments_Data2_enrich = cluster_assignments_Data2_enrich)
+      })
+    })
+
+    output$tableClusterAssigAnnot2 <- DT::renderDataTable({
+      df3 = Data2_enrich()$cluster_assignments_Data2_enrich
+      df3 = df3[, -which(names(df3) == "cluster")]
+      names(df3)[names(df3) == "col"] = "Module_id"
+      df3$enriched_P.value <- round(df3$enriched_P.value, digits = 4)
+      df3$enriched_Adjusted.P.value <- round(df3$enriched_Adjusted.P.value, digits = 4)
+      DT::datatable(df3)
+    })
+
+    # Render the download handler
+    output$downloadEnrichment2 <- downloadHandler(
+      filename = function() {
+        "EnrichmentbyModules.csv"
+      },
+      content = function(file) {
+        write.csv(Data2_enrich()$cluster_assignments_Data2_enrich, file, row.names = TRUE)
+      }
+    )
+
+    # Phenotype
+
+    output$tableM2 <- DT::renderDataTable({
       df <- metadata()
       DT::datatable(df)
     })
 
-    pheno_variablesPCA2 <- reactive({
+    pheno_variables2 <- reactive({
       names(metadata())[-which(names(metadata()) == "Sample")]
     })
 
-    # For metabolites global PCA
     observe({
-      updateSelectInput(session, "phenotypeSelectorPCA2", choices = pheno_variablesPCA2())
+      updateSelectInput(session, "phenotypeSelector2", choices = pheno_variables2())
     })
 
-    Classification_Proteins <- reactive({
+    Classification_Data2 <- reactive({
       eigengenes_prot = as.data.frame(Eigengene2()$Eigengenes)
       metadata <- as.data.frame(metadata())
       phenotype_variable = input$phenotypeSelector2
       significance_threshold = input$pValueThreshold2
-      classification_proteins <- perform_classification( eigengene_data = eigengenes_prot,
-                                                           metadata = metadata,
-                                                           phenotype_variable = phenotype_variable,
+      Classification_Data2 <- perform_classification( eigengene_data = eigengenes_prot,
+                                                         metadata = metadata,
+                                                         phenotype_variable = phenotype_variable,
                                                          significance_threshold = significance_threshold)
       return(list(
-        result = classification_proteins$result,
-        plots = classification_proteins$plots))
+        result = Classification_Data2$result,
+        plots = Classification_Data2$plots))
     })
 
     output$classification_results2 <- DT::renderDataTable({
-      df <- Classification_Proteins()$result
+      df <- Classification_Data2()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "module_id"
+      names(df)[names(df) == "Variable"] = "Module_id"
       DT::datatable(df)
     })
 
     # Render the download handler
     output$downloadClassification_results2 <- downloadHandler(
       filename = function() {
-        "ClassByEigenfeatures_Proteins/Genes.csv"
+        "ClassByEigenfeatures_Data2.csv"
       },
       content = function(file) {
-        write.csv(Classification_Proteins()$result, file, row.names = TRUE)
+        write.csv(Classification_Data2()$result, file, row.names = TRUE)
       }
     )
 
@@ -1552,72 +2015,44 @@ mod_module1_server <- function(id){
       if (length(levels_selected_variable) < 3) {
         class_names <- levels_selected_variable
         class_label <- paste(class_names, collapse = " vs ")
-        plot <- Classification_Proteins()$plots[[1]]
+        plot <- Classification_Data2()$plots[[1]]
         plot <- plot +
           ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
                         x = "Variables",
                         y = "Class") +
-      ggplot2::theme(
-        axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
-      )
-        classification_plot2(plot)
+          ggplot2::theme(
+            axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
+          )
+        classification_Prot(plot)
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
         plots_list <- lapply(1:length(levels_selected_variable), function(i) {
-          Classification_Proteins()$plots[[i]]
+          Classification_Data2()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)
-        classification_plot2(plot)  # Store the plot in the reactive variable
+        classification_Prot(plot)  # Store the plot in the reactive variable
         return(plot)
       }
     })
 
     output$downloadClassification_plot_2_all <- downloadHandler(
       filename = function() {
-        "Boxplot_classificationProteins/Genes.png"
+        "Boxplot_classificationData2.png"
       },
       content = function(file) {
         # Save the plot stored in the reactive variable
-        ggplot2::ggsave(file, plot = classification_plot2(), device = "png")
+        ggplot2::ggsave(file, plot = classification_Prot(), device = "png")
       }
     )
 
     loadings_Prot <- reactive({
-      req(filedata2())
-      data = filedata2()
       selected_variable <- input$phenotypeSelector2
-      data$missing_count = rowSums(is.na(data))
-      feature_mat = subset(data, missing_count <= 0.1 * (ncol(data)-2))
-
-      features <- feature_mat$Feature_ID
-      feature_mat_t <- t(feature_mat[, -c(1, ncol(feature_mat))])
-      colnames(feature_mat_t) <- features
-      feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
-
-      sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
-      filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
-
-      feature_mat_t <- if (length(sd_values) > 20000) {
-        if (length(filtered_indices) > 20000) {
-          feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
-        } else {
-          feature_mat_t[, filtered_indices]
-        }
-      } else {
-        feature_mat_t[, ]
-      }
-
-      feature_mat_t_imp = impute::impute.knn(feature_mat_t, k = min(10, nrow(feature_mat_t)))
-      feature_mat_t_imp_data= feature_mat_t_imp$data
-
-      feature_mat_t_imp_data <- as.matrix(scale(feature_mat_t_imp_data))
-
       cluster_Prot <- subset(hierarchical_cluster2()$hcCluster_assignments, col == input$moduleSelector2)
-      #cluster_Metab <- subset(cluster_assignments_metabolites1()$cluster_assignments_metab, cluster == "cluster_000011")
+      #cluster_Metab <- subset(cluster_assignments_Data1()$cluster_assignments_D1, cluster == "cluster_000011")
       cluster_variables_Prot <- cluster_Prot$feature
       cluster_variables_ProtSymbol <- cluster_variables_Prot
-      cluster_expression_matrix_Prot <- feature_mat_t_imp_data[, colnames(feature_mat_t_imp_data) %in% cluster_variables_Prot, drop = FALSE]
+      cluster_expression_matrix_Prot <- load_data2()$feature_mat_t_imp_data[, colnames(load_data2()$feature_mat_t_imp_data) %in% cluster_variables_Prot, drop = FALSE]
       combined_data <- merge(metadata()[,c("Sample", selected_variable)], cluster_expression_matrix_Prot, by.x = "Sample", by.y = "row.names", all.x = TRUE)
       heatmap_data_sub_order <- combined_data[order(combined_data[[selected_variable]]), ]
       data_heat= t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
@@ -1625,29 +2060,31 @@ mod_module1_server <- function(id){
       return(list(pca_res = pca_res, data_heat= data_heat, heatmap_data_sub_order = heatmap_data_sub_order, cluster_variables_ProtSymbol = cluster_variables_ProtSymbol))
     })
 
-    output$ModuleFeatures2Annot <- DT::renderDataTable({
+    output$ModuleFeaturesAnnot2 <- DT::renderDataTable({
       req(loadings_Prot())
       df2 = as.data.frame(loadings_Prot()$cluster_variables_ProtSymbol)
       names(df2) = "Feature_ID"
-      if (!is.null(filedata4())) {
-        AnnoProt = as.data.frame(filedata4())
-        df2 <- merge(df2, AnnoProt[, c("Feature_ID", "Symbol")], by = "Feature_ID", all.x = TRUE)
+      selected_columns <- input$Screening2
+      if (!is.null(Prot_annot()) && !is.null(selected_columns)) {
+        AnnoProt = as.data.frame(Prot_annot())
+        df2 <- merge(df2, AnnoProt[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
       }
       DT::datatable(df2, rownames = FALSE)
     })
 
     # Render the download handler
-    output$downloadModuleFeatures2Annot <- downloadHandler(
+    output$downloadModuleFeaturesAnnot2 <- downloadHandler(
       filename = function() {
         "FeaturesOnProteomicsModule.csv"
       },
       content = function(file) {
         df2 = as.data.frame(loadings_Prot()$cluster_variables_ProtSymbol)
         names(df2) = "Feature_ID"
-        if (!is.null(filedata4())) {
-          AnnoProt = as.data.frame(filedata4())
-          df2 <- merge(df2, AnnoProt[, c("Feature_ID", "Symbol")], by = "Feature_ID", all.x = TRUE)
-          }
+        selected_columns <- input$Screening2
+        if (!is.null(Prot_annot()) && !is.null(selected_columns)) {
+          AnnoProt = as.data.frame(Prot_annot())
+          df2 <- merge(df2, AnnoProt[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
+        }
         write.csv(df2, file, row.names = FALSE)
       }
     )
@@ -1661,7 +2098,7 @@ mod_module1_server <- function(id){
     # Render the download handler
     output$downloadLoadings2 <- downloadHandler(
       filename = function() {
-        "Loadings_Proteomics_Genes.png"
+        "Loadings_Data2.png"
       },
       content = function(file) {
         p <- ggplot2::autoplot(loadings_Prot()$pca_res, data = metadata(), colour = input$phenotypeSelector2, loadings = TRUE)
@@ -1700,7 +2137,7 @@ mod_module1_server <- function(id){
 
     output$downloadHeatmap2 <- downloadHandler(
       filename = function() {
-        "HeatmapModProt_Genes.png"
+        "HeatmapModData2.png"
       },
       content = function(file) {
         png(file, width = 800, height = 600)  # Adjust dimensions as needed
@@ -1733,117 +2170,585 @@ mod_module1_server <- function(id){
       }
     )
 
-    Cor_Prot_Metab1 <- reactive({
-      threshold <- input$pValueThreshold3
-      eigengenes_Prot <- Eigengene2()$Eigengenes
-      eigengenes_metab <- Eigengene1()$Eigengenes
+    ####### Data3
+    # Data Input
 
-      cluster_assignments_metab <- hierarchical_cluster1()$hcCluster_assignments2
-      Count_Metab <- table(cluster_assignments_metab$col)
+    observeEvent(input$Data3, {
+      req(input$Data3)
+      filedata_value <- read.csv(input$Data3$datapath)
+      Gene_exp(filedata_value)
+    })
 
-      cluster_assignments_ProtGenes <- hierarchical_cluster2()$hcCluster_assignments
-      Count_Prot <- table(cluster_assignments_ProtGenes$col)
+    observeEvent(input$PhenoData3, {
+      req(input$PhenoData3)
+      filedata_value <- read.csv(input$PhenoData3$datapath)
+      Gene_annot(filedata_value)
+    })
+    data_info3 <- reactive({
+      req(Gene_exp())
+      Nobservations <- nrow(Gene_exp())
+      Ncells <- ncol(Gene_exp())-1
+      SummaryData <- as.data.frame(list(Number = c(Ncells, Nobservations)))
+      rownames(SummaryData) <- c("Samples", "Features")
+      list(SummaryData = SummaryData)
+    })
+    output$infotable3 <- DT::renderDataTable({
+      df <- data_info3()$SummaryData
+      DT::datatable(df)
+    })
 
-      #if (is.null(filedata4())) {
-      if (is.null(filedata4()) | is.null(Genes_Prot_enrich()$cluster_assignments_Prot_enrich)) {
-        cor_Prot_metab_WGCNA <- cor(eigengenes_Prot, eigengenes_metab, method = 'spearman', use = "pairwise.complete.obs")
-        cor_Prot_metab_list <- reshape2::melt(cor_Prot_metab_WGCNA, varnames = c("Prot_module", "Metab_module"))
-        colnames(cor_Prot_metab_list) <- c("Prot_module", "Metab_module", "Correlation")
-        cor_Prot_metab_list1 <- cor_Prot_metab_list[order(abs(cor_Prot_metab_list$Correlation), decreasing = TRUE), ][1:5, ]
-        cor_Prot_metab_list2 <- subset(cor_Prot_metab_list, abs(Correlation) >= threshold)
+    output$table3 <- DT::renderDataTable({
+      df <- Gene_exp()
+      df[] <- lapply(df, function(x) if(is.numeric(x)) round(x, digits = 2) else x)
+      DT::datatable(df)
+    })
 
-        Top_cor_Prot_metab <- if (nrow(cor_Prot_metab_list1) >= nrow(cor_Prot_metab_list2)) {
-          cor_Prot_metab_list1
-        } else {
-          cor_Prot_metab_list2
-        }
+    variables_mapping3 <- reactive({
+      names(Gene_annot())[-which(names(Gene_annot()) == "Feature_ID")]
+    })
 
-        Top_cor_Prot_metab$Correlation <- round(Top_cor_Prot_metab$Correlation, 2)
-        filtered_cor_Prot_metab_list <- as.data.frame(Top_cor_Prot_metab)
+    observe({
+      updateSelectInput(session, "Mapping3", choices = variables_mapping3())
+    })
 
-        # Remove the "ME" prefix from Prot_module and Metab_module columns
-        Top_cor_Prot_metab[c("Prot_module", "Metab_module")] <- lapply(Top_cor_Prot_metab[c("Prot_module", "Metab_module")], function(x) sub("^ME", "", x))
+    pheno_variablesPCA3 <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
 
-        # Edges to funcion visnetwork
-        edges <- Top_cor_Prot_metab[1:min(nrow(Top_cor_Prot_metab), 30), ]
-        edges$label <-as.character(edges$Correlation)
-        #edges$length = (1-abs(edges$Correlation))*10000 #
-        edges$dashes = ifelse(abs(edges$Correlation) < 0.50, TRUE, FALSE)
-        edges$title <-as.character(edges$Correlation)
-        edges$smooth = ifelse(abs(edges$Correlation) < 0.50, TRUE, FALSE)
-        edges$shadow = TRUE
-        edges <- subset(edges, select = -c(Correlation))
-        #colnames(edges) <- c("Prot_module" = "from", "Metab_module" = "to", "label", "length", "dashes", "title", "smooth", "shadow")
-        colnames(edges) <- c("Prot_module" = "from", "Metab_module" = "to", "label", "dashes", "title", "smooth", "shadow")
+    observe({
+      updateSelectInput(session, "phenotypeSelectorPCA3", choices = pheno_variablesPCA3())
+    })
 
-        unique_from <- unique(edges$from)
-        label_from <- unique_from
-        #label_from <- paste0("Module", seq_along(unique_from))
-        value_from <- Count_Prot[match(sub("^Prot_Genes_", "", unique_from), names(Count_Prot))]
-        #value_from <- Count_Prot[match(unique_from, names(Count_Prot))]
-        shape_from <- "triangle"
-        title_from0 = paste(value_from, "genes", sep = " ")
-        color_from <- "darkgreen"
+    variables_Screening3 <- reactive({
+      names(Gene_annot())[-which(names(Gene_annot()) == "Feature_ID")]
+    })
 
-        unique_to <- unique(edges$to)
-        label_to <- unique_to
-        #label_to <- paste0("Module", seq_along(unique_to))
-        value_to <- Count_Metab[match(sub("^Metab_", "", unique_to), names(Count_Metab))]
-        shape_to <- "diamond"
-        title_to = paste(value_to, "metabolites", sep = " ")
-        color_to <- "orange"
+    observe({
+      updateSelectInput(session, "Screening3", choices = variables_Screening3())
+    })
 
-        #nodes to function Visnetwork
-        nodes <- data.frame(id = c(unique_from, unique_to),
-                            label = c(title_from0, title_to),
-                            value = c(value_from, value_to),
-                            shape = c(rep(shape_from, length(unique_from)), rep(shape_to, length(unique_to))),
-                            #title = c(title_from0, title_to),
-                            title = c(label_from, label_to),
-                            color = c(rep(color_from, length(unique_from)), rep(color_to, length(unique_to))),
-                            shadow = TRUE)
-        nodes <- nodes[,c("id", "label", "value", "shape", "title", "color", "shadow")]
+    load_data3 <- reactive({
+      req(Gene_exp())
+      Expression_mat = Gene_exp()
+      feature_mat_t_imp_data = load_data(Expression_mat = Expression_mat)
+      return(list(feature_mat_t_imp_data = feature_mat_t_imp_data))
+    })
 
-        edges[["from"]] <- sub("^#", "", edges[["from"]])
-        edges[["to"]] <- sub("^#", "", edges[["to"]])
+    pca3 <- reactive({
+      pca_res <- prcomp(load_data3()$feature_mat_t_imp_data)
+      return(list(pca_res = pca_res))
+    })
 
-        rownames(nodes) <- NULL
-        nodes[["id"]] <- sub("^#", "", nodes[["id"]])
-
+    output$PCA3 <- renderPlot({
+      requireNamespace("ggplot2", quietly = TRUE)
+      requireNamespace("ggfortify", quietly = TRUE)
+      if(is.null(metadata())){
+        ggplot2::autoplot(pca3()$pca_res)
       } else {
-        cluster_assignments_metab <- cluster_assignments_metabolites1()$cluster_assignments_metab
-        cluster_assignments_Prot_enrich <- Genes_Prot_enrich()$cluster_assignments_Prot_enrich
+        #ggplot2::autoplot(pca3()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA3)
+        req(metadata())
 
-        Cor_Prot_Metab <- Modules_correlation(eigengenes_Prot, eigengenes_metab,
-                                              cluster_assignments_Prot_enrich,
-                                              cluster_assignments_metab, threshold = threshold)
+        pca_data <- as.data.frame(pca3()$pca_res$x)
+        combined_data <- cbind(pca_data, metadata())
+        color_column <- input$phenotypeSelectorPCA3
 
-        Top_cor_Prot_metab <- Cor_Prot_Metab$Top_cor_Prot_metab
-        filtered_cor_Prot_metab_list <- Cor_Prot_Metab$filtered_cor_Prot_metab_list
-        cor_Prot_metab_WGCNA <- Cor_Prot_Metab$cor_Prot_metab_WGCNA
-        edges <- Cor_Prot_Metab$edges
-        nodes <- Cor_Prot_Metab$nodes
+        if (!is.null(color_column) && color_column != "") {
+          ggplot2::ggplot(combined_data, ggplot2::aes_string(x = "PC1", y = "PC2", color = color_column)) +
+            ggplot2::geom_point()
+        } else {
+          print("Select a phenotype.")
+        }
+      }
+    })
+
+    # Render the download handler
+    output$downloadPCA3 <- downloadHandler(
+      filename = function() {
+        "PCA_Data3.png"
+      },
+      content = function(file) {
+        if (is.null(metadata())) {
+          p <- ggplot2::autoplot(pca3()$pca_res)
+        } else {
+          req(metadata())
+          p <- ggplot2::autoplot(pca3()$pca_res, data = metadata(), colour = input$phenotypeSelectorPCA3)
+        }
+        ggplot2::ggsave(file, plot = p, device = "png")
+      }
+    )
+
+    output$tableAnnot3 <- DT::renderDataTable({
+      df <- Gene_annot()
+      DT::datatable(df)
+    })
+
+    # Module Assigments
+    partial_cors3 <- reactive({
+      withProgress(message = 'Calculating partial correlations Data 3...', value = 0, {
+        if (is.null(demo_par_cor_Prot()) && is.null(demo_par_cor_Prot_All())) {
+          req(Gene_exp())
+          Expression_mat <- Gene_exp()
+          Sys.sleep(5)
+          par_cor <- partial_cors(Expression_mat = Expression_mat)
+        } else if (demo_par_cor_Prot()) {
+          Sys.sleep(5)
+          par_cor <- load_partial_cor_RNA()
+        } else if (demo_par_cor_Prot_All()) {
+          Sys.sleep(5)
+          par_cor <- load_partial_cor_RNAAll()
+        }
+        incProgress(100, detail = 'Complete!')
+        list(par_cor = par_cor)
+      })
+    })
+
+    output$matrizTable3 <- renderPrint({
+      partial_cors3()$par_cor[1:5,1:5]
+    })
+
+    # Render the download handler
+    output$downloadParCor3 <- downloadHandler(
+      filename = function() {
+        "PartialCorData3.csv"
+      },
+      content = function(file) {
+        write.csv(partial_cors3()$par_cor, file, row.names = TRUE)
+      }
+    )
+
+    hierarchical_cluster3 <- reactive({
+      par_cor = partial_cors3()$par_cor
+      hc = hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
+      hclusterTree = hc$hclustTree
+      hcDynMods = hc$dynamicMods_numeric
+      hcCluster_assignments = hc$cluster_assignments
+      return(list(hclusterTree = hclusterTree,
+                  hcDynMods = hcDynMods,
+                  hcCluster_assignments = hcCluster_assignments ))
+    })
+
+    unique_variables3 <- reactive({
+      unique(hierarchical_cluster3()$hcCluster_assignments$col)
+    })
+
+    observe({
+      updateSelectInput(session, "moduleSelector3", choices = unique_variables3())
+    })
+
+    output$hc_plot3 <- renderPlot({
+      hcClu = hierarchical_cluster3()$hclusterTree
+      hcMod = hierarchical_cluster3()$hcDynMods
+      WGCNA::plotDendroAndColors(dendro = hcClu,
+                                 colors = hcMod,
+                                 dendroLabels = FALSE,
+                                 hang = 0.03,
+                                 addGuide = TRUE,
+                                 guideHang = 0.05,
+                                 groupLabels = "Modules",
+                                 main = "Feature dendrogram and module assignments")
+    })
+
+    # Render the download handler
+    output$downloadhc_plot3 <- downloadHandler(
+      filename = function() {
+        "Hierarchical_clusterData3.png"
+      },
+      content = function(file) {
+        png(file)
+        hcClu = hierarchical_cluster3()$hclusterTree
+        hcMod = hierarchical_cluster3()$hcDynMods
+        WGCNA::plotDendroAndColors(dendro = hcClu,
+                                   colors = hcMod,
+                                   dendroLabels = FALSE,
+                                   hang = 0.03,
+                                   addGuide = TRUE,
+                                   guideHang = 0.05,
+                                   groupLabels = "Modules",
+                                   main = "Feature dendrogram and module assignments")
+        dev.off()
+      }
+    )
+
+    cluster_assignments_Data3 <- reactive({
+      cluster = as.data.frame(hierarchical_cluster3()$hcCluster_assignments)
+      if (is.null(Gene_annot())) {
+        cluster_assignments_D3 <- cluster_assignments_genes(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
+      } else {
+        Gene_annot = Gene_annot()
+        annot_Uni <- Gene_annot[Gene_annot$Feature_ID %in% colnames(partial_cors3()$par_cor), ]
+        cluster_assignments_D3 <- cluster_assignments_genes(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping3)
+      }
+      return(list(cluster_assignments_D3 = cluster_assignments_D3))
+    })
+
+    output$tableClusterAssig3 <- DT::renderDataTable({
+      df1 = cluster_assignments_Data3()$cluster_assignments_D3
+      df1 = df1[, -which(names(df1) == "cluster")]
+      df1 = df1[, -which(names(df1) == "feature_name")]
+      names(df1)[names(df1) == "feature"] = "Feature_ID"
+      names(df1)[names(df1) == "col"] = "Module_id"
+      DT::datatable(df1)
+    })
+
+    # Render the download handler
+    output$downloadClusterAssig3 <- downloadHandler(
+      filename = function() {
+        "ClusterAssigData3.csv"
+      },
+      content = function(file) {
+        write.csv(cluster_assignments_Data3()$cluster_assignments_D3, file, row.names = TRUE)
+      }
+    )
+
+    databaseSelectorListData3 <- reactive({
+      gene_set_library = readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE)
+      choices <- gene_set_library[[1]]
+      data.frame(choices = choices)
+    })
+
+    observe({
+      updateSelectInput(session, "databaseSelector3", choices = databaseSelectorListData3()$choices)
+    })
+
+    Data3_enrich <- reactive({
+      req(input$runEnrichment3)
+      withProgress(message = 'Performing enrichment analysis...', value = 0, {
+        if (is.null(demo_enrich_Gene()) && is.null(demo_enrich_Gene_All ())) {
+          req(input$databaseSelector3)
+          selected_database <- input$databaseSelector3
+          cluster_assignments_ProtGenes <- cluster_assignments_Data3()$cluster_assignments_D3
+          cluster_assignments_Data3_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
+                                                                     database = selected_database)
+          Sys.sleep(1)
+        } else if (demo_enrich_Gene()) {
+          Sys.sleep(5)
+          cluster_assignments_Data3_enrich <- load_enrichment()
+        } else if (demo_enrich_Gene_All ()) {
+          Sys.sleep(5)
+          cluster_assignments_Data3_enrich <- load_enrichmentAll()
+        }
+        incProgress(100, detail = 'Complete!')
+        list(cluster_assignments_Data3_enrich = cluster_assignments_Data3_enrich)
+      })
+    })
+
+    output$tableClusterAssigAnnot3 <- DT::renderDataTable({
+      df3 = Data3_enrich()$cluster_assignments_Data3_enrich
+      df3 = df3[, -which(names(df3) == "cluster")]
+      names(df3)[names(df3) == "col"] = "Module_id"
+      df3$enriched_P.value <- round(df3$enriched_P.value, digits = 4)
+      df3$enriched_Adjusted.P.value <- round(df3$enriched_Adjusted.P.value, digits = 4)
+      DT::datatable(df3)
+    })
+
+    # Render the download handler
+    output$downloadEnrichment3 <- downloadHandler(
+      filename = function() {
+        "EnrichmentbyData3Modules.csv"
+      },
+      content = function(file) {
+        write.csv(Data3_enrich()$cluster_assignments_Data3_enrich, file, row.names = TRUE)
+      }
+    )
+
+    Eigengene3 <- reactive({
+      req(Gene_exp())
+      Expression_mat = Gene_exp()
+      Cluster_assignments = hierarchical_cluster3()$hcCluster_assignments[,3]
+      Eigengenes = Eigengenes(Expression_mat = Expression_mat,
+                              cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
+      return(list(Eigengenes = Eigengenes))
+    })
+
+    output$tableEigengene3 <- DT::renderDataTable({
+      df3 = as.data.frame(Eigengene3()$Eigengenes)
+      df3[] <- lapply(df3, function(x) if(is.numeric(x)) round(x, digits = 4) else x)
+      DT::datatable(df3)
+    })
+
+    # Render the download handler
+    output$downloadtableEigengene3 <- downloadHandler(
+      filename = function() {
+        "EigenfeaturesData3.csv"
+      },
+      content = function(file) {
+        write.csv(Eigengene3()$Eigengenes, file, row.names = TRUE)
+      }
+    )
+
+    output$heatmapEigenGene <- renderPlot({
+      heatmap_plot = ComplexHeatmap::Heatmap(
+        as.data.frame(t(Eigengene3()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
+        row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
+        heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
+        show_row_names = FALSE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
+        show_column_names = TRUE
+      )
+      ComplexHeatmap::draw(heatmap_plot, heatmap_legend_side = "right",
+                           annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
+    })
+
+    output$downloadheatmapEigenGene <- downloadHandler(
+      filename = function() {
+        "HeatmapEigenData3.png"
+      },
+      content = function(file) {
+        png(file)
+        heatmap_plot = ComplexHeatmap::Heatmap(
+          as.data.frame(t(Eigengene3()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
+          row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
+          heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
+          show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
+          show_column_names = TRUE
+        )
+        ComplexHeatmap::draw(heatmap_plot, heatmap_legend_side = "right",
+                             annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
+        dev.off()
+      }
+    )
+
+    # Phenotype
+
+    output$tableM3 <- DT::renderDataTable({
+      df <- metadata()
+      DT::datatable(df)
+    })
+
+    pheno_variables3 <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
+
+    observe({
+      updateSelectInput(session, "phenotypeSelector3", choices = pheno_variables3())
+    })
+
+    Classification_Data3 <- reactive({
+      eigengenes_prot = as.data.frame(Eigengene3()$Eigengenes)
+      metadata <- as.data.frame(metadata())
+      phenotype_variable = input$phenotypeSelector3
+      significance_threshold = input$pValueThreshold3
+      Classification_Data <- perform_classification( eigengene_data = eigengenes_prot,
+                                                     metadata = metadata,
+                                                     phenotype_variable = phenotype_variable,
+                                                     significance_threshold = significance_threshold)
+      return(list(
+        result = Classification_Data$result,
+        plots = Classification_Data$plots))
+    })
+
+    output$classification_results3 <- DT::renderDataTable({
+      df <- Classification_Data3()$result
+      rownames(df) <- NULL
+      names(df)[names(df) == "Variable"] = "Module_id"
+      DT::datatable(df)
+    })
+
+    # Render the download handler
+    output$downloadClassification_results3 <- downloadHandler(
+      filename = function() {
+        "ClassByEigenfeatures_Data3.csv"
+      },
+      content = function(file) {
+        write.csv(Classification_Data3()$result, file, row.names = TRUE)
+      }
+    )
+
+    output$classification_plot_3_all <- renderPlot({
+      selected_variable <- input$phenotypeSelector3
+      levels_selected_variable <- unique(metadata()[[selected_variable]])
+      if (length(levels_selected_variable) < 3) {
+        class_names <- levels_selected_variable
+        class_label <- paste(class_names, collapse = " vs ")
+        plot <- Classification_Data3()$plots[[1]]
+        plot <- plot +
+          ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
+                        x = "Variables",
+                        y = "Class") +
+          ggplot2::theme(
+            axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
+          )
+        classification_Gene(plot)
+        return(plot)
+      } else {
+        # Print multiple boxplot charts, one for each level of the selected variable
+        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+          Classification_Data3()$plots[[i]]
+        })
+        plot <- cowplot::plot_grid(plotlist = plots_list)
+        classification_Gene(plot)  # Store the plot in the reactive variable
+        return(plot)
+      }
+    })
+
+    output$downloadClassification_plot_3_all <- downloadHandler(
+      filename = function() {
+        "Boxplot_classificationData3.png"
+      },
+      content = function(file) {
+        # Save the plot stored in the reactive variable
+        ggplot2::ggsave(file, plot = classification_Gene(), device = "png")
+      }
+    )
+
+    loadings_Gene <- reactive({
+      selected_variable <- input$phenotypeSelector3
+      cluster_Prot <- subset(hierarchical_cluster3()$hcCluster_assignments, col == input$moduleSelector3)
+      #cluster_Metab <- subset(cluster_assignments_Data1()$cluster_assignments_D1, cluster == "cluster_000011")
+      cluster_variables_Prot <- cluster_Prot$feature
+      cluster_variables_ProtSymbol <- cluster_variables_Prot
+      cluster_expression_matrix_Prot <- load_data3()$feature_mat_t_imp_data[, colnames(load_data3()$feature_mat_t_imp_data) %in% cluster_variables_Prot, drop = FALSE]
+      combined_data <- merge(metadata()[,c("Sample", selected_variable)], cluster_expression_matrix_Prot, by.x = "Sample", by.y = "row.names", all.x = TRUE)
+      heatmap_data_sub_order <- combined_data[order(combined_data[[selected_variable]]), ]
+      data_heat= t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
+      pca_res <- prcomp(cluster_expression_matrix_Prot)
+      return(list(pca_res = pca_res, data_heat= data_heat, heatmap_data_sub_order = heatmap_data_sub_order, cluster_variables_ProtSymbol = cluster_variables_ProtSymbol))
+    })
+
+    output$ModuleFeaturesAnnot3 <- DT::renderDataTable({
+      req(loadings_Gene())
+      df2 = as.data.frame(loadings_Gene()$cluster_variables_ProtSymbol)
+      names(df2) = "Feature_ID"
+      selected_columns <- input$Screening3
+      if (!is.null(Prot_annot()) && !is.null(selected_columns)) {
+        AnnoProt = as.data.frame(Prot_annot())
+        df2 <- merge(df2, AnnoProt[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
+      }
+      DT::datatable(df2, rownames = FALSE)
+    })
+
+
+    # Render the download handler
+    output$downloadModuleFeaturesAnnot3 <- downloadHandler(
+      filename = function() {
+        "FeaturesOnData3Module.csv"
+      },
+      content = function(file) {
+        df2 = as.data.frame(loadings_Gene()$cluster_variables_ProtSymbol)
+        names(df2) = "Feature_ID"
+        selected_columns <- input$Screening3
+        if (!is.null(Prot_annot()) && !is.null(selected_columns)) {
+          AnnoProt = as.data.frame(Prot_annot())
+          df2 <- merge(df2, AnnoProt[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
+        }
+        write.csv(df2, file, row.names = FALSE)
+      }
+    )
+
+    output$Loadings3 <- renderPlot({
+      requireNamespace("ggplot2", quietly = TRUE)
+      requireNamespace("ggfortify", quietly = TRUE)
+      ggplot2::autoplot(loadings_Gene()$pca_res, data = metadata(), colour = input$phenotypeSelector3, loadings = TRUE)
+    })
+
+    # Render the download handler
+    output$downloadLoadings3 <- downloadHandler(
+      filename = function() {
+        "Loadings_Data3.png"
+      },
+      content = function(file) {
+        p <- ggplot2::autoplot(loadings_Gene()$pca_res, data = metadata(), colour = input$phenotypeSelector3, loadings = TRUE)
+        ggplot2::ggsave(file, plot = p, device = "png")
+      }
+    )
+
+    output$heatmap3 <- renderPlot({
+      selected_variable <- input$phenotypeSelector3
+      levels_selected_variable <- unique(metadata()[[selected_variable]])
+
+      if (length(levels_selected_variable) == 2) {
+        col_palette <- c("Level1" = "#1B9E77", "Level2" = "#D95F02")
+      } else {
+        col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
       }
 
-      list(Top_cor_Prot_metab = Top_cor_Prot_metab,
-           filtered_cor_Prot_metab_list = filtered_cor_Prot_metab_list,
-           cor_Prot_metab_WGCNA = cor_Prot_metab_WGCNA,
-           edges = edges,
-           nodes = nodes)
+      # Column annotation
+      column_anno = ComplexHeatmap::HeatmapAnnotation(
+        selected_variable = as.factor(loadings_Gene()$heatmap_data_sub_order[[selected_variable]]),
+        col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
+        annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
+      )
+
+      heatmap_plot = ComplexHeatmap::Heatmap(
+        loadings_Gene()$data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
+        row_title = "Genes Abundance", column_title = "Tissues", name = "Z-score",
+        heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
+        show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
+        show_column_names = FALSE,  top_annotation = column_anno
+      )
+
+      ComplexHeatmap::draw(heatmap_plot, heatmap_legend_side = "right",
+                           annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
+    })
+
+    output$downloadHeatmap3 <- downloadHandler(
+      filename = function() {
+        "HeatmapModData3.png"
+      },
+      content = function(file) {
+        png(file, width = 800, height = 600)  # Adjust dimensions as needed
+        selected_variable <- input$phenotypeSelector3
+        levels_selected_variable <- unique(metadata()[[selected_variable]])
+
+        if (length(levels_selected_variable) == 2) {
+          col_palette <- c("Level1" = "#1B9E77", "Level2" = "#D95F02")
+        } else {
+          col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
+        }
+
+        column_anno = ComplexHeatmap::HeatmapAnnotation(
+          selected_variable = as.factor(loadings_Gene()$heatmap_data_sub_order[[selected_variable]]),
+          col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
+          annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
+        )
+
+        heatmap_plot = ComplexHeatmap::Heatmap(
+          loadings_Gene()$data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
+          row_title = "Genes Abundance", column_title = "Tissues", name = "Z-score",
+          heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
+          show_row_names = TRUE, row_names_side = "left", row_names_gp = grid::gpar(fontsize = 8),
+          show_column_names = FALSE, top_annotation = column_anno
+        )
+
+        ComplexHeatmap::draw(heatmap_plot, heatmap_legend_side = "right",
+                             annotation_legend_side = "left", padding = ggplot2::unit(c(2, 3, 2, 40), "mm"))
+        dev.off()
+      }
+    )
+    ######## Multiomics
+    # Modules Correlations
+    Cor_Data_n <- reactive({
+      threshold <- input$pValueThresholdcor
+      eigengenes_list <- list(Eigengene1()$Eigengenes, Eigengene2()$Eigengenes)
+      cluster_list <- list(hierarchical_cluster1()$hcCluster_assignments, hierarchical_cluster2()$hcCluster_assignments)
+
+      if (!is.null(Gene_exp())) {
+        eigengenes_list <- c(eigengenes_list, list(Eigengene3()$Eigengenes))
+        cluster_list <- c(cluster_list, list(hierarchical_cluster3()$hcCluster_assignments))
+      }
+
+      Cor_Prot_Metab <- Modules_correlation(eigengenes_list, cluster_list, threshold = threshold)
+
+        Top_cor_Prot_metab <- Cor_Prot_Metab$Top_cor_Prot_metab
+        Correlation_Plot <- Cor_Prot_Metab$Correlation_Plot
+        Cor_list <- Cor_Prot_Metab$Cor_list
+        edges <- Cor_Prot_Metab$edges
+        nodes <- Cor_Prot_Metab$nodes
+        n  <- Cor_Prot_Metab$n
+
+        return(list(Top_cor_Prot_metab = Top_cor_Prot_metab,
+                    Cor_list = Cor_list,
+                    Correlation_Plot = Correlation_Plot,
+                    edges = edges,
+                    nodes = nodes,
+                    n = n))
     })
 
     output$tableCorrelation <- DT::renderDataTable({
-      df4 = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
-      df4 = df4[, -which(names(df4) %in% c("Metab_Module_id", "Prot_Module_id"))]
-      names(df4)[names(df4) == "Metab_module"] = "Metab_module_id"
-      names(df4)[names(df4) == "Metab_count"] = "# of metabolites into the module"
-      names(df4)[names(df4) == "Prot_module"] = "Prot_module_id"
-      names(df4)[names(df4) == "Prot_count"] = "# of Prot/Genes into the module"
+      df4 = as.data.frame(Cor_Data_n()$Top_cor_Prot_metab)
+      names(df4)[names(df4) == "from"] = "From_module_id"
+      names(df4)[names(df4) == "to"] = "To_module_id"
+      names(df4)[names(df4) == "value"] = "Correlation"
       rownames(df4) <- NULL
-      df4$`# of metabolites into the module` <- gsub("metabolites", "", df4$`# of metabolites into the module`)
-      df4$`# of Prot/Genes into the module` <- gsub("genes", "", df4$`# of Prot/Genes into the module`)
-      df4$Enriched_P.value <- round(df4$Enriched_P.value, digits = 4)
-      df4$Enriched_Adjusted.P.value <- round(df4$Enriched_Adjusted.P.value, digits = 4)
       DT::datatable(df4)
     })
 
@@ -1853,72 +2758,80 @@ mod_module1_server <- function(id){
         "OmicsCorrelation.csv"
       },
       content = function(file) {
-        write.csv(Cor_Prot_Metab1()$Top_cor_Prot_metab, file, row.names = TRUE)
+        write.csv(Cor_Data_n()$Top_cor_Prot_metab, file, row.names = TRUE)
       }
     )
 
     # Create a histogram of correlation
-    output$Correlation_plot <- renderPlot({
-      cor_Prot_metab_WGCNA = Cor_Prot_Metab1()$cor_Prot_metab_WGCNA
-      hist(cor_Prot_metab_WGCNA, main = "Histogram of Correlation")
+    output$Correlation_plot12 <- renderPlot({
+      Correlation_Plot <- Cor_Data_n()$Correlation_Plot
+
+      if (length(Correlation_Plot) == 1) {
+        par(mfrow = c(1, 1))
+        hist(Correlation_Plot[[1]], main = "Correlation: Data 1 / Data 2 ")
+      } else {
+        par(mfrow = c(1, 3))
+        hist(Correlation_Plot[[1]], main = "Correlation: Data 1 / Data 2")
+        hist(Correlation_Plot[[2]], main = "Correlation: Data 1 / Data 3")
+        hist(Correlation_Plot[[3]], main = "Correlation: Data 2 / Data 3")
+        par(mfrow = c(1, 1))  # Restablecer la disposición de los gráficos
+      }
     })
 
-    output$Network_plot <- renderPlot({
-      filtered_cor_Prot_metab_list = as.data.frame(Cor_Prot_Metab1()$filtered_cor_Prot_metab_list)
-      # Create the network graph
-      network <- igraph::graph_from_data_frame(filtered_cor_Prot_metab_list, directed = FALSE)
-      igraph::E(network)$label <- filtered_cor_Prot_metab_list$Correlation
-      # Conditions for node type and color
-      condicion_tipo <- ifelse(grepl("genes", igraph::V(network)$name), "lightgreen", "#E69F00")
-      color_text <- ifelse(grepl("genes", igraph::V(network)$name), "darkgreen", "orange")
-      legend_labels <- c("Genes", "Metabolites")
-      plot(
-        network,
-        edge.label = igraph::E(network)$label,
-        vertex.size = 2,
-        vertex.color = condicion_tipo,
-        vertex.label.color = color_text,
-        edge.label.cex = 0.8,
-        edge.label.color = "black",
-        edge.width = 2,
-        edge.color = "gray",
-        main = "Modules network"
-      )
-      legend("topright", legend = legend_labels, pch = 21, pt.bg = c("lightgreen", "orange"),
-             pt.cex = 1.5, cex = 0.8, col = c("darkgreen", "black"), bty = "n")
-     })
 
     mynetwork <- reactive({
       requireNamespace("dplyr", quietly = TRUE)
-      dfnodes <- as.data.frame(Cor_Prot_Metab1()$nodes)
-      dfedges <- as.data.frame(Cor_Prot_Metab1()$edges)
 
-      network <- visNetwork::visNetwork(
-        nodes = dfnodes,
-        edges = dfedges,
-        #main = "Protein-Metabolite Network",
-        width = "100%",
-        height = "800px"
-      )
-      network <- visNetwork::visLegend(
-        network,
-        useGroups = FALSE,
-        addNodes = data.frame(
-          label = c("Genes Modules", "Metabolites Modules"),
-          shape = c("triangle", "diamond"),
-          color = c("darkgreen", "orange")
-        ),
-        addEdges = data.frame(
-          label = "Correlation",
-          shape = "line",
-          length = 200,
-          color = "darkgreen"
-        )
-      )
-      network <- visNetwork::visInteraction(
-        network,
-        navigationButtons = TRUE
-      )
+      nodes <- as.data.frame(Cor_Data_n()$nodes)
+      edges <- as.data.frame(Cor_Data_n()$edges)
+      n <- Cor_Data_n()$n
+
+      shapes <- c("diamond", "triangle", "dot")
+      colors <- c("orange", "darkgreen", "darkblue")
+
+      network <- visNetwork::visNetwork(nodes = nodes, edges = edges, width = "100%", height = "800px")
+      network <- visNetwork::visLegend(network, useGroups = FALSE, addNodes = data.frame(label = paste0("Data", 1:n, " Modules"),
+                                                                                            shape = shapes[1:n], color = colors[1:n]),
+                                       addEdges = data.frame(label = "Correlation", shape = "line", length = 200, color = "darkgreen"))
+      network <- visNetwork::visInteraction(network, navigationButtons = TRUE)
+
+      if (input$runEnrichment1) {
+        Enriched_Data1 <- Data2_enrich()$cluster_assignments_Data1_enrich
+        Enriched_Data1 <- Enriched_Data1[!duplicated(Enriched_Data1$col), ]
+        Enriched_Data1$col <- paste0("D1", Enriched_Data1$col)
+        nodes <- merge(nodes, Enriched_Data1[, c("col", "enriched_Term")], by.x = "id", by.y = "col", all.x = TRUE)
+        nodes$enriched_Term0 <- ifelse(nchar(nodes$enriched_Term) > 20, paste0(substring(nodes$enriched_Term, 1, 20), "..."), nodes$enriched_Term)
+        nodes$label <- ifelse(grepl("^D1", nodes$id), paste(nodes$label, nodes$enriched_Term, sep = "\n"), nodes$label)
+        nodes = nodes[,1:7]
+      }
+
+      if (input$runEnrichment2) {
+        Enriched_Data2 <- Data2_enrich()$cluster_assignments_Data2_enrich
+        Enriched_Data2 <- Enriched_Data2[!duplicated(Enriched_Data2$col), ]
+        Enriched_Data2$col <- paste0("D2", Enriched_Data2$col)
+        nodes <- merge(nodes, Enriched_Data2[, c("col", "enriched_Term")], by.x = "id", by.y = "col", all.x = TRUE)
+        nodes$enriched_Term0 <- ifelse(nchar(nodes$enriched_Term) > 20, paste0(substring(nodes$enriched_Term, 1, 20), "..."), nodes$enriched_Term)
+        nodes$label <- ifelse(grepl("^D2", nodes$id), paste(nodes$label, nodes$enriched_Term, sep = "\n"), nodes$label)
+        nodes = nodes[,1:7]
+      }
+
+      if (input$runEnrichment3) {
+        Enriched_Data3 <- Data3_enrich()$cluster_assignments_Data3_enrich
+        Enriched_Data3 <- Enriched_Data3[!duplicated(Enriched_Data3$col), ]
+        Enriched_Data3$col <- paste0("D3", Enriched_Data3$col)
+        nodes <- merge(nodes, Enriched_Data3[, c("col", "enriched_Term")], by.x = "id", by.y = "col", all.x = TRUE)
+        nodes$enriched_Term0 <- ifelse(nchar(nodes$enriched_Term) > 20, paste0(substring(nodes$enriched_Term, 1, 20), "..."), nodes$enriched_Term)
+        nodes$label <- ifelse(grepl("^D3", nodes$id), paste(nodes$label, nodes$enriched_Term, sep = "\n"), nodes$label)
+        nodes = nodes[,1:7]
+      }
+
+      network <- visNetwork::visNetwork(nodes = nodes, edges = edges, width = "100%", height = "800px")
+      network <- visNetwork::visLegend(network, useGroups = FALSE, addNodes = data.frame(label = paste0("Data", 1:n, " Modules"),
+                                                                                         shape = shapes[1:n], color = colors[1:n]),
+                                       addEdges = data.frame(label = "Correlation", shape = "line", length = 200, color = "darkgreen"))
+      network <- visNetwork::visInteraction(network, navigationButtons = TRUE)
+
+
       return(network)
     })
     output$network <- visNetwork::renderVisNetwork({
@@ -1935,25 +2848,59 @@ mod_module1_server <- function(id){
       }
     )
 
-    ImpVar_Prot_Metab1 <- reactive({
-      top_n <- input$TopModules
-      Cor_Prot_Metab = as.data.frame(Cor_Prot_Metab1()$Top_cor_Prot_metab)
-      cluster_assignments_metab = cluster_assignments_metabolites1()$cluster_assignments_metab
-      req(filedata())
-      ExpressionMetab_mat = filedata()
-      req(filedata2())
-      ExpressionProt_mat = filedata2()
-      if (is.null(filedata4())) {
-        cluster_assignments_Prot = as.data.frame(cluster_assignments_genes1()$cluster_assignments_Prot)
-        str(cluster_assignments_Prot)
-      } else{
-        cluster_assignments_Prot = Genes_Prot_enrich()$cluster_assignments_Prot_enrich
-      }
-      ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Prot_Metab = Cor_Prot_Metab,
-                                                     cluster_assignments_Prot = cluster_assignments_Prot,
-                                                     cluster_assignments_metab = cluster_assignments_metab,
-                                                     ExpressionProt_mat = ExpressionProt_mat,
-                                                     ExpressionMetab_mat = ExpressionMetab_mat,
+    # Important features Data 1 - Data 2
+
+    observeEvent(input$TopModules_12, {
+      n <- input$TopModules_12
+      choices <- setNames(as.list(1:n), paste0("Top_", 1:n))
+      updateSelectInput(session, "visualization_list_12", choices = choices)
+    })
+
+    pheno_variables_imp_12_1 <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
+    observe({
+      updateSelectInput(session, "phenotypeSelector_imp_12_1", choices = pheno_variables_imp_12_1())
+    })
+
+    pheno_variables_imp_12_2 <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
+    observe({
+      updateSelectInput(session, "phenotypeSelector_imp_12_2", choices = pheno_variables_imp_12_2())
+    })
+
+    variables_Screening_12_1 <- reactive({
+      names(Metab_annot())[-which(names(Metab_annot()) == "Feature_ID")]
+    })
+
+    observe({
+      updateSelectInput(session, "Screening12_1", choices = variables_Screening_12_1())
+    })
+
+    variables_Screening_12_2 <- reactive({
+      names(Metab_annot())[-which(names(Prot_annot()) == "Feature_ID")]
+    })
+
+    observe({
+      updateSelectInput(session, "Screening12_2", choices = variables_Screening_12_2())
+    })
+
+
+    ImpVar_D1_D2 <- reactive({
+      top_n <- input$TopModules_12
+      Cor_Data1_Data2 = as.data.frame(Cor_Data_n()$Cor_list[[1]])
+      cluster_assignments_D1 = cluster_assignments_Data1()$cluster_assignments_D1
+      cluster_assignments_D2 = cluster_assignments_Data2()$cluster_assignments_D2
+      req(Metab_exp())
+      ExpressionD1 = Metab_exp()
+      req(Prot_exp())
+      ExpressionD2 = Prot_exp()
+      ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Datai_Dataj = Cor_Data1_Data2,
+                                                     cluster_assignments_D1 = cluster_assignments_D1,
+                                                     cluster_assignments_D2 = cluster_assignments_D2,
+                                                     ExpressionD1 = ExpressionD1,
+                                                     ExpressionD2 = ExpressionD2,
                                                      top_n = top_n) #$correlation_matrices_list
       return(list(
         Top_correlations = ImpVar_Prot_Metab$Top_correlations,
@@ -1965,22 +2912,22 @@ mod_module1_server <- function(id){
       ))
     })
 
-    Important_Features <- reactive({
+    Important_Features12 <- reactive({
       custom_palette <- colorRampPalette(c(RColorBrewer::brewer.pal(11, "RdYlBu")[11], "white", RColorBrewer::brewer.pal(11, "RdYlBu")[1]))(n = 100)
 
-      n <- input$visualization_list
+      n <- input$visualization_list_12
       df_list <- list()
 
       for (i in 1:n) {
-        df1_1 <- as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[2*i - 1]])
-        df1_2 <- as.data.frame(ImpVar_Prot_Metab1()$cluster_assignments[[2*i]])
-        df2_1 <- as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[2*i - 1]])
-        df2_2 <- as.data.frame(ImpVar_Prot_Metab1()$expression_matrices[[2*i]])
-        df4 <- ImpVar_Prot_Metab1()$correlation_List[[i]]
-        df4_1 <- hist(ImpVar_Prot_Metab1()$correlation_matrices[[i]], main = paste("Top", i, "Modules Correlation"))
-        df4_2 <- corrplot::corrplot(ImpVar_Prot_Metab1()$correlation_matrices[[i]], type = "upper", tl.col = "black", col = custom_palette)
-        df5_1 <- ImpVar_Prot_Metab1()$Important_features[[2*i - 1]]
-        df5_2 <- ImpVar_Prot_Metab1()$Important_features[[2*i]]
+        df1_1 <- as.data.frame(ImpVar_D1_D2()$cluster_assignments[[2*i - 1]])
+        df1_2 <- as.data.frame(ImpVar_D1_D2()$cluster_assignments[[2*i]])
+        df2_1 <- as.data.frame(ImpVar_D1_D2()$expression_matrices[[2*i - 1]])
+        df2_2 <- as.data.frame(ImpVar_D1_D2()$expression_matrices[[2*i]])
+        df4 <- ImpVar_D1_D2()$correlation_List[[i]]
+        df4_1 <- hist(ImpVar_D1_D2()$correlation_matrices[[i]], main = paste("Top", i, "Modules Correlation"))
+        df4_2 <- corrplot::corrplot(ImpVar_D1_D2()$correlation_matrices[[i]], type = "upper", tl.col = "black", col = custom_palette)
+        df5_1 <- ImpVar_D1_D2()$Important_features[[2*i - 1]]
+        df5_2 <- ImpVar_D1_D2()$Important_features[[2*i]]
 
         df_list[[i]] <- list(df1_1 = df1_1, df1_2 = df1_2, df2_1 = df2_1, df2_2 = df2_2, df4 = df4, df4_1 = df4_1, df4_2 = df4_2, df5_1 = df5_1, df5_2 = df5_2)
       }
@@ -1988,120 +2935,112 @@ mod_module1_server <- function(id){
       return(df_list)
     })
 
-    output$ImportantVariables <- DT::renderDataTable({
-      df4 = as.data.frame(ImpVar_Prot_Metab1()$Top_correlations)
-      df4 = df4[, -which(names(df4) %in% c("Metab_Module_id", "Prot_Module_id"))]
-      names(df4)[names(df4) == "Metab_module"] = "Metab_module_id"
-      names(df4)[names(df4) == "Metab_count"] = "# of metabolites into the module"
-      names(df4)[names(df4) == "Prot_module"] = "Prot_module_id"
-      names(df4)[names(df4) == "Prot_count"] = "# of Prot/Genes into the module"
-      df4$`# of metabolites into the module` <- gsub("metabolites", "", df4$`# of metabolites into the module`)
-      df4$`# of Prot/Genes into the module` <- gsub("genes", "", df4$`# of Prot/Genes into the module`)
-      df4$Enriched_P.value <- round(df4$Enriched_P.value, digits = 4)
-      df4$Enriched_Adjusted.P.value <- round(df4$Enriched_Adjusted.P.value, digits = 4)
+    output$ImportantVariables_12 <- DT::renderDataTable({
+      df4 = as.data.frame(ImpVar_D1_D2()$Top_correlations)
+      names(df4)[names(df4) == "from"] = "From"
+      names(df4)[names(df4) == "to"] = "To"
+      names(df4)[names(df4) == "value"] = "Correlation"
       rownames(df4) <- NULL
       DT::datatable(df4)
     })
 
-    output$Correlation_plotImp <- renderPlot({
-      df_list <- Important_Features()
-      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
-      df4_1 <- df_list[[selected_index]]$df4_1
-    })
-
-    output$CorplotImp <- renderPlot({
-      df_list <- Important_Features()
-      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+    output$CorplotImp12 <- renderPlot({
+      df_list <- Important_Features12()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
       df4_2 <- df_list[[selected_index]]$df4_2
     })
 
-    output$Correlation_mod <- DT::renderDataTable({
-      df_list <- Important_Features()
-      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+    output$Correlation_mod12 <- DT::renderDataTable({
+      df_list <- Important_Features12()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
       df4 <- df_list[[selected_index]]$df4
       DT::datatable(data.frame(df4))
     })
 
     # Render the download handler
-    output$downloadModCorrelation <- downloadHandler(
+    output$downloadModCorrelation12 <- downloadHandler(
       filename = function() {
         "ModulesCorrelation.csv"
       },
       content = function(file) {
-        df_list <- Important_Features()
-        selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+        df_list <- Important_Features12()
+        selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
         df4 <- df_list[[selected_index]]$df4
         write.csv(df4, file, row.names = TRUE)
       }
     )
 
-    output$cluster_assignments_features2 <- DT::renderDataTable({
-      df_list <- Important_Features()
-      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+    output$cluster_assignments_features12_2 <- DT::renderDataTable({
+      df_list <- Important_Features12()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
       df <- df_list[[selected_index]]$df1_2
-
-      df_features <- dplyr::select(df, feature, feature_name, feature_map, Metabolite)
+      df_features <- dplyr::select(df, feature)
       df_features <- dplyr::distinct(df_features)
-
+      names(df_features)[names(df_features) == "feature"] = "Feature_ID"
+      selected_columns <- input$Screening12_2
+      if (!is.null(Prot_annot()) && !is.null(selected_columns)) {
+        AnnoMeta <- as.data.frame(Prot_annot())
+        df_features <- merge(df_features, AnnoMeta[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
+      }
       DT::datatable(df_features)
     })
 
-    output$cluster_assignments_summary2 <- DT::renderDataTable({
-      df_list <- Important_Features()
-      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+    output$cluster_assignments_summary12_2 <- DT::renderDataTable({
+      df_list <- Important_Features12()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
       df <- df_list[[selected_index]]$df1_2
       cluster <- unique(df$cluster)
       col <- unique(df$col)
       SummaryData <- data.frame(cluster = cluster, col = col, stringsAsFactors = FALSE)
 
       SummaryData <- dplyr::select(SummaryData, -cluster)
-      SummaryData <- dplyr::rename(SummaryData, `Metabolites_module_id` = col)
+      SummaryData <- dplyr::rename(SummaryData, `Module_id` = col)
 
       DT::datatable(SummaryData)
     })
 
-    output$downloadcluster_assignments_2 <- downloadHandler(
+    output$downloadcluster_assignments12_2 <- downloadHandler(
       filename = function() {
-        "Metabolites_TopModule.csv"
+        "Data1_TopModule.csv"
       },
       content = function(file) {
-        df_list <- Important_Features()
-        selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+        df_list <- Important_Features12()
+        selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
         df1_2 <- df_list[[selected_index]]$df1_2
         write.csv(df1_2, file, row.names = TRUE)
       }
     )
 
-    Classification_Metabolites_imp_metab <- reactive({
-      df_list <- Important_Features()
-      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
-      df2_2 <- as.data.frame(df_list[[selected_index]]$df2_2)
+    Classification_imp_12_1 <- reactive({
+      df_list <- Important_Features12()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
+      df2_1 <- as.data.frame(df_list[[selected_index]]$df2_1)
       metadata <- as.data.frame(metadata())
-      phenotype_variable = input$phenotypeSelector_imp_metab
-      significance_threshold = input$pValueThreshold_imp_metab
-      classification_metabolite <- perform_classification( eigengene_data = df2_2,
+      phenotype_variable = input$phenotypeSelector_imp_12_1
+      significance_threshold = input$pValueThreshold_imp_12_1
+      Classification_Data <- perform_classification( eigengene_data = df2_1,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
                                                            significance_threshold = significance_threshold)
       return(list(
-        result = classification_metabolite$result,
-        plots = classification_metabolite$plots))
+        result = Classification_Data$result,
+        plots = Classification_Data$plots))
     })
 
-    output$classification_results_imp_metab <- DT::renderDataTable({
-      df <- Classification_Metabolites_imp_metab()$result
+    output$classification_results_imp_12_1 <- DT::renderDataTable({
+      df <- Classification_imp_12_1()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "Metabolite"
+      names(df)[names(df) == "Variable"] = "Feature"
       DT::datatable(df)
     })
 
-    output$classification_plot_1_all_imp_metab <- renderPlot({
-      selected_variable <- input$phenotypeSelector_imp_metab
+    output$classification_plot_1_all_imp_12_1 <- renderPlot({
+      selected_variable <- input$phenotypeSelector_imp_12_1
       levels_selected_variable <- unique(metadata()[[selected_variable]])
       if (length(levels_selected_variable) < 3) {
         class_names <- levels_selected_variable
         class_label <- paste(class_names, collapse = " vs ")
-        plot <- Classification_Metabolites_imp_metab()$plots[[1]]
+        plot <- Classification_imp_12_1()$plots[[1]]
         plot <- plot +
           ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
                         x = "Variables",
@@ -2109,93 +3048,89 @@ mod_module1_server <- function(id){
           ggplot2::theme(
             axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
           )
-        classification_plot(plot)
+        classification_Metab_imp(plot)
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
         plots_list <- lapply(1:length(levels_selected_variable), function(i) {
-          Classification_Metabolites_imp_metab()$plots[[i]]
+          Classification_imp_12_1()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)
-        classification_plot(plot)  # Store the plot in the reactive variable
+        classification_Metab_imp(plot)  # Store the plot in the reactive variable
         return(plot)
       }
     })
 
-    output$cluster_assignments_features <- DT::renderDataTable({
-      df_list <- Important_Features()
-      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+    output$cluster_assignments_features12_1 <- DT::renderDataTable({
+      df_list <- Important_Features12()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
       df <- df_list[[selected_index]]$df1_1
-
-      df_features <- dplyr::select(df, feature, feature_name)
+      df_features <- dplyr::select(df, feature)
       df_features <- dplyr::distinct(df_features)
-
+      names(df_features)[names(df_features) == "feature"] = "Feature_ID"
+      selected_columns <- input$Screening12_1
+      if (!is.null(Metab_annot()) && !is.null(selected_columns)) {
+        AnnoMeta <- as.data.frame(Metab_annot())
+        df_features <- merge(df_features, AnnoMeta[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
+      }
       DT::datatable(df_features)
     })
 
-    output$cluster_assignments_summary <- DT::renderDataTable({
-      df_list <- Important_Features()
-      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+    output$cluster_assignments_summary12_1 <- DT::renderDataTable({
+      df_list <- Important_Features12()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
       df <- df_list[[selected_index]]$df1_1
-      df_summary <- dplyr::group_by(df, cluster, col)
-      df_summary <- dplyr::summarise(
-        df_summary,
-        enriched_Term = unique(enriched_Term),
-        enriched_Overlap = unique(enriched_Overlap),
-        enriched_Genes = unique(enriched_Genes),
-        enriched_P.value = unique(enriched_P.value),
-        enriched_Adjusted_P.value = unique(enriched_Adjusted.P.value),
-        enriched_GO = unique(enriched_GO)
-      )
-      df_summary <- dplyr::ungroup(df_summary)
+      cluster <- unique(df$cluster)
+      col <- unique(df$col)
+      df_summary <- data.frame(cluster = cluster, col = col, stringsAsFactors = FALSE)
       df_summary <- dplyr::select(df_summary, -cluster)
-      df_summary <- dplyr::rename(df_summary, `Prot/Genes_module_id` = col)
+      df_summary <- dplyr::rename(df_summary, `Module_id` = col)
       DT::datatable(df_summary)
     })
 
     # Render the download handler
-    output$downloadcluster_assignments_1 <- downloadHandler(
+    output$downloadcluster_assignments12_1 <- downloadHandler(
       filename = function() {
-        "Proteins_Genes_TopModule.csv"
+        "Data2_TopModule.csv"
       },
       content = function(file) {
-        df_list <- Important_Features()
-        selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+        df_list <- Important_Features12()
+        selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
         df1_1 <- df_list[[selected_index]]$df1_1
         write.csv(df1_1, file, row.names = TRUE)
       }
     )
 
-    Classification_Proteins_imp_Prot <- reactive({
-      df_list <- Important_Features()
-      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
-      df2_1 <- df_list[[selected_index]]$df2_1
+    Classification_imp_12_2 <- reactive({
+      df_list <- Important_Features12()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
+      df2_2 <- df_list[[selected_index]]$df2_2
       metadata <- as.data.frame(metadata())
-      phenotype_variable = input$phenotypeSelector_imp_Prot
-      significance_threshold = input$pValueThreshold_imp_Prot
-      classification_metabolite <- perform_classification( eigengene_data = df2_1,
+      phenotype_variable = input$phenotypeSelector_imp_12_2
+      significance_threshold = input$pValueThreshold_imp_12_2
+      Classification_Data <- perform_classification( eigengene_data = df2_2,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
                                                            significance_threshold = significance_threshold)
       return(list(
-        result = classification_metabolite$result,
-        plots = classification_metabolite$plots))
+        result = Classification_Data$result,
+        plots = Classification_Data$plots))
     })
 
-    output$classification_results_imp_Prot <- DT::renderDataTable({
-      df <- Classification_Proteins_imp_Prot()$result
+    output$classification_results_imp_12_2 <- DT::renderDataTable({
+      df <- Classification_imp_12_2()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "Protein/Gene"
+      names(df)[names(df) == "Variable"] = "Feature"
       DT::datatable(df)
     })
 
-    output$classification_plot_1_all_imp_Prot <- renderPlot({
-      selected_variable <- input$phenotypeSelector_imp_Prot
+    output$classification_plot_1_all_imp_12_2 <- renderPlot({
+      selected_variable <- input$phenotypeSelector_imp_12_2
       levels_selected_variable <- unique(metadata()[[selected_variable]])
       if (length(levels_selected_variable) < 3) {
         class_names <- levels_selected_variable
         class_label <- paste(class_names, collapse = " vs ")
-        plot <- Classification_Proteins_imp_Prot()$plots[[1]]
+        plot <- Classification_imp_12_2()$plots[[1]]
         plot <- plot +
           ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
                         x = "Variables",
@@ -2203,30 +3138,745 @@ mod_module1_server <- function(id){
           ggplot2::theme(
             axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
           )
-        classification_plot(plot)
+        classification_Prot_imp(plot)
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
         plots_list <- lapply(1:length(levels_selected_variable), function(i) {
-          Classification_Proteins_imp_Prot()$plots[[i]]
+          Classification_imp_12_2()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)
-        classification_plot(plot)  # Store the plot in the reactive variable
+        classification_Prot_imp(plot)  # Store the plot in the reactive variable
         return(plot)
       }
     })
 
-    output$Important_features_1 <- renderText({
-      df_list <- Important_Features()
-      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+    output$Important_features_12_1 <- renderText({
+      df_list <- Important_Features12()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
       df5_1 <- df_list[[selected_index]]$df5_1
     })
 
-    output$Important_features_2 <- renderText({
-      df_list <- Important_Features()
-      selected_index <- as.numeric(sub("Top_", "", input$visualization_list))
+    output$Important_features_12_2 <- renderText({
+      df_list <- Important_Features12()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
       df5_2 <- df_list[[selected_index]]$df5_2
     })
+
+    # Important features Data 1 - Data 3
+
+    observeEvent(input$TopModules_13, {
+      n <- input$TopModules_13
+      choices <- setNames(as.list(1:n), paste0("Top_", 1:n))
+      updateSelectInput(session, "visualization_list_13", choices = choices)
+    })
+
+    pheno_variables_imp_13_1 <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
+    observe({
+      updateSelectInput(session, "phenotypeSelector_imp_13_1", choices = pheno_variables_imp_13_1())
+    })
+
+    pheno_variables_imp_13_3 <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
+    observe({
+      updateSelectInput(session, "phenotypeSelector_imp_13_3", choices = pheno_variables_imp_13_3())
+    })
+
+    variables_Screening_13_1 <- reactive({
+      names(Metab_annot())[-which(names(Metab_annot()) == "Feature_ID")]
+    })
+
+    observe({
+      updateSelectInput(session, "Screening13_1", choices = variables_Screening_13_1())
+    })
+
+    variables_Screening_13_3 <- reactive({
+      names(Gene_annot())[-which(names(Gene_annot()) == "Feature_ID")]
+    })
+
+    observe({
+      updateSelectInput(session, "Screening13_3", choices = variables_Screening_13_3())
+    })
+
+
+    ImpVar_D1_D3 <- reactive({
+      top_n <- input$TopModules_13
+      Cor_Data1_Data3 = as.data.frame(Cor_Data_n()$Cor_list[[2]])
+      cluster_assignments_D1 = cluster_assignments_Data1()$cluster_assignments_D1
+      cluster_assignments_D3 = cluster_assignments_Data3()$cluster_assignments_D3
+      req(Metab_exp())
+      ExpressionD1 = Metab_exp()
+      req(Gene_exp())
+      ExpressionD3 = Gene_exp()
+      ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Datai_Dataj = Cor_Data1_Data3,
+                                                     cluster_assignments_D1 = cluster_assignments_D1,
+                                                     cluster_assignments_D2 = cluster_assignments_D3,
+                                                     ExpressionD1 = ExpressionD1,
+                                                     ExpressionD2 = ExpressionD3,
+                                                     top_n = top_n) #$correlation_matrices_list
+      return(list(
+        Top_correlations = ImpVar_Prot_Metab$Top_correlations,
+        cluster_assignments = ImpVar_Prot_Metab$cluster_assignments,
+        expression_matrices = ImpVar_Prot_Metab$expression_matrices,
+        correlation_matrices = ImpVar_Prot_Metab$correlation_matrices,
+        Important_features = ImpVar_Prot_Metab$Important_features,
+        correlation_List = ImpVar_Prot_Metab$correlation_List
+      ))
+    })
+
+    Important_Features13 <- reactive({
+      custom_palette <- colorRampPalette(c(RColorBrewer::brewer.pal(11, "RdYlBu")[11], "white", RColorBrewer::brewer.pal(11, "RdYlBu")[1]))(n = 100)
+
+      n <- input$visualization_list_13
+      df_list <- list()
+
+      for (i in 1:n) {
+        df1_1 <- as.data.frame(ImpVar_D1_D3()$cluster_assignments[[2*i - 1]])
+        df1_2 <- as.data.frame(ImpVar_D1_D3()$cluster_assignments[[2*i]])
+        df2_1 <- as.data.frame(ImpVar_D1_D3()$expression_matrices[[2*i - 1]])
+        df2_2 <- as.data.frame(ImpVar_D1_D3()$expression_matrices[[2*i]])
+        df4 <- ImpVar_D1_D3()$correlation_List[[i]]
+        df4_1 <- hist(ImpVar_D1_D3()$correlation_matrices[[i]], main = paste("Top", i, "Modules Correlation"))
+        df4_2 <- corrplot::corrplot(ImpVar_D1_D3()$correlation_matrices[[i]], type = "upper", tl.col = "black", col = custom_palette)
+        df5_1 <- ImpVar_D1_D3()$Important_features[[2*i - 1]]
+        df5_2 <- ImpVar_D1_D3()$Important_features[[2*i]]
+
+        df_list[[i]] <- list(df1_1 = df1_1, df1_2 = df1_2, df2_1 = df2_1, df2_2 = df2_2, df4 = df4, df4_1 = df4_1, df4_2 = df4_2, df5_1 = df5_1, df5_2 = df5_2)
+      }
+
+      return(df_list)
+    })
+
+    output$ImportantVariables_13 <- DT::renderDataTable({
+      df4 = as.data.frame(ImpVar_D1_D3()$Top_correlations)
+      names(df4)[names(df4) == "from"] = "From"
+      names(df4)[names(df4) == "to"] = "To"
+      names(df4)[names(df4) == "value"] = "Correlation"
+      rownames(df4) <- NULL
+      DT::datatable(df4)
+    })
+
+    output$CorplotImp13 <- renderPlot({
+      df_list <- Important_Features13()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+      df4_2 <- df_list[[selected_index]]$df4_2
+    })
+
+    output$Correlation_mod13 <- DT::renderDataTable({
+      df_list <- Important_Features13()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+      df4 <- df_list[[selected_index]]$df4
+      names(df4)[names(df4) == "Data2"] = "Data3"
+      DT::datatable(data.frame(df4))
+    })
+
+    # Render the download handler
+    output$downloadModCorrelation13 <- downloadHandler(
+      filename = function() {
+        "ModulesCorrelation.csv"
+      },
+      content = function(file) {
+        df_list <- Important_Features13()
+        selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+        df4 <- df_list[[selected_index]]$df4
+        write.csv(df4, file, row.names = TRUE)
+      }
+    )
+
+    output$cluster_assignments_features13_3 <- DT::renderDataTable({
+      df_list <- Important_Features13()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+      df <- df_list[[selected_index]]$df1_2
+      df_features <- dplyr::select(df, feature)
+      df_features <- dplyr::distinct(df_features)
+      names(df_features)[names(df_features) == "feature"] = "Feature_ID"
+      selected_columns <- input$Screening13_3
+      if (!is.null(Gene_annot()) && !is.null(selected_columns)) {
+        AnnoMeta <- as.data.frame(Gene_annot())
+        df_features <- merge(df_features, AnnoMeta[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
+      }
+      DT::datatable(df_features)
+    })
+
+    output$cluster_assignments_summary13_3 <- DT::renderDataTable({
+      df_list <- Important_Features13()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+      df <- df_list[[selected_index]]$df1_2
+      cluster <- unique(df$cluster)
+      col <- unique(df$col)
+      SummaryData <- data.frame(cluster = cluster, col = col, stringsAsFactors = FALSE)
+
+      SummaryData <- dplyr::select(SummaryData, -cluster)
+      SummaryData <- dplyr::rename(SummaryData, `Module_id` = col)
+
+      DT::datatable(SummaryData)
+    })
+
+    output$downloadcluster_assignments13_3 <- downloadHandler(
+      filename = function() {
+        "Data1_TopModule.csv"
+      },
+      content = function(file) {
+        df_list <- Important_Features13()
+        selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+        df1_2 <- df_list[[selected_index]]$df1_2
+        write.csv(df1_2, file, row.names = TRUE)
+      }
+    )
+
+    Classification_imp_13_1 <- reactive({
+      df_list <- Important_Features13()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+      df2_1 <- as.data.frame(df_list[[selected_index]]$df2_1)
+      metadata <- as.data.frame(metadata())
+      phenotype_variable = input$phenotypeSelector_imp_13_1
+      significance_threshold = input$pValueThreshold_imp_13_1
+      Classification_Data <- perform_classification( eigengene_data = df2_1,
+                                                           metadata = metadata,
+                                                           phenotype_variable = phenotype_variable,
+                                                           significance_threshold = significance_threshold)
+      return(list(
+        result = Classification_Data$result,
+        plots = Classification_Data$plots))
+    })
+
+    output$classification_results_imp_13_1 <- DT::renderDataTable({
+      df <- Classification_imp_13_1()$result
+      rownames(df) <- NULL
+      names(df)[names(df) == "Variable"] = "Feature"
+      DT::datatable(df)
+    })
+
+    output$classification_plot_1_all_imp_13_1 <- renderPlot({
+      selected_variable <- input$phenotypeSelector_imp_13_1
+      levels_selected_variable <- unique(metadata()[[selected_variable]])
+      if (length(levels_selected_variable) < 3) {
+        class_names <- levels_selected_variable
+        class_label <- paste(class_names, collapse = " vs ")
+        plot <- Classification_imp_13_1()$plots[[1]]
+        plot <- plot +
+          ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
+                        x = "Variables",
+                        y = "Class") +
+          ggplot2::theme(
+            axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
+          )
+        classification_Metab_imp(plot)
+        return(plot)
+      } else {
+        # Print multiple boxplot charts, one for each level of the selected variable
+        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+          Classification_imp_13_1()$plots[[i]]
+        })
+        plot <- cowplot::plot_grid(plotlist = plots_list)
+        classification_Metab_imp(plot)  # Store the plot in the reactive variable
+        return(plot)
+      }
+    })
+
+    output$cluster_assignments_features13_1 <- DT::renderDataTable({
+      df_list <- Important_Features13()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+      df <- df_list[[selected_index]]$df1_1
+      df_features <- dplyr::select(df, feature)
+      df_features <- dplyr::distinct(df_features)
+      names(df_features)[names(df_features) == "feature"] = "Feature_ID"
+      selected_columns <- input$Screening13_1
+      if (!is.null(Metab_annot()) && !is.null(selected_columns)) {
+        AnnoMeta <- as.data.frame(Metab_annot())
+        df_features <- merge(df_features, AnnoMeta[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
+      }
+      DT::datatable(df_features)
+    })
+
+    output$cluster_assignments_summary13_1 <- DT::renderDataTable({
+      df_list <- Important_Features13()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+      df <- df_list[[selected_index]]$df1_1
+      cluster <- unique(df$cluster)
+      col <- unique(df$col)
+      df_summary <- data.frame(cluster = cluster, col = col, stringsAsFactors = FALSE)
+      df_summary <- dplyr::select(df_summary, -cluster)
+      df_summary <- dplyr::rename(df_summary, `Module_id` = col)
+      DT::datatable(df_summary)
+    })
+
+    # Render the download handler
+    output$downloadcluster_assignments13_1 <- downloadHandler(
+      filename = function() {
+        "Data3_TopModule.csv"
+      },
+      content = function(file) {
+        df_list <- Important_Features13()
+        selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+        df1_1 <- df_list[[selected_index]]$df1_1
+        write.csv(df1_1, file, row.names = TRUE)
+      }
+    )
+
+    Classification_imp_13_3 <- reactive({
+      df_list <- Important_Features13()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+      df2_2 <- df_list[[selected_index]]$df2_2
+      metadata <- as.data.frame(metadata())
+      phenotype_variable = input$phenotypeSelector_imp_13_3
+      significance_threshold = input$pValueThreshold_imp_13_3
+      Classification_Data <- perform_classification( eigengene_data = df2_2,
+                                                           metadata = metadata,
+                                                           phenotype_variable = phenotype_variable,
+                                                           significance_threshold = significance_threshold)
+      return(list(
+        result = Classification_Data$result,
+        plots = Classification_Data$plots))
+    })
+
+    output$classification_results_imp_13_3 <- DT::renderDataTable({
+      df <- Classification_imp_13_3()$result
+      rownames(df) <- NULL
+      names(df)[names(df) == "Variable"] = "Feature"
+      DT::datatable(df)
+    })
+
+    output$classification_plot_1_all_imp_13_3 <- renderPlot({
+      selected_variable <- input$phenotypeSelector_imp_13_3
+      levels_selected_variable <- unique(metadata()[[selected_variable]])
+      if (length(levels_selected_variable) < 3) {
+        class_names <- levels_selected_variable
+        class_label <- paste(class_names, collapse = " vs ")
+        plot <- Classification_imp_13_3()$plots[[1]]
+        plot <- plot +
+          ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
+                        x = "Variables",
+                        y = "Class") +
+          ggplot2::theme(
+            axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
+          )
+        classification_Gene_imp(plot)
+        return(plot)
+      } else {
+        # Print multiple boxplot charts, one for each level of the selected variable
+        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+          Classification_imp_13_3()$plots[[i]]
+        })
+        plot <- cowplot::plot_grid(plotlist = plots_list)
+        classification_Gene_imp(plot)  # Store the plot in the reactive variable
+        return(plot)
+      }
+    })
+
+    output$Important_features_13_1 <- renderText({
+      df_list <- Important_Features13()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+      df5_1 <- df_list[[selected_index]]$df5_1
+    })
+
+    output$Important_features_13_3 <- renderText({
+      df_list <- Important_Features13()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
+      df5_2 <- df_list[[selected_index]]$df5_2
+    })
+
+    # Important features Data 2 - Data 3
+
+    observeEvent(input$TopModules_23, {
+      n <- input$TopModules_23
+      choices <- setNames(as.list(1:n), paste0("Top_", 1:n))
+      updateSelectInput(session, "visualization_list_23", choices = choices)
+    })
+
+    pheno_variables_imp_23_2 <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
+    observe({
+      updateSelectInput(session, "phenotypeSelector_imp_23_2", choices = pheno_variables_imp_23_2())
+    })
+
+    pheno_variables_imp_23_3 <- reactive({
+      names(metadata())[-which(names(metadata()) == "Sample")]
+    })
+    observe({
+      updateSelectInput(session, "phenotypeSelector_imp_23_3", choices = pheno_variables_imp_23_3())
+    })
+
+    variables_Screening_23_2 <- reactive({
+      names(Prot_annot())[-which(names(Prot_annot()) == "Feature_ID")]
+    })
+
+    observe({
+      updateSelectInput(session, "Screening23_2", choices = variables_Screening_23_2())
+    })
+
+    variables_Screening_23_3 <- reactive({
+      names(Gene_annot())[-which(names(Gene_annot()) == "Feature_ID")]
+    })
+
+    observe({
+      updateSelectInput(session, "Screening23_3", choices = variables_Screening_23_3())
+    })
+
+
+    ImpVar_D2_D3 <- reactive({
+      top_n <- input$TopModules_23
+      Cor_Data2_Data3 = as.data.frame(Cor_Data_n()$Cor_list[[3]])
+      cluster_assignments_D2 = cluster_assignments_Data2()$cluster_assignments_D2
+      cluster_assignments_D3 = cluster_assignments_Data3()$cluster_assignments_D3
+      req(Prot_exp())
+      ExpressionD2 = Prot_exp()
+      req(Gene_exp())
+      ExpressionD3 = Gene_exp()
+      ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Datai_Dataj = Cor_Data2_Data3,
+                                                     cluster_assignments_D1 = cluster_assignments_D2,
+                                                     cluster_assignments_D2 = cluster_assignments_D3,
+                                                     ExpressionD1 = ExpressionD2,
+                                                     ExpressionD2 = ExpressionD3,
+                                                     top_n = top_n) #$correlation_matrices_list
+      return(list(
+        Top_correlations = ImpVar_Prot_Metab$Top_correlations,
+        cluster_assignments = ImpVar_Prot_Metab$cluster_assignments,
+        expression_matrices = ImpVar_Prot_Metab$expression_matrices,
+        correlation_matrices = ImpVar_Prot_Metab$correlation_matrices,
+        Important_features = ImpVar_Prot_Metab$Important_features,
+        correlation_List = ImpVar_Prot_Metab$correlation_List
+      ))
+    })
+
+    Important_Features23 <- reactive({
+      custom_palette <- colorRampPalette(c(RColorBrewer::brewer.pal(11, "RdYlBu")[11], "white", RColorBrewer::brewer.pal(11, "RdYlBu")[1]))(n = 100)
+
+      n <- input$visualization_list_23
+      df_list <- list()
+
+      for (i in 1:n) {
+        df1_1 <- as.data.frame(ImpVar_D2_D3()$cluster_assignments[[2*i - 1]])
+        df1_2 <- as.data.frame(ImpVar_D2_D3()$cluster_assignments[[2*i]])
+        df2_1 <- as.data.frame(ImpVar_D2_D3()$expression_matrices[[2*i - 1]])
+        df2_2 <- as.data.frame(ImpVar_D2_D3()$expression_matrices[[2*i]])
+        df4 <- ImpVar_D2_D3()$correlation_List[[i]]
+        df4_1 <- hist(ImpVar_D2_D3()$correlation_matrices[[i]], main = paste("Top", i, "Modules Correlation"))
+        df4_2 <- corrplot::corrplot(ImpVar_D2_D3()$correlation_matrices[[i]], type = "upper", tl.col = "black", col = custom_palette)
+        df5_1 <- ImpVar_D2_D3()$Important_features[[2*i - 1]]
+        df5_2 <- ImpVar_D2_D3()$Important_features[[2*i]]
+
+        df_list[[i]] <- list(df1_1 = df1_1, df1_2 = df1_2, df2_1 = df2_1, df2_2 = df2_2, df4 = df4, df4_1 = df4_1, df4_2 = df4_2, df5_1 = df5_1, df5_2 = df5_2)
+      }
+
+      return(df_list)
+    })
+
+    output$ImportantVariables_23 <- DT::renderDataTable({
+      df4 = as.data.frame(ImpVar_D2_D3()$Top_correlations)
+      names(df4)[names(df4) == "from"] = "From"
+      names(df4)[names(df4) == "to"] = "To"
+      names(df4)[names(df4) == "value"] = "Correlation"
+      rownames(df4) <- NULL
+      DT::datatable(df4)
+    })
+
+    output$CorplotImp23 <- renderPlot({
+      df_list <- Important_Features23()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+      df4_2 <- df_list[[selected_index]]$df4_2
+    })
+
+    output$Correlation_mod23 <- DT::renderDataTable({
+      df_list <- Important_Features23()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+      df4 <- df_list[[selected_index]]$df4
+      names(df4)[names(df4) == "Data2"] = "Data3"
+      names(df4)[names(df4) == "Data1"] = "Data2"
+      DT::datatable(data.frame(df4))
+    })
+
+    # Render the download handler
+    output$downloadModCorrelation23 <- downloadHandler(
+      filename = function() {
+        "ModulesCorrelation.csv"
+      },
+      content = function(file) {
+        df_list <- Important_Features23()
+        selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+        df4 <- df_list[[selected_index]]$df4
+        write.csv(df4, file, row.names = TRUE)
+      }
+    )
+
+    output$cluster_assignments_features23_3 <- DT::renderDataTable({
+      df_list <- Important_Features23()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+      df <- df_list[[selected_index]]$df1_2
+      df_features <- dplyr::select(df, feature)
+      df_features <- dplyr::distinct(df_features)
+      names(df_features)[names(df_features) == "feature"] = "Feature_ID"
+      selected_columns <- input$Screening23_3
+      if (!is.null(Gene_annot()) && !is.null(selected_columns)) {
+        AnnoMeta <- as.data.frame(Gene_annot())
+        df_features <- merge(df_features, AnnoMeta[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
+      }
+      DT::datatable(df_features)
+    })
+
+    output$cluster_assignments_summary23_3 <- DT::renderDataTable({
+      df_list <- Important_Features23()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+      df <- df_list[[selected_index]]$df1_2
+      cluster <- unique(df$cluster)
+      col <- unique(df$col)
+      SummaryData <- data.frame(cluster = cluster, col = col, stringsAsFactors = FALSE)
+
+      SummaryData <- dplyr::select(SummaryData, -cluster)
+      SummaryData <- dplyr::rename(SummaryData, `Module_id` = col)
+
+      DT::datatable(SummaryData)
+    })
+
+    output$downloadcluster_assignments23_3 <- downloadHandler(
+      filename = function() {
+        "Data2_TopModule.csv"
+      },
+      content = function(file) {
+        df_list <- Important_Features23()
+        selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+        df1_2 <- df_list[[selected_index]]$df1_2
+        write.csv(df1_2, file, row.names = TRUE)
+      }
+    )
+
+    Classification_imp_23_2 <- reactive({
+      df_list <- Important_Features23()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+      df2_1 <- as.data.frame(df_list[[selected_index]]$df2_1)
+      metadata <- as.data.frame(metadata())
+      phenotype_variable = input$phenotypeSelector_imp_23_2
+      significance_threshold = input$pValueThreshold_imp_23_2
+      Classification_Data <- perform_classification( eigengene_data = df2_1,
+                                                           metadata = metadata,
+                                                           phenotype_variable = phenotype_variable,
+                                                           significance_threshold = significance_threshold)
+      return(list(
+        result = Classification_Data$result,
+        plots = Classification_Data$plots))
+    })
+
+    output$classification_results_imp_23_2 <- DT::renderDataTable({
+      df <- Classification_imp_23_2()$result
+      rownames(df) <- NULL
+      names(df)[names(df) == "Variable"] = "Feature"
+      DT::datatable(df)
+    })
+
+    output$classification_plot_1_all_imp_23_2 <- renderPlot({
+      selected_variable <- input$phenotypeSelector_imp_23_2
+      levels_selected_variable <- unique(metadata()[[selected_variable]])
+      if (length(levels_selected_variable) < 3) {
+        class_names <- levels_selected_variable
+        class_label <- paste(class_names, collapse = " vs ")
+        plot <- Classification_imp_23_2()$plots[[1]]
+        plot <- plot +
+          ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
+                        x = "Variables",
+                        y = "Class") +
+          ggplot2::theme(
+            axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
+          )
+        classification_Prot_imp(plot)
+        return(plot)
+      } else {
+        # Print multiple boxplot charts, one for each level of the selected variable
+        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+          Classification_imp_23_2()$plots[[i]]
+        })
+        plot <- cowplot::plot_grid(plotlist = plots_list)
+        classification_Prot_imp(plot)  # Store the plot in the reactive variable
+        return(plot)
+      }
+    })
+
+    output$cluster_assignments_features23_2 <- DT::renderDataTable({
+      df_list <- Important_Features23()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+      df <- df_list[[selected_index]]$df1_1
+      df_features <- dplyr::select(df, feature)
+      df_features <- dplyr::distinct(df_features)
+      names(df_features)[names(df_features) == "feature"] = "Feature_ID"
+      selected_columns <- input$Screening23_2
+      if (!is.null(Prot_annot()) && !is.null(selected_columns)) {
+        AnnoMeta <- as.data.frame(Prot_annot())
+        df_features <- merge(df_features, AnnoMeta[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
+      }
+      DT::datatable(df_features)
+    })
+
+    output$cluster_assignments_summary23_2 <- DT::renderDataTable({
+      df_list <- Important_Features23()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+      df <- df_list[[selected_index]]$df1_1
+      cluster <- unique(df$cluster)
+      col <- unique(df$col)
+      df_summary <- data.frame(cluster = cluster, col = col, stringsAsFactors = FALSE)
+      df_summary <- dplyr::select(df_summary, -cluster)
+      df_summary <- dplyr::rename(df_summary, `Module_id` = col)
+      DT::datatable(df_summary)
+    })
+
+    # Render the download handler
+    output$downloadcluster_assignments23_2 <- downloadHandler(
+      filename = function() {
+        "Data3_TopModule.csv"
+      },
+      content = function(file) {
+        df_list <- Important_Features23()
+        selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+        df1_1 <- df_list[[selected_index]]$df1_1
+        write.csv(df1_1, file, row.names = TRUE)
+      }
+    )
+
+    Classification_imp_23_3 <- reactive({
+      df_list <- Important_Features23()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+      df2_2 <- df_list[[selected_index]]$df2_2
+      metadata <- as.data.frame(metadata())
+      phenotype_variable = input$phenotypeSelector_imp_23_3
+      significance_threshold = input$pValueThreshold_imp_23_3
+      Classification_Data <- perform_classification( eigengene_data = df2_2,
+                                                           metadata = metadata,
+                                                           phenotype_variable = phenotype_variable,
+                                                           significance_threshold = significance_threshold)
+      return(list(
+        result = Classification_Data$result,
+        plots = Classification_Data$plots))
+    })
+
+    output$classification_results_imp_23_3 <- DT::renderDataTable({
+      df <- Classification_imp_23_3()$result
+      rownames(df) <- NULL
+      names(df)[names(df) == "Variable"] = "Feature"
+      DT::datatable(df)
+    })
+
+    output$classification_plot_1_all_imp_23_3 <- renderPlot({
+      selected_variable <- input$phenotypeSelector_imp_23_3
+      levels_selected_variable <- unique(metadata()[[selected_variable]])
+      if (length(levels_selected_variable) < 3) {
+        class_names <- levels_selected_variable
+        class_label <- paste(class_names, collapse = " vs ")
+        plot <- Classification_imp_23_3()$plots[[1]]
+        plot <- plot +
+          ggplot2::labs(title = class_label, fill = as.factor(levels_selected_variable),
+                        x = "Variables",
+                        y = "Class") +
+          ggplot2::theme(
+            axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
+          )
+        classification_Gene_imp(plot)
+        return(plot)
+      } else {
+        # Print multiple boxplot charts, one for each level of the selected variable
+        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+          Classification_imp_23_3()$plots[[i]]
+        })
+        plot <- cowplot::plot_grid(plotlist = plots_list)
+        classification_Gene_imp(plot)  # Store the plot in the reactive variable
+        return(plot)
+      }
+    })
+
+    output$Important_features_23_2 <- renderText({
+      df_list <- Important_Features23()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+      df5_1 <- df_list[[selected_index]]$df5_1
+    })
+
+    output$Important_features_23_3 <- renderText({
+      df_list <- Important_Features23()
+      selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
+      df5_2 <- df_list[[selected_index]]$df5_2
+    })
+
+    # Demodata
+    #ccRCC
+
+    observeEvent(input$runDemo, {
+      withProgress(message = 'Loading example data...', value = 0, {
+        incProgress(0, detail = 'Loading Metab_exp.csv')
+        Metab_exp(load_metab_exp())
+        Sys.sleep(5)
+
+        incProgress(10, detail = 'Loading Metab_annot.csv')
+        Metab_annot(load_metab_annot())
+        Sys.sleep(3)
+
+        incProgress(20, detail = 'Loading Prot_exp.csv')
+        Prot_exp(load_RNA_exp())
+        Sys.sleep(6)
+
+        incProgress(30, detail = 'Loading Prot_annot.csv')
+        Prot_annot(load_RNA_annot())
+        Sys.sleep(3)
+
+        incProgress(50, detail = 'Loading Metadata.csv...')
+        metadata(load_metadata())
+        Sys.sleep(2)
+
+        demo_par_cor_Metab(TRUE)
+        demo_par_cor_Metab_All(FALSE)
+        demo_par_cor_Prot(TRUE)
+        demo_par_cor_Prot_All(FALSE)
+        demo_enrich_Prot(TRUE)
+        demo_enrich_Gene(TRUE)
+        demo_enrich_Prot_All(FALSE)
+        demo_enrich_Gene_All (FALSE)
+        updateSelectInput(session, "databaseSelector", selected = "GO_Biological_Process_2023")
+        updateSliderInput(session, "pValueThresholdcor", value = 0.60)
+        updateSliderInput(session, "pValueThreshold_imp_12_1", value = 0.05)
+        updateSliderInput(session, "pValueThreshold_imp_12_2", value = 0.05)
+        incProgress(100, detail = 'Complete!')
+      })
+    })
+
+    #LUAD
+
+    observeEvent(input$runDemoAll, {
+      withProgress(message = 'Loading example data...', value = 0, {
+        incProgress(0, detail = 'Loading Metab_exp.csv')
+        Metab_exp(load_metab_expAll())
+        Sys.sleep(5)
+
+        incProgress(10, detail = 'Loading Metab_annot.csv')
+        Metab_annot(load_metab_annotAll())
+        Sys.sleep(3)
+
+        incProgress(20, detail = 'Loading Prot_exp.csv')
+        Prot_exp(load_RNA_expAll())
+        Sys.sleep(6)
+
+        incProgress(30, detail = 'Loading Prot_annot.csv')
+        Prot_annot(load_RNA_annotAll())
+        Sys.sleep(3)
+
+        incProgress(50, detail = 'Loading Metadata.csv...')
+        metadata(load_metadataAll())
+        Sys.sleep(2)
+
+        demo_par_cor_Metab(FALSE)
+        demo_par_cor_Metab_All(TRUE)
+        demo_par_cor_Prot(FALSE)
+        demo_par_cor_Prot_All(TRUE)
+        demo_enrich_Prot(FALSE)
+        demo_enrich_Gene(FALSE)
+        demo_enrich_Prot_All(TRUE)
+        demo_enrich_Gene_All (TRUE)
+        updateSelectInput(session, "databaseSelector", selected = "KEGG_2019_Mouse")
+        updateSliderInput(session, "pValueThresholdcor", value = 0.90)
+        updateSliderInput(session, "pValueThreshold_imp_12_1", value = 0.5)
+        updateSliderInput(session, "pValueThreshold_imp_12_2", value = 0.5)
+        incProgress(100, detail = 'Complete!')
+      })
+    })
+
 
   })
 }

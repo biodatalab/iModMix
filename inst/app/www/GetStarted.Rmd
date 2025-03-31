@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 IModMix allows the analysis and integration of multi-omics data types. If metabolomics abundance and proteomics or transcriptomics expression data from the same samples are available, they can be correlated (integrated) using iModMix. To ensure optimal performance and accurate results, please follow these guidelines to prepare and upload your data: 
 
-## Uploading the Metabolomics Abundance and Protein/Gene Expression Matrices
+## Uploading the Expression Matrices
 
 - Omics matrix data should be in a tabular format (e.g., CSV, Excel).
 - Each row represents a feature (e.g., gene, protein, metabolite), and each column represents a sample.
@@ -44,7 +44,7 @@ Metabolomics Annotation data should have the following labeled columns:
 - Metabolites: Include the corresponding metabolite name.
 - KEGG: Include corresponding KEGG IDs.
 
-Proteomics/Genomics Data: It should have the following columns:
+Proteomics or Genomics Data: It should have the following columns:
 
 - Feature_ID: The sample IDs used in your expression matrix file.
 - Symbol: Include corresponding Symbols to enable enrichment analysis.
@@ -64,44 +64,5 @@ To ensure your data is ready for analysis, please follow these guidelines:
 - Web-based Tools for ID Conversion: If you need to convert identifiers, consider using web-based tools like the Uniprot batch conversion tool for genes/proteins or DAVID for genes.
 - Ensure that the sample IDs in your metadata file match those in your omics data files. If there are discrepancies, an error will occur. Make sure all samples are labeled correctly with no extra or missing samples.
 
-Analysis time will vary depending on number of samples and number of proteomic/transcriptomic/metabolomic features. The table below can provide an approximate run time based on these factors.
 
-<table>
-  <tr>
-    <th>    # Sample  _  </th>
-    <th>_ # Metabolomic features _</th>
-    <th>_ # Proteins/Genes  _</th>
-    <th>_  Time (min) </th>
-  </tr>
-  <tr>
-    <th> 76 </th>
-    <th> 904</th>
-    <th>23001 </th>
-    <th> 40 </th>
-  </tr>
-  <tr>
-    <th> 137 </th>
-    <th> 361</th>
-    <th>27827 </th>
-    <th> 45 </th>
-  </tr>
-  <tr>
-    <th>81 </th>
-    <th> 457</th>
-    <th>8281 </th>
-    <th> 3 </th>
-  </tr>
-  <tr>
-    <th> 81 </th>
-    <th> 7392</th>
-    <th>8281 </th>
-    <th> 5 </th>
-  </tr>
-  <tr>
-    <th> 20 </th>
-    <th> 353</th>
-    <th>7928 </th>
-    <th> 5 </th>
-  </tr>
-</table>  
   

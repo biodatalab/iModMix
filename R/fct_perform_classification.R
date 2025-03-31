@@ -14,22 +14,15 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
   requireNamespace("pROC", quietly = TRUE)
   requireNamespace("ggplot2", quietly = TRUE)
 
-  # Check if phenotype_variable is selected
   if (is.null(phenotype_variable)) {
     return(NULL)
   }
 
-  # Subset metadata to include only relevant columns
   metadata_subset <- metadata[, c("Sample", phenotype_variable), drop = FALSE]
-
-  # Merge eigengene_data with metadata_subset based on Sample_ID
   merged_data <- merge(eigengene_data, metadata_subset, by.x = "row.names", by.y = "Sample")
-
-  # Extract predictor variables and response variable
   predictors <- names(merged_data)[-c(1, ncol(merged_data))]
   response <- as.factor(merged_data[[phenotype_variable]])
 
-  # Initialize an empty list to store results for each binary classification
   result_list <- list()
   plot_list <- list()
 
@@ -44,29 +37,25 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
         Result_pValue = round(t_test_result$p.value, 4)
       )
     })
+      t_test_results$Adjusted_pValue <- round(p.adjust(t_test_results$Result_pValue, method = "BH"), 4)
+      t_test_results <- t_test_results[t_test_results$Result_pValue <= significance_threshold, ]
+      t_test_results <- t_test_results[order(t_test_results$Result_pValue), ]
 
-    # Filter results based on significance threshold
-    t_test_results <- t_test_results[t_test_results$Result_pValue <= significance_threshold, ]
-    t_test_results <- t_test_results[order(t_test_results$Result_pValue), ]
 
-    # Append result to the list
     result_list[["Comparison"]] <- t_test_results
 
-    # Generate boxplot for each variable
     boxplot_data <- tidyr::gather(merged_data, key = "Variable", value = "Expression", predictors)
     boxplot_data$Class <- response
-
     boxplot_data_filtered <- boxplot_data[boxplot_data$Variable %in% t_test_results$Variable, ]
 
     p <- ggplot2::ggplot(boxplot_data_filtered, ggplot2::aes(x = Variable, y = Expression, fill = Class)) +
       ggplot2::geom_boxplot() +
       ggplot2::labs(title = paste(level_class[[1]], "vs", level_class[[2]]))
 
-    plot_list[["Comparison"]] <- p  # Store the plot in the list
+    plot_list[["Comparison"]] <- p
     print(p)
 
   } else {
-    # Perform Welch's T-test for each variable
     for (class_label in levels(response)) {
       binary_response <- as.factor(ifelse(response == class_label, "Class", "Rest"))
 
@@ -80,31 +69,27 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
         )
       })
 
-      # Filter results based on significance threshold
+      t_test_results$Adjusted_pValue <- round(p.adjust(t_test_results$Result_pValue, method = "BH"), 4)
       t_test_results <- t_test_results[t_test_results$Result_pValue <= significance_threshold, ]
       t_test_results <- t_test_results[order(t_test_results$Result_pValue), ]
 
-      # Append result to the list
       result_list[[paste(class_label, "vs Rest")]] <- t_test_results
 
-      # Generate boxplot for each variable
       boxplot_data <- tidyr::gather(merged_data, key = "Variable", value = "Expression", predictors)
       boxplot_data$Class <- binary_response
-
-      # Filter boxplot_data based on significance threshold
       boxplot_data_filtered <- boxplot_data[boxplot_data$Variable %in% t_test_results$Variable, ]
 
       p <- ggplot2::ggplot(boxplot_data_filtered, ggplot2::aes(x = Variable, y = Expression, fill = Class)) +
         ggplot2::geom_boxplot() +
         ggplot2::labs(title = paste(class_label, " vs Rest"))
 
-      plot_list[[paste(class_label, "vs Rest")]] <- p  # Store the plot in the list
+      plot_list[[paste(class_label, "vs Rest")]] <- p
       print(p)
     }
   }
 
-  # Combine results from all binary classifications
   result <- do.call(rbind, result_list)
+  result <- result[order(result$Result_pValue), ]
 
   return(list(result = result, plots = plot_list))
 }

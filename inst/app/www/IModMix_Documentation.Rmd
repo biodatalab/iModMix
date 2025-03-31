@@ -13,10 +13,7 @@ library("knitr")
 
 ## Introduction
 
-Welcome to the Integrative Modules for Multi-omics data (iModMix) Shiny app. This app implements integrative analysis of molecular data in a user-friendly interface to analyze:
-
-- Metabolomics vs proteomics.
-- Metabolomics vs transcriptomics.
+Welcome to the Integrative Modules for Multi-omics data (iModMix) Shiny app. This app implements integrative analysis of molecular data in a user-friendly interface.
 
 <style>
   .github-button {
@@ -47,17 +44,16 @@ knitr::include_graphics(paste0(here::here(),"/inst/documentation/OverviewIModMix
 
 
 ## What does this application do?
-IModMix begins by evaluating separately the metabolomics dataset and the transcriptomics/proteomics dataset provided by the user. Features from each are assigned into modules based on graphical lasso and Gaussian graphical models (GGMs) focusing on only the direct associations between features. Each module (set of metabolomic features, genes, or proteins) can be compared by phenotypes based on conditions provided by user in the metadata file. After separate analysis of metabolomics and transcriptomics/proteomics datasets, a multi-omic integration can be performed through the correlations of the first eigenvector of each module determined by the first principal component (PC1). After setting a correlation threshold, a table is generated listing the correlations between metabolomic and transcriptomic/proteomic modules, and producing a multi-omic module network. The top 5 highest correlated modules are provided with the list of metabolites and proteins/genes for modules of interest including a correlation plot of each metabolite to each gene/protein. 
+IModMix begins by evaluating separately the each dataset provided by the user. Features from each are assigned into modules based on graphical lasso and Gaussian graphical models (GGMs) focusing on only the direct associations between features. Each module (set of variables: i.e. metabolomic features, genes, or proteins) can be compared by phenotypes based on conditions provided by user in the metadata file. After separate analysis of each datasets, a multi-omic integration can be performed through the correlations of the first eigenvector of each module determined by the first principal component (PC1). After setting a correlation threshold, a table is generated listing the correlations between modules, and producing a multi-omic module network. The top highest correlated modules are provided with the list of variables for the modules of interest including a correlation plot between variables. 
 
-In summary, this application will allow the user to perform multi-omic integration from the same samples by taking a metabolomics data set and comparing it to a transcriptomics or proteomics dataset. The simplified output are the top metabolite modules (set of metabolites of interest) and its correlated transcriptomics/proteomics module (set of genes/proteins). This is performed by the following steps:
+In summary, this application will allow the user to perform multi-omic integration from the same samples by taking a data set and comparing it to a others one. The simplified output are the top correlated modules. This is performed by the following steps:
 
 - Generate a partial correlation network of all features available in each dataset.
 - Interrogate this network to identify groups of features (modules) using topographical overlap matrix (TOM) and outputing a hierarchal clustering dendrogram
 -Clusters are enriched for transcriptomics/proteomics modules and linked to EnrichR so users can select libraries of interest for downstream analysis
 - Deeper analysis of modules using provided metadata.
-- Integration of metabolomics with transcriptomics/proteomics to define correlations between metabolite modules and protein/gene modules.
-- Generate a network of modules between metabolomics and proteomics/transcriptomics datasets.
-- Identification of top correlated modules with lists of metabolites and proteins/genes of interest and generation of a correlation plot of metabolites to protein/genes
-
+- Integration of datasets to define correlations between eigenfeatures modules.
+- Generate a network of modules between variables.
+- Identification of top correlated modules with lists of variables of interest and generation of a correlation plot.
 
 
