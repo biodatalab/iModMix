@@ -1,5 +1,5 @@
 # IModMix
-Description...
+iModMix is an R package designed for the integrated analysis of omics data.
 
 
 ## How install this app
@@ -10,35 +10,38 @@ install.packages("remotes")
 ```
 ### The following console command is to install from github
 ```
-remotes::install_github("biodatalab/iModmix", auth_token = "your GitHub token")
+remotes::install_github("biodatalab/iModmix")
 ```
 
 ## Example
 
-This is a basic example which shows you how to analyse a metabolomics and proteomics datasets:
+This is a basic example which shows you how to analyse 2 datasets:
 
 ``` r
-### Run app
+# Load the package
 library(iModMix)
+
+# Run the Shiny app
 run_app()
 
-### Run R package
-library(iModMix)
 
-# Metabolites modules 
-parcorMetab= partial_cors(Metabolomics_abundance)
-hcMetab = hierarchical_cluster(parcor_mat = parcorMetab, tom = TRUE, min_module_size = 10)
-cluster_assig_metab = cluster_assignments_metabolites(as.data.frame(hcMetab$cluster_assignments))
-eigenmetab = Eigengenes(Stemetab_exp_id, hcMetab$cluster_assignments[,3])
-eigengenes_metab = eigenmetab$module_eigenmetab_Me
+# Data 1 modules 
+parcorData1= partial_cors(Data1_abundance)
+hcData1 = hierarchical_cluster(parcor_mat = parcorData1, tom = TRUE, min_module_size = 10)
+cluster_assig_Data1 = cluster_assignments(as.data.frame(hcData1$cluster_assignments))
+eigenData1 = Eigengenes(SteData1_exp_id, hcData1$cluster_assignments[,3])
+eigengenes_Data1 = eigenData1$module_eigenData1_Me
 
-## Proteins/Genes modules
-parcorProt= partial_cors(Protein/gene_exp)
-hcProt = hierarchical_cluster(parcor_mat = parcorProt, tom = TRUE, min_module_size = 10)
-cluster_assig_prot = cluster_assignments_genes(as.data.frame(hcProt$cluster_assignments))
-eigenprot= Eigengenes(SteProt_exp, hcProt$cluster_assignments[,3])
+# Data 2 modules 
+parcorData2= partial_cors(Data2_abundance)
+hcData2 = hierarchical_cluster(parcor_mat = parcorData2, tom = TRUE, min_module_size = 10)
+cluster_assig_Data2 = cluster_assignments(as.data.frame(hcData2$cluster_assignments))
+eigenData2 = Eigengenes(SteData2_exp_id, hcData2$cluster_assignments[,3])
+eigengenes_Data2 = eigenData2$module_eigenData2_Me
 
-## Integration Metabolites and proteins
-cor_Prot_metab <- cor(eigenprot$module_eigenmetab_Me, eigenmetab$module_eigenmetab_Me, method = 'spearman', use = "pairwise.complete.obs")
+## Integration Data 1 and Data 2
+eigengenes_list <- list(eigengenes_Data1, Eeigengenes_Data2)
+cluster_list <- list(hcData1()$hcCluster_assignments, hcData1()$hcCluster_assignments)
+Integration_Data1_Data2 <- Modules_correlation(eigengenes_list, cluster_list, threshold = 0.5)
 
 ```

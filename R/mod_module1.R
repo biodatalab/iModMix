@@ -1271,11 +1271,11 @@ mod_module1_server <- function(id){
     cluster_assignments_Data1 <- reactive({
       cluster = as.data.frame(hierarchical_cluster1()$hcCluster_assignments)
       if (is.null(Metab_annot())) {
-        cluster_assignments_D1 <- cluster_assignments_genes(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
+        cluster_assignments_D1 <- cluster_assignments(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
       } else {
         Metab_annot = Metab_annot()
         annot_Uni <- Metab_annot[Metab_annot$Feature_ID %in% colnames(partial_cors1()$par_cor), ]
-        cluster_assignments_D1 <- cluster_assignments_genes(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping1)
+        cluster_assignments_D1 <- cluster_assignments(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping1)
       }
       return(list(cluster_assignments_D1 = cluster_assignments_D1))
     })
@@ -1826,11 +1826,11 @@ mod_module1_server <- function(id){
     cluster_assignments_Data2 <- reactive({
       cluster = as.data.frame(hierarchical_cluster2()$hcCluster_assignments)
       if (is.null(Prot_annot())) {
-        cluster_assignments_D2 <- cluster_assignments_genes(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
+        cluster_assignments_D2 <- cluster_assignments(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
       } else {
         Prot_annot = Prot_annot()
         annot_Uni <- Prot_annot[Prot_annot$Feature_ID %in% colnames(partial_cors2()$par_cor), ]
-        cluster_assignments_D2 <- cluster_assignments_genes(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping2)
+        cluster_assignments_D2 <- cluster_assignments(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping2)
       }
       return(list(cluster_assignments_D2 = cluster_assignments_D2))
     })
@@ -2372,11 +2372,11 @@ mod_module1_server <- function(id){
     cluster_assignments_Data3 <- reactive({
       cluster = as.data.frame(hierarchical_cluster3()$hcCluster_assignments)
       if (is.null(Gene_annot())) {
-        cluster_assignments_D3 <- cluster_assignments_genes(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
+        cluster_assignments_D3 <- cluster_assignments(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
       } else {
         Gene_annot = Gene_annot()
         annot_Uni <- Gene_annot[Gene_annot$Feature_ID %in% colnames(partial_cors3()$par_cor), ]
-        cluster_assignments_D3 <- cluster_assignments_genes(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping3)
+        cluster_assignments_D3 <- cluster_assignments(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping3)
       }
       return(list(cluster_assignments_D3 = cluster_assignments_D3))
     })

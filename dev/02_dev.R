@@ -61,8 +61,7 @@ golem::add_module(name = "name_of_module2", with_test = TRUE) # Name of the modu
 ## Creates fct_* and utils_*
 golem::add_fct("partial_cors", with_test = TRUE)
 golem::add_fct("hierarchical_cluster", with_test = TRUE)
-golem::add_fct("cluster_assignments_metabolites", with_test = TRUE)
-golem::add_fct("cluster_assignments_genes", with_test = TRUE)
+golem::add_fct("cluster_assignments", with_test = TRUE)
 golem::add_fct("Assigment_genes_enrichr", with_test = TRUE)
 golem::add_fct("Eigengenes", with_test = TRUE)
 golem::add_fct("Modules_correlation", with_test = TRUE)

@@ -1,11 +1,11 @@
-#' cluster_assignments_genes
+#' cluster_assignments
 #'
 #' @description Cluster assignments with annotation.
 #' @param cluster A data frame containing cluster assignments.
 #' @param PhenoData A data frame with the annotation names of the Dataset. Should have a column called Feature_ID.
 #' @return A data frame containing cluster assignments and selected columns by user.
 #' @export
-cluster_assignments_genes <- function(cluster, PhenoData = NULL, selected_columns = NULL) {
+cluster_assignments <- function(cluster, PhenoData = NULL, selected_columns = NULL) {
   if (is.null(PhenoData)) {
     cluster_annot <- cluster
     cluster_annot$feature_name <- cluster_annot$feature
