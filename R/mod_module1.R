@@ -2879,7 +2879,7 @@ mod_module1_server <- function(id){
     })
 
     variables_Screening_12_2 <- reactive({
-      names(Metab_annot())[-which(names(Prot_annot()) == "Feature_ID")]
+      names(Prot_annot())[-which(names(Prot_annot()) == "Feature_ID")]
     })
 
     observe({
