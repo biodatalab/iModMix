@@ -1365,9 +1365,9 @@ mod_module1_server <- function(id){
       updateSelectInput(session, "databaseSelector1", choices = databaseSelectorListData1()$choices)
     })
 
-    #curl::has_internet()
+    curl::has_internet()
     assign("has_internet_via_proxy", TRUE, environment(curl::has_internet))
-    #httr::set_config(httr::config(ssl_verifypeer = 0L))
+    httr::set_config(httr::config(ssl_verifypeer = 0L))
     requireNamespace("enrichR", quietly = TRUE)
     enrichR::listEnrichrSites()
 

@@ -29,7 +29,7 @@ Welcome to the Integrative Modules for Multi-omics data (iModMix) Shiny app. Thi
 </style>
 
 <div class="github-button">
-  <a href="https://github.com/IsisNarvaez/iModMix">
+  <a href="hhttps://github.com/biodatalab/iModMix"> 
     <img src="https://github.com/favicon.ico" width="30" height="30" alt="GitHub" />
     <span>iModMix GitHub repository</span>
   </a>
