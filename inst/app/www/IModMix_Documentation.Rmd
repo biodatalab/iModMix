@@ -56,4 +56,11 @@ In summary, this application will allow the user to perform multi-omic integrati
 - Generate a network of modules between variables.
 - Identification of top correlated modules with lists of variables of interest and generation of a correlation plot.
 
+## How to cite
+
+When using iModMix, please cite the following publication:
+
+Narváez-Bandera, I., Lui, A., Mekonnen, Y. A., Rubio, V., Sulman, N., Wilson, C., Ackerman, H., Ospina, o., Gonzalez-Calderon1 , G., Flores, E., Li, Q., Chen, A., Fridley, B., & Stewart, P. (2024). iModMix: Integrative Module Analysis for Multi-omics Data. bioRxiv, 2024-11.
+
+Read the full publication: https://www.biorxiv.org/content/biorxiv/early/2024/12/17/2024.11.12.623208.full.pdf
 
