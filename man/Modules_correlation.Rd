@@ -4,24 +4,14 @@
 \alias{Modules_correlation}
 \title{Modules_correlation}
 \usage{
-Modules_correlation(
-  eigengenes_Prot,
-  eigengenes_metab,
-  cluster_assignments_Prot,
-  cluster_assignments_metab,
-  threshold = 0.5
-)
+Modules_correlation(eigengenes_list, cluster_list, threshold = 0.5)
 }
 \arguments{
-\item{eigengenes_Prot}{A feature matrix with the first principal component of each protein cluster}
-
-\item{eigengenes_metab}{A feature matrix with the first principal component of each metabolomic cluster}
-
-\item{cluster_assignments_Prot}{data frame containing cluster_assignments and Enrichr terms}
-
-\item{cluster_assignments_metab}{data frame containing cluster_assignments}
-
 \item{threshold}{A numeric value to filter correlations. Default is 0.5}
+
+\item{eigengenes}{A feature matrix with the first principal component of each cluster}
+
+\item{cluster_assignments}{data frame containing cluster_assignments}
 }
 \value{
 Return the Top_correlations between Prot and metab eigengenes, graph of red, correlation plot

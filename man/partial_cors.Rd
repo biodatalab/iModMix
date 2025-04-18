@@ -4,7 +4,7 @@
 \alias{partial_cors}
 \title{partial_cors}
 \usage{
-partial_cors(Expression_mat)
+partial_cors(load_data)
 }
 \arguments{
 \item{Expression_mat}{A feature matrix (e.g. gene expression) with samples in columns and features (e.g. genes) in rows. Row names must be unique.}

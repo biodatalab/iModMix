@@ -4,15 +4,12 @@
 \alias{Eigengenes}
 \title{Eigengenes}
 \usage{
-Eigengenes(
-  Expression_mat = Expression_mat,
-  cluster_assignments = cluster_assignments
-)
+Eigengenes(load_data = load_data, cluster_assignments = cluster_assignments)
 }
 \arguments{
-\item{Expression_mat}{A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.}
-
 \item{cluster_assignments}{A vector of cluster assignments for each feature.}
+
+\item{Expression_mat}{A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.}
 }
 \value{
 A list containing:

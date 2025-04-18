@@ -116,16 +116,16 @@ mod_module1_ui <- function(id) {
                    type = "tabs",
                    tabPanel("Data Input",
                             h4("Expression data 1",
-                               shinyBS::bsButton("surf-infoMAM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            shinyBS::bsPopover(id = "surf-infoMAM", title = "More information",
-                                      content = HTML(paste0("Table reflecting the uploaded file <i> Abundance Data 1</i>. Check if the number of samples and the number of data_1 features are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a feature of interest. ")),
+                               shinyBS::bsButton("surfinfoMAM", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surfinfoMAM", title = "Information",
+                                      content = HTML(paste0("Table reflecting the uploaded file expression Data 1. Check if the number of samples and the number of data_1 features are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a feature of interest.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             DT::DTOutput(ns("infotable")),
                             DT::DTOutput(ns("table")),
                             h4("Principal component analysis for each phenotype",
                                shinyBS::bsButton("surf-infoMPCAPh", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surf-infoMPCAPh", title = "More information",
-                                      content = HTML(paste0("Drop-down menu displays conditions or sample descriptions provided with uploaded <i>Metadata</i>. Graph below displays Principal Component Analysis (PCA) plots representing each of your phenotype descriptions.")),
+                                      content = HTML(paste0("Drop-down menu displays conditions or sample descriptions provided with uploaded Metadata. Graph below displays Principal Component Analysis (PCA) plots representing each of your phenotype descriptions.")),
                                       placement = "right", trigger = "hover", options = list(container = "body") ),
                             selectInput(ns("phenotypeSelectorPCA"),
                                         label = "Select the phenotype of interest",
@@ -143,7 +143,8 @@ mod_module1_ui <- function(id) {
                             DT::DTOutput(ns("tableAnnot1"))
                    ),
                    tabPanel("Module Assignments",
-                            h4("Sparse partial correlations: data 1", shinyBS::bsButton("surfInfoMPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            h4("Sparse partial correlations: data 1",
+                               shinyBS::bsButton("surfInfoMPC", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
                             shinyBS::bsPopover(id = "surfInfoMPC", title = "More information",
                               content = HTML("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimate the partial correlation and captures only direct associations.</p> <p>Below is a preview of the sparse partial correlation of the first five features. The full .csv file for the sparse partial correlation calculations for all the features can be downloaded at the bottom of the table.</p>"),
                               placement = "right", trigger = "hover", options = list(container = "body")),
@@ -183,8 +184,8 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadheatmapEigenMetab"),
                                            "Eigenfeatures heatmap Image (.png)"),
                             h4("Cluster assignments enriched",
-                               shinyBS::bsButton("surf-info_PGCAE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            shinyBS::bsPopover(id = "surf-info_PGCAE", title = "More information",
+                               shinyBS::bsButton("surf-info_MGCAE", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-info_MGCAE", title = "More information",
                                                content = HTML(paste0("Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the dataset cluster descriptions on table below. Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr. The search bar can also be used to find the details of a protein/gene or module of interest. The full .csv file of Cluster Enrichments for dataset can be downloaded at the bottom of the table.")),
                                                placement = "right", trigger = "hover", options = list(container = "body")),
                             helpText(
@@ -571,8 +572,8 @@ mod_module1_ui <- function(id) {
                               )
                             ),
                             h4("Module screening",
-                               shinyBS::bsButton("surf-infoMS", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            shinyBS::bsPopover(id = "surf-infoMS", title = "More information",
+                               shinyBS::bsButton("surf-infoMS3", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
+                            shinyBS::bsPopover(id = "surf-infoMS3", title = "More information",
                                       content = HTML(paste0("The drop-down menu displays all modules generated by iModMix. Users can view the features within a selected module. If annotation data is available, it also shows the Gene Symbol. PCA loading and heatmap plots are generated to visualize the behavior of each specific module across the phenotype.")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
                             fluidRow(
@@ -922,7 +923,7 @@ mod_module1_ui <- function(id) {
                                                     "Top_5" = 5)),
                             h4("Features from data 2",
                                shinyBS::bsButton("surf-info_LofMet3", label = "", icon = icon("info", lib = "font-awesome"), style = "default", size = "extra-small")),
-                            shinyBS::bsPopover(id = "surf-info_LofMet", title = "More information",
+                            shinyBS::bsPopover(id = "surf-info_LofMet3", title = "More information",
                                                content = HTML(paste0("<p> Displays the list of features within a Data 1 module that is highly correlated with a Data 2 module. The Data 1 module ID is specified first, followed by the list of constituent metabolites. This information facilitates further pathway analysis and provides valuable insights into the relationships between metabolites and proteins. </p> <p> The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table. </p>")),
                                                placement = "right", trigger = "hover", options = list(container = "body")
 
@@ -1187,10 +1188,10 @@ mod_module1_server <- function(id){
     partial_cors1 <- reactive({
       withProgress(message = 'Calculating partial correlations Data 1...', value = 0, {
         if (is.null(demo_par_cor_Metab()) && is.null(demo_par_cor_Metab_All())) {
-          req(Metab_exp())
-          Expression_mat <- Metab_exp()
+          req(load_data1()$feature_mat_t_imp_data)
+          load_data1 = load_data1()$feature_mat_t_imp_data
           Sys.sleep(5)
-          par_cor1 <- partial_cors(Expression_mat = Expression_mat)
+          par_cor1 <- partial_cors(load_data = load_data1, rho = .25)
         } else if (demo_par_cor_Metab()) {
           Sys.sleep(5)
           par_cor1 <- load_partial_cor_metab()
@@ -1300,10 +1301,10 @@ mod_module1_server <- function(id){
     )
 
     Eigengene1 <- reactive({
-      req(Metab_exp())
-      Expression_mat = Metab_exp()
+      req(load_data1()$feature_mat_t_imp_data)
+      load_data = load_data1()$feature_mat_t_imp_data
       Cluster_assignments = hierarchical_cluster1()$hcCluster_assignments[,3]
-      Eigengenes = Eigengenes( Expression_mat = Expression_mat, cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
+      Eigengenes = Eigengenes( load_data = load_data, cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
       return(list(Eigengenes = Eigengenes))
     })
 
@@ -1740,10 +1741,10 @@ mod_module1_server <- function(id){
     partial_cors2 <- reactive({
       withProgress(message = 'Calculating partial correlations Data 2...', value = 0, {
         if (is.null(demo_par_cor_Prot()) && is.null(demo_par_cor_Prot_All())) {
-          req(Prot_exp())
-          Expression_mat <- Prot_exp()
+          req(load_data2()$feature_mat_t_imp_data)
+          load_data2 = load_data2()$feature_mat_t_imp_data
           Sys.sleep(5)
-          par_cor <- partial_cors(Expression_mat = Expression_mat)
+          par_cor <- partial_cors(load_data = load_data2, rho = .25)
         } else if (demo_par_cor_Prot()) {
           Sys.sleep(5)
           par_cor <- load_partial_cor_RNA()
@@ -1855,10 +1856,10 @@ mod_module1_server <- function(id){
     )
 
     Eigengene2 <- reactive({
-      req(Prot_exp())
-      Expression_mat = Prot_exp()
+      req(load_data2()$feature_mat_t_imp_data)
+      load_data = load_data2()$feature_mat_t_imp_data
       Cluster_assignments = hierarchical_cluster2()$hcCluster_assignments[,3]
-      Eigengenes = Eigengenes(Expression_mat = Expression_mat,
+      Eigengenes = Eigengenes(load_data = load_data,
                               cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
       return(list(Eigengenes = Eigengenes))
     })
@@ -2286,10 +2287,10 @@ mod_module1_server <- function(id){
     partial_cors3 <- reactive({
       withProgress(message = 'Calculating partial correlations Data 3...', value = 0, {
         if (is.null(demo_par_cor_Prot()) && is.null(demo_par_cor_Prot_All())) {
-          req(Gene_exp())
-          Expression_mat <- Gene_exp()
+          req(load_data3()$feature_mat_t_imp_data)
+          load_data3 = load_data3()$feature_mat_t_imp_data
           Sys.sleep(5)
-          par_cor <- partial_cors(Expression_mat = Expression_mat)
+          par_cor <- partial_cors(load_data = load_data3, rho = .25)
         } else if (demo_par_cor_Prot()) {
           Sys.sleep(5)
           par_cor <- load_partial_cor_RNA()
@@ -2452,10 +2453,10 @@ mod_module1_server <- function(id){
     )
 
     Eigengene3 <- reactive({
-      req(Gene_exp())
-      Expression_mat = Gene_exp()
+      req(load_data3()$feature_mat_t_imp_data)
+      load_data = load_data3()$feature_mat_t_imp_data
       Cluster_assignments = hierarchical_cluster3()$hcCluster_assignments[,3]
-      Eigengenes = Eigengenes(Expression_mat = Expression_mat,
+      Eigengenes = Eigengenes(load_data = load_data,
                               cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
       return(list(Eigengenes = Eigengenes))
     })
@@ -2892,15 +2893,15 @@ mod_module1_server <- function(id){
       Cor_Data1_Data2 = as.data.frame(Cor_Data_n()$Cor_list[[1]])
       cluster_assignments_D1 = cluster_assignments_Data1()$cluster_assignments_D1
       cluster_assignments_D2 = cluster_assignments_Data2()$cluster_assignments_D2
-      req(Metab_exp())
-      ExpressionD1 = Metab_exp()
-      req(Prot_exp())
-      ExpressionD2 = Prot_exp()
+      req(load_data1()$feature_mat_t_imp_data)
+      load_data1 = load_data1()$feature_mat_t_imp_data
+      req(load_data2()$feature_mat_t_imp_data)
+      load_data2 = load_data2()$feature_mat_t_imp_data
       ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Datai_Dataj = Cor_Data1_Data2,
                                                      cluster_assignments_D1 = cluster_assignments_D1,
                                                      cluster_assignments_D2 = cluster_assignments_D2,
-                                                     ExpressionD1 = ExpressionD1,
-                                                     ExpressionD2 = ExpressionD2,
+                                                     load_data1 = load_data1,
+                                                     load_data2 = load_data2,
                                                      top_n = top_n) #$correlation_matrices_list
       return(list(
         Top_correlations = ImpVar_Prot_Metab$Top_correlations,
@@ -3207,15 +3208,15 @@ mod_module1_server <- function(id){
       Cor_Data1_Data3 = as.data.frame(Cor_Data_n()$Cor_list[[2]])
       cluster_assignments_D1 = cluster_assignments_Data1()$cluster_assignments_D1
       cluster_assignments_D3 = cluster_assignments_Data3()$cluster_assignments_D3
-      req(Metab_exp())
-      ExpressionD1 = Metab_exp()
-      req(Gene_exp())
-      ExpressionD3 = Gene_exp()
+      req(load_data1()$feature_mat_t_imp_data)
+      load_data1 = load_data1()$feature_mat_t_imp_data
+      req(load_data3()$feature_mat_t_imp_data)
+      load_data3 = load_data3()$feature_mat_t_imp_data
       ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Datai_Dataj = Cor_Data1_Data3,
                                                      cluster_assignments_D1 = cluster_assignments_D1,
                                                      cluster_assignments_D2 = cluster_assignments_D3,
-                                                     ExpressionD1 = ExpressionD1,
-                                                     ExpressionD2 = ExpressionD3,
+                                                     load_data1 = load_data1,
+                                                     load_data2 = load_data3,
                                                      top_n = top_n) #$correlation_matrices_list
       return(list(
         Top_correlations = ImpVar_Prot_Metab$Top_correlations,
@@ -3523,15 +3524,15 @@ mod_module1_server <- function(id){
       Cor_Data2_Data3 = as.data.frame(Cor_Data_n()$Cor_list[[3]])
       cluster_assignments_D2 = cluster_assignments_Data2()$cluster_assignments_D2
       cluster_assignments_D3 = cluster_assignments_Data3()$cluster_assignments_D3
-      req(Prot_exp())
-      ExpressionD2 = Prot_exp()
-      req(Gene_exp())
-      ExpressionD3 = Gene_exp()
+      req(load_data2()$feature_mat_t_imp_data)
+      load_data2 = load_data2()$feature_mat_t_imp_data
+      req(load_data3()$feature_mat_t_imp_data)
+      load_data3 = load_data3()$feature_mat_t_imp_data
       ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Datai_Dataj = Cor_Data2_Data3,
                                                      cluster_assignments_D1 = cluster_assignments_D2,
                                                      cluster_assignments_D2 = cluster_assignments_D3,
-                                                     ExpressionD1 = ExpressionD2,
-                                                     ExpressionD2 = ExpressionD3,
+                                                     load_data1 = load_data2,
+                                                     load_data2 = load_data3,
                                                      top_n = top_n) #$correlation_matrices_list
       return(list(
         Top_correlations = ImpVar_Prot_Metab$Top_correlations,

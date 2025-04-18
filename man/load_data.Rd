@@ -4,14 +4,14 @@
 \alias{load_data}
 \title{load_data}
 \usage{
-load_data(file_name)
+load_data(Expression_mat = Expression_mat)
 }
 \arguments{
-\item{file_name}{The name of the fle to upload.}
+\item{Expression_mat}{A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.}
 }
 \value{
-The return value, if any, from executing the function.
+A preprocessed data matrix.
 }
 \description{
-A fct function
+A function to load and preprocess data from a file.
 }

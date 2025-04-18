@@ -12,7 +12,7 @@ utils::globalVariables(c("missing_count"))
 #' @return A list containing important features and correlation matrices.
 #' @export
 FeaturesAnnot_correlation <- function(Cor_Datai_Dataj, cluster_assignments_D1, cluster_assignments_D2,
-                                      ExpressionD1 = ExpressionD1, ExpressionD2 = ExpressionD2, top_n = 5)  {
+                                      load_data1 = load_data1, load_data2 = load_data2, top_n = 5)  {
   # Select the top n correlations
   Top_correlations <- Cor_Datai_Dataj[order(-abs(Cor_Datai_Dataj$value)), ][1:top_n, ]
 
@@ -43,113 +43,15 @@ FeaturesAnnot_correlation <- function(Cor_Datai_Dataj, cluster_assignments_D1, c
     cluster_variables_Metab <- cluster_top_Metab$feature
     cluster_variables_Prot <- cluster_top_Prot$feature
 
-    # Filter expression matrices based on column names
-    ExpressionD1 = ExpressionD1
-    ExpressionD1$missing_count <- rowSums(is.na(ExpressionD1))
-    featureMetab_mat <- subset(ExpressionD1, missing_count <= 0.1 * (ncol(ExpressionD1) - 2))
-    featuresMetab <- featureMetab_mat$Feature_ID
-
-    metab_t <- t(featureMetab_mat[, -c(1, ncol(featureMetab_mat))])
-    colnames(metab_t) <- featuresMetab
-    metab_t <- metab_t[, apply(metab_t, 2, function(x) length(unique(x)) > 1)]
-
-    sd_values_metab <- apply(metab_t, 2, function(x) sd(x, na.rm = TRUE))
-    filtered_indices <- which(sd_values_metab > quantile(sd_values_metab, 0.25))
-
-    metab_t <- if (length(sd_values_metab) > 20000) {
-      if (length(filtered_indices) > 20000) {
-        metab_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
-      } else {
-        metab_t[, filtered_indices]
-      }
-    } else {
-      metab_t[, ]
-    }
-
-    metab_t = impute::impute.knn(metab_t, k = min(10, nrow(metab_t)))
-    metab_t= metab_t$data
-
-    metab_t <- as.matrix(scale(metab_t))
-
-    ExpressionD2 = ExpressionD2
-    ExpressionD2$missing_count <- rowSums(is.na(ExpressionD2))
-    featureProt_mat <- subset(ExpressionD2, missing_count <= 0.1 * (ncol(ExpressionD2) - 2))
-    featuresProt <- featureProt_mat$Feature_ID
-
-    Prot_t <- t(featureProt_mat[, -c(1, ncol(featureProt_mat))])
-    colnames(Prot_t) <- featuresProt
-    Prot_t <- Prot_t[, apply(Prot_t, 2, function(x) length(unique(x)) > 1)]
-
-    sd_values_Prot <- apply(Prot_t, 2, function(x) sd(x, na.rm = TRUE))
-    filtered_indices <- which(sd_values_Prot > quantile(sd_values_Prot, 0.25))
-
-    Prot_t <- if (length(sd_values_Prot) > 20000) {
-      if (length(filtered_indices) > 20000) {
-        Prot_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
-      } else {
-        Prot_t[, filtered_indices]
-      }
-    } else {
-      Prot_t[, ]
-    }
-
-    Prot_t = impute::impute.knn(Prot_t, k = min(10, nrow(Prot_t)))
-    Prot_t= Prot_t$data
-
-    Prot_t <- as.matrix(scale(Prot_t))
-
-    cluster_expression_matrix_Metab <- metab_t[, colnames(metab_t) %in% cluster_variables_Metab, drop = FALSE]
-    cluster_expression_matrix_Prot <- Prot_t[, colnames(Prot_t) %in% cluster_variables_Prot, drop = FALSE]
+    cluster_expression_matrix_Metab <- load_data1[, colnames(load_data1) %in% cluster_variables_Metab, drop = FALSE]
+    cluster_expression_matrix_Prot <- load_data2[, colnames(load_data2) %in% cluster_variables_Prot, drop = FALSE]
 
     # Calculate and store the correlation matrix between Prot and Metab expression matrices
     correlation_matrix <- cor(cluster_expression_matrix_Metab, cluster_expression_matrix_Prot, method = 'spearman', use = "pairwise.complete.obs")
 
-    #correlation_matrix2 <- correlation_matrix
-
-    #correlation_matrix
-
-    # # Replace column names with corresponding values from cluster_assignments_D1$feature_name
-    # metab_annotation_match <- match(rownames(correlation_matrix), cluster_assignments_D1$feature)
-    # non_na_KEGG <- !is.na(cluster_assignments_D1$feature_name)
-    # correlation_matrix_rows <- ifelse(!is.na(metab_annotation_match) & non_na_KEGG[metab_annotation_match],
-    #                                   cluster_assignments_D1$feature_name[metab_annotation_match],
-    #                                   rownames(correlation_matrix))
-    # rownames(correlation_matrix) <- correlation_matrix_rows
-    #
-    # # Replace row names with corresponding values from cluster_assignments_D2$feature_name
-    # prot_annotation_match <- match(colnames(correlation_matrix), cluster_assignments_D2$feature)
-    # non_na_symbols <- !is.na(cluster_assignments_D2$feature_name)
-    # correlation_matrix_cols <- ifelse(!is.na(prot_annotation_match) & non_na_symbols[prot_annotation_match],
-    #                                   cluster_assignments_D2$feature_name[prot_annotation_match],
-    #                                   colnames(correlation_matrix))
-    # colnames(correlation_matrix) <- correlation_matrix_cols
-    #
-    # #correlation_matrix2
-    # # Replace row names with corresponding values from cluster_assignments_D2$feature_name
-    # prot_annotation_match <- match(colnames(correlation_matrix2), cluster_assignments_D2$feature)
-    # non_na_symbols <- !is.na(cluster_assignments_D2$feature_name)
-    # correlation_matrix_cols <- ifelse(!is.na(prot_annotation_match) & non_na_symbols[prot_annotation_match],
-    #                                   cluster_assignments_D2$feature_name[prot_annotation_match],
-    #                                   colnames(correlation_matrix2))
-    # colnames(correlation_matrix2) <- correlation_matrix_cols
-    #
-    # # Store cluster-specific expression matrices
-    # colnames(cluster_expression_matrix_Metab) <- correlation_matrix_rows
-    # colnames(cluster_expression_matrix_Prot) <- correlation_matrix_cols
     expression_matrices_list[[paste("Expression_Matrix_Cluster_Metab_", i)]] <- cluster_expression_matrix_Metab
     expression_matrices_list[[paste("Expression_Matrix_Cluster_Prot_", i)]] <- cluster_expression_matrix_Prot
 
-
-    # # Replace column names in correlation_matrix2 with corresponding values from cluster_assignments_D1$feature_map
-    # metab_annotation_match2 <- match(rownames(correlation_matrix2), cluster_assignments_D1$feature)
-    # non_na_KEGG2 <- !is.na(cluster_assignments_D1$feature_map)
-    # correlation_matrix_rows2 <- ifelse(!is.na(metab_annotation_match2) & non_na_KEGG2[metab_annotation_match2],
-    #                                    cluster_assignments_D1$feature_map[metab_annotation_match2],
-    #                                    rownames(correlation_matrix2))
-    # rownames(correlation_matrix2) <- correlation_matrix_rows2
-
-
-    # Extract column names omitting NA values and empty strings
     Important_features_Metab <- na.omit(rownames(correlation_matrix))
     Important_features_list[[paste("Important_features_Cluster_Metab_", i)]] <- Important_features_Metab[Important_features_Metab != ""]
 

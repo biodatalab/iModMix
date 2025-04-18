@@ -5,26 +5,26 @@
 \title{FeaturesAnnot_correlation}
 \usage{
 FeaturesAnnot_correlation(
-  Cor_Prot_Metab,
-  cluster_assignments_Prot,
-  cluster_assignments_metab,
-  ExpressionProt_mat = ExpressionProt_mat,
-  ExpressionMetab_mat = ExpressionMetab_mat,
+  Cor_Datai_Dataj,
+  cluster_assignments_D1,
+  cluster_assignments_D2,
+  load_data1 = load_data1,
+  load_data2 = load_data2,
   top_n = 5
 )
 }
 \arguments{
-\item{Cor_Prot_Metab}{A data frame with the first principal component of each protein cluster and their correlations.}
+\item{Cor_Datai_Dataj}{A data frame with the first principal component of each protein cluster and their correlations.}
 
-\item{cluster_assignments_Prot}{A data frame containing cluster assignments and Enrichr terms for proteins.}
+\item{cluster_assignments_D1}{A data frame containing cluster assignments for metabolites.}
 
-\item{cluster_assignments_metab}{A data frame containing cluster assignments for metabolites.}
-
-\item{ExpressionProt_mat}{A feature matrix (e.g., protein expression) with samples in rows and features (e.g., proteins) in columns. Row names must be unique.}
-
-\item{ExpressionMetab_mat}{A feature matrix (e.g., metabolite expression) with samples in rows and features (e.g., metabolites) in columns. Row names must be unique.}
+\item{cluster_assignments_D2}{A data frame containing cluster assignments and Enrichr terms for proteins.}
 
 \item{top_n}{The number of top correlations to select.}
+
+\item{ExpressionD2}{A feature matrix (e.g., protein expression) with samples in rows and features (e.g., proteins) in columns. Row names must be unique.}
+
+\item{ExpressionD1}{A feature matrix (e.g., metabolite expression) with samples in rows and features (e.g., metabolites) in columns. Row names must be unique.}
 }
 \value{
 A list containing important features and correlation matrices.

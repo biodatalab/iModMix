@@ -3,6 +3,9 @@
 #' @description A function to load and preprocess data from a file.
 #' @param Expression_mat A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.
 #' @return A preprocessed data matrix.
+#'
+#' @export
+#'
 load_data <- function(Expression_mat = Expression_mat) {
   data <- Expression_mat
 

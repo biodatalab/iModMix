@@ -45,17 +45,19 @@ run_app()
 
 # Run through functions
 # Data 1 modules 
-parcorData1 <- partial_cors(Data1_exp)
+load_data1 <- load_data(Data_exp1)
+parcorData1 <- partial_cors(load_data1)
 hcData1 <- hierarchical_cluster(parcor_mat = parcorData1, tom = TRUE, min_module_size = 10)
 cluster_assig_Data1 <- cluster_assignments(as.data.frame(hcData1$cluster_assignments))
-eigenData1 <- Eigengenes(Data1_exp, hcData1$cluster_assignments[,3])
+eigenData1 <- Eigengenes(load_data1, hcData1$cluster_assignments[,3])
 eigengenes_Data1 <- eigenData1$module_eigenmetab_Me
 
 # Data 2 modules 
-parcorData2 <- partial_cors(Data2_exp)
+load_data2 <- load_data(Data_exp2)
+parcorData2 <- partial_cors(load_data2)
 hcData2 <- hierarchical_cluster(parcor_mat = parcorData2, tom = TRUE, min_module_size = 10)
 cluster_assig_Data2 <- cluster_assignments(as.data.frame(hcData2$cluster_assignments))
-eigenData2 <- Eigengenes(Data2_exp, hcData2$cluster_assignments[,3])
+eigenData2 <- Eigengenes(load_data2, hcData2$cluster_assignments[,3])
 eigengenes_Data2 <- eigenData2$module_eigenmetab_Me
 
 # Integration of Data 1 and Data 2
