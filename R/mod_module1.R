@@ -2745,11 +2745,17 @@ mod_module1_server <- function(id){
     })
 
     output$tableCorrelation <- DT::renderDataTable({
-      df4 = as.data.frame(Cor_Data_n()$Top_cor_Prot_metab)
+      TopCor = as.data.frame(Cor_Data_n()$Top_cor_Prot_metab)
+      nodes <- as.data.frame(Cor_Data_n()$nodes)
+      df4from <- merge(TopCor, nodes, by.x = "from", by.y = "id", all.x = TRUE)
+      names(df4from)[names(df4from) == "label"] = "# of var into the From_module"
+      df4 <- merge(df4from, nodes, by.x = "to", by.y = "id", all.x = TRUE)
       names(df4)[names(df4) == "from"] = "From_module_id"
       names(df4)[names(df4) == "to"] = "To_module_id"
-      names(df4)[names(df4) == "value"] = "Correlation"
+      names(df4)[names(df4) == "value.x"] = "Correlation"
+      names(df4)[names(df4) == "label"] = "# of var into the To_module"
       rownames(df4) <- NULL
+      df4 = df4[,c("From_module_id", "# of var into the From_module", "To_module_id", "# of var into the To_module", "Correlation")]
       DT::datatable(df4)
     })
 
