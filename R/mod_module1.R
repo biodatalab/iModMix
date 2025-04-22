@@ -3939,24 +3939,43 @@ mod_module1_server <- function(id){
 
     observeEvent(input$runDemo, {
       withProgress(message = 'Loading example data...', value = 0, {
+        demo_data_path <- paste0(here::here(),"/inst/Example_data/ccRCC4_Data")
+        file_path_metab_exp <- file.path(demo_data_path, "Metab_exp.rds")
+        file_path_metab_annot <- file.path(demo_data_path, "Metab_annot.rds")
+        file_path_RNA_exp <- file.path(demo_data_path, "RNA_exp.rds")
+        file_path_RNA_annot <- file.path(demo_data_path, "RNA_annot.rds")
+        file_path_metadata <- file.path(demo_data_path, "Metadata.rds")
+        file_path_partial_cor_metab <- file.path(demo_data_path, "PartialCorMetabolites.rds")
+        file_path_partial_cor_RNA <- file.path(demo_data_path, "PartialCorGenes.rds")
+        file_path_enrichment <- file.path(demo_data_path, "Enrichment.rds")
+
+        precargados_metab_exp <- readRDS(file_path_metab_exp)
+        precargados_metab_annot <- readRDS(file_path_metab_annot)
+        precargados_RNA_exp <- readRDS(file_path_RNA_exp)
+        precargados_RNA_annot <- readRDS(file_path_RNA_annot)
+        precargados_metadata <- readRDS(file_path_metadata)
+        precargados_partial_cor_metab <- readRDS(file_path_partial_cor_metab)
+        precargados_partial_cor_RNA <- readRDS(file_path_partial_cor_RNA)
+        precargados_enrichment <- readRDS(file_path_enrichment)
+
         incProgress(0, detail = 'Loading Metab_exp.csv')
-        Metab_exp(load_metab_exp())
+        Metab_exp(precargados_metab_exp)
         Sys.sleep(5)
 
         incProgress(10, detail = 'Loading Metab_annot.csv')
-        Metab_annot(load_metab_annot())
+        Metab_annot(precargados_metab_annot)
         Sys.sleep(3)
 
         incProgress(20, detail = 'Loading Prot_exp.csv')
-        Prot_exp(load_RNA_exp())
+        Prot_exp(precargados_RNA_exp)
         Sys.sleep(6)
 
         incProgress(30, detail = 'Loading Prot_annot.csv')
-        Prot_annot(load_RNA_annot())
+        Prot_annot(precargados_RNA_annot)
         Sys.sleep(3)
 
         incProgress(50, detail = 'Loading Metadata.csv...')
-        metadata(load_metadata())
+        metadata(precargados_metadata)
         Sys.sleep(2)
 
         demo_par_cor_Metab(TRUE)
@@ -3966,7 +3985,7 @@ mod_module1_server <- function(id){
         demo_enrich_Prot(TRUE)
         demo_enrich_Gene(TRUE)
         demo_enrich_Prot_All(FALSE)
-        demo_enrich_Gene_All (FALSE)
+        demo_enrich_Gene_All(FALSE)
 
         updateSelectInput(session, "Mapping1", choices = variables_mapping1(), selected = c("Metabolite", "KEGG"))
         updateSelectInput(session, "Screening1", choices = variables_Screening1(), selected = c("Metabolite", "KEGG"))
@@ -3975,7 +3994,6 @@ mod_module1_server <- function(id){
         updateSelectInput(session, "Screening2", choices = variables_Screening2(), selected = "Symbol")
         updateSelectInput(session, "Screening12_1", choices = variables_Screening_12_1(), selected = c("Metabolite", "KEGG"))
         updateSelectInput(session, "Screening12_2", choices = variables_Screening_12_2(), selected = "Symbol")
-
 
         updateSelectInput(session, "databaseSelector2", selected = "GO_Biological_Process_2023")
         updateSliderInput(session, "pValueThresholdcor", value = 0.60)
@@ -3989,24 +4007,43 @@ mod_module1_server <- function(id){
 
     observeEvent(input$runDemoAll, {
       withProgress(message = 'Loading example data...', value = 0, {
+        demo_data_pathAll <- paste0(here::here(),"/inst/Example_data/FloresData_K_TK")
+        file_path_metab_expAll <- file.path(demo_data_pathAll, "Metab_exp.rds")
+        file_path_metab_annotAll <- file.path(demo_data_pathAll, "Metab_annot.rds")
+        file_path_RNA_expAll <- file.path(demo_data_pathAll, "Prot_exp.rds")
+        file_path_RNA_annotAll <- file.path(demo_data_pathAll, "Prot_annot.rds")
+        file_path_metadataAll <- file.path(demo_data_pathAll, "Metadata.rds")
+        file_path_partial_cor_metabAll <- file.path(demo_data_pathAll, "PartialCorMetabolites.rds")
+        file_path_partial_cor_RNAAll <- file.path(demo_data_pathAll, "PartialCorProt.rds")
+        file_path_enrichmentAll <- file.path(demo_data_pathAll, "EnrichmentMouse.rds")
+
+        precargados_metab_expAll <- readRDS(file_path_metab_expAll)
+        precargados_metab_annotAll <- readRDS(file_path_metab_annotAll)
+        precargados_RNA_expAll <- readRDS(file_path_RNA_expAll)
+        precargados_RNA_annotAll <- readRDS(file_path_RNA_annotAll)
+        precargados_metadataAll <- readRDS(file_path_metadataAll)
+        precargados_partial_cor_metabAll <- readRDS(file_path_partial_cor_metabAll)
+        precargados_partial_cor_RNAAll <- readRDS(file_path_partial_cor_RNAAll)
+        precargados_enrichmentAll <- readRDS(file_path_enrichmentAll)
+
         incProgress(0, detail = 'Loading Metab_exp.csv')
-        Metab_exp(load_metab_expAll())
+        Metab_exp(precargados_metab_expAll)
         Sys.sleep(5)
 
         incProgress(10, detail = 'Loading Metab_annot.csv')
-        Metab_annot(load_metab_annotAll())
+        Metab_annot(precargados_metab_annotAll)
         Sys.sleep(3)
 
         incProgress(20, detail = 'Loading Prot_exp.csv')
-        Prot_exp(load_RNA_expAll())
+        Prot_exp(precargados_RNA_expAll)
         Sys.sleep(6)
 
         incProgress(30, detail = 'Loading Prot_annot.csv')
-        Prot_annot(load_RNA_annotAll())
+        Prot_annot(precargados_RNA_annotAll)
         Sys.sleep(3)
 
         incProgress(50, detail = 'Loading Metadata.csv...')
-        metadata(load_metadataAll())
+        metadata(precargados_metadataAll)
         Sys.sleep(2)
 
         demo_par_cor_Metab(FALSE)
@@ -4016,7 +4053,7 @@ mod_module1_server <- function(id){
         demo_enrich_Prot(FALSE)
         demo_enrich_Gene(FALSE)
         demo_enrich_Prot_All(TRUE)
-        demo_enrich_Gene_All (TRUE)
+        demo_enrich_Gene_All(TRUE)
 
         updateSelectInput(session, "Mapping1", choices = variables_mapping1(), selected = c("Metabolite", "KEGG"))
         updateSelectInput(session, "Screening1", choices = variables_Screening1(), selected = c("Metabolite", "KEGG"))
@@ -4033,6 +4070,7 @@ mod_module1_server <- function(id){
         incProgress(100, detail = 'Complete!')
       })
     })
+
 
 
   })
