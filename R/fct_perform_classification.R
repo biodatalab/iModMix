@@ -64,12 +64,12 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
         data.frame(
           Variable = x,
           Class = paste(class_label, "vs Rest"),
-          Result_t = round(t_test_result$statistic, 4),
-          Result_pValue = round(t_test_result$p.value, 4)
+          Result_t = t_test_result$statistic,
+          Result_pValue = t_test_result$p.value
         )
       })
 
-      t_test_results$Adjusted_pValue <- round(p.adjust(t_test_results$Result_pValue, method = "BH"), 4)
+      t_test_results$Adjusted_pValue <- p.adjust(t_test_results$Result_pValue, method = "BH")
       t_test_results <- t_test_results[t_test_results$Result_pValue <= significance_threshold, ]
       t_test_results <- t_test_results[order(t_test_results$Result_pValue), ]
 

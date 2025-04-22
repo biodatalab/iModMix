@@ -1449,11 +1449,13 @@ mod_module1_server <- function(id){
         plots = Classification_Data$plots))
     })
 
-
     output$classification_results <- DT::renderDataTable({
       df <- Classification_Data1()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "Module_id"
+      names(df)[names(df) == "Variable"] <- "Module_id"
+      df$Result_t <- format(df$Result_t, scientific = TRUE)
+      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
+      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
     })
 
@@ -1997,6 +1999,9 @@ mod_module1_server <- function(id){
       df <- Classification_Data2()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Module_id"
+      df$Result_t <- format(df$Result_t, scientific = TRUE)
+      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
+      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
     })
 
@@ -2213,7 +2218,11 @@ mod_module1_server <- function(id){
     })
 
     pheno_variablesPCA3 <- reactive({
-      names(metadata())[-which(names(metadata()) == "Sample")]
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
+        names(metadata())[names(metadata()) != "Sample"]
+      }
     })
 
     observe({
@@ -2286,18 +2295,10 @@ mod_module1_server <- function(id){
     # Module Assigments
     partial_cors3 <- reactive({
       withProgress(message = 'Calculating partial correlations Data 3...', value = 0, {
-        if (is.null(demo_par_cor_Prot()) && is.null(demo_par_cor_Prot_All())) {
           req(load_data3()$feature_mat_t_imp_data)
           load_data3 = load_data3()$feature_mat_t_imp_data
           Sys.sleep(5)
           par_cor <- partial_cors(load_data = load_data3, rho = .25)
-        } else if (demo_par_cor_Prot()) {
-          Sys.sleep(5)
-          par_cor <- load_partial_cor_RNA()
-        } else if (demo_par_cor_Prot_All()) {
-          Sys.sleep(5)
-          par_cor <- load_partial_cor_RNAAll()
-        }
         incProgress(100, detail = 'Complete!')
         list(par_cor = par_cor)
       })
@@ -2414,20 +2415,12 @@ mod_module1_server <- function(id){
     Data3_enrich <- reactive({
       req(input$runEnrichment3)
       withProgress(message = 'Performing enrichment analysis...', value = 0, {
-        if (is.null(demo_enrich_Gene()) && is.null(demo_enrich_Gene_All ())) {
           req(input$databaseSelector3)
           selected_database <- input$databaseSelector3
           cluster_assignments_ProtGenes <- cluster_assignments_Data3()$cluster_assignments_D3
           cluster_assignments_Data3_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
                                                                      database = selected_database)
-          Sys.sleep(1)
-        } else if (demo_enrich_Gene()) {
           Sys.sleep(5)
-          cluster_assignments_Data3_enrich <- load_enrichment()
-        } else if (demo_enrich_Gene_All ()) {
-          Sys.sleep(5)
-          cluster_assignments_Data3_enrich <- load_enrichmentAll()
-        }
         incProgress(100, detail = 'Complete!')
         list(cluster_assignments_Data3_enrich = cluster_assignments_Data3_enrich)
       })
@@ -2509,14 +2502,21 @@ mod_module1_server <- function(id){
     )
 
     # Phenotype
-
     output$tableM3 <- DT::renderDataTable({
-      df <- metadata()
-      DT::datatable(df)
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
+        df <- metadata()
+        DT::datatable(df)
+      }
     })
 
     pheno_variables3 <- reactive({
-      names(metadata())[-which(names(metadata()) == "Sample")]
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
+        names(metadata())[names(metadata()) != "Sample"]
+      }
     })
 
     observe({
@@ -2541,6 +2541,9 @@ mod_module1_server <- function(id){
       df <- Classification_Data3()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Module_id"
+      df$Result_t <- format(df$Result_t, scientific = TRUE)
+      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
+      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
     })
 
@@ -3038,6 +3041,9 @@ mod_module1_server <- function(id){
       df <- Classification_imp_12_1()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Feature"
+      df$Result_t <- format(df$Result_t, scientific = TRUE)
+      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
+      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
     })
 
@@ -3128,6 +3134,9 @@ mod_module1_server <- function(id){
       df <- Classification_imp_12_2()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Feature"
+      df$Result_t <- format(df$Result_t, scientific = TRUE)
+      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
+      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
     })
 
@@ -3258,26 +3267,38 @@ mod_module1_server <- function(id){
     })
 
     output$ImportantVariables_13 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df4 = as.data.frame(ImpVar_D1_D3()$Top_correlations)
       names(df4)[names(df4) == "from"] = "From"
       names(df4)[names(df4) == "to"] = "To"
       names(df4)[names(df4) == "value"] = "Correlation"
       rownames(df4) <- NULL
       DT::datatable(df4)
+      }
     })
 
     output$CorplotImp13 <- renderPlot({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features13()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
       df4_2 <- df_list[[selected_index]]$df4_2
+      }
     })
 
     output$Correlation_mod13 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features13()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
       df4 <- df_list[[selected_index]]$df4
       names(df4)[names(df4) == "Data2"] = "Data3"
       DT::datatable(data.frame(df4))
+      }
     })
 
     # Render the download handler
@@ -3294,6 +3315,9 @@ mod_module1_server <- function(id){
     )
 
     output$cluster_assignments_features13_3 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features13()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
       df <- df_list[[selected_index]]$df1_2
@@ -3306,9 +3330,13 @@ mod_module1_server <- function(id){
         df_features <- merge(df_features, AnnoMeta[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
       }
       DT::datatable(df_features)
+      }
     })
 
     output$cluster_assignments_summary13_3 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features13()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
       df <- df_list[[selected_index]]$df1_2
@@ -3320,6 +3348,7 @@ mod_module1_server <- function(id){
       SummaryData <- dplyr::rename(SummaryData, `Module_id` = col)
 
       DT::datatable(SummaryData)
+      }
     })
 
     output$downloadcluster_assignments13_3 <- downloadHandler(
@@ -3351,10 +3380,17 @@ mod_module1_server <- function(id){
     })
 
     output$classification_results_imp_13_1 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df <- Classification_imp_13_1()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Feature"
+      df$Result_t <- format(df$Result_t, scientific = TRUE)
+      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
+      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
+      }
     })
 
     output$classification_plot_1_all_imp_13_1 <- renderPlot({
@@ -3385,6 +3421,9 @@ mod_module1_server <- function(id){
     })
 
     output$cluster_assignments_features13_1 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features13()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
       df <- df_list[[selected_index]]$df1_1
@@ -3397,9 +3436,13 @@ mod_module1_server <- function(id){
         df_features <- merge(df_features, AnnoMeta[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
       }
       DT::datatable(df_features)
+      }
     })
 
     output$cluster_assignments_summary13_1 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features13()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
       df <- df_list[[selected_index]]$df1_1
@@ -3409,6 +3452,7 @@ mod_module1_server <- function(id){
       df_summary <- dplyr::select(df_summary, -cluster)
       df_summary <- dplyr::rename(df_summary, `Module_id` = col)
       DT::datatable(df_summary)
+      }
     })
 
     # Render the download handler
@@ -3441,10 +3485,17 @@ mod_module1_server <- function(id){
     })
 
     output$classification_results_imp_13_3 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df <- Classification_imp_13_3()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Feature"
+      df$Result_t <- format(df$Result_t, scientific = TRUE)
+      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
+      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
+      }
     })
 
     output$classification_plot_1_all_imp_13_3 <- renderPlot({
@@ -3475,15 +3526,23 @@ mod_module1_server <- function(id){
     })
 
     output$Important_features_13_1 <- renderText({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features13()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
       df5_1 <- df_list[[selected_index]]$df5_1
+      }
     })
 
     output$Important_features_13_3 <- renderText({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features13()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
       df5_2 <- df_list[[selected_index]]$df5_2
+      }
     })
 
     # Important features Data 2 - Data 3
@@ -3574,27 +3633,39 @@ mod_module1_server <- function(id){
     })
 
     output$ImportantVariables_23 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df4 = as.data.frame(ImpVar_D2_D3()$Top_correlations)
       names(df4)[names(df4) == "from"] = "From"
       names(df4)[names(df4) == "to"] = "To"
       names(df4)[names(df4) == "value"] = "Correlation"
       rownames(df4) <- NULL
       DT::datatable(df4)
+      }
     })
 
     output$CorplotImp23 <- renderPlot({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features23()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
       df4_2 <- df_list[[selected_index]]$df4_2
+      }
     })
 
     output$Correlation_mod23 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features23()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
       df4 <- df_list[[selected_index]]$df4
       names(df4)[names(df4) == "Data2"] = "Data3"
       names(df4)[names(df4) == "Data1"] = "Data2"
       DT::datatable(data.frame(df4))
+      }
     })
 
     # Render the download handler
@@ -3611,6 +3682,9 @@ mod_module1_server <- function(id){
     )
 
     output$cluster_assignments_features23_3 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features23()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
       df <- df_list[[selected_index]]$df1_2
@@ -3623,20 +3697,23 @@ mod_module1_server <- function(id){
         df_features <- merge(df_features, AnnoMeta[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
       }
       DT::datatable(df_features)
+      }
     })
 
     output$cluster_assignments_summary23_3 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features23()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
       df <- df_list[[selected_index]]$df1_2
       cluster <- unique(df$cluster)
       col <- unique(df$col)
       SummaryData <- data.frame(cluster = cluster, col = col, stringsAsFactors = FALSE)
-
       SummaryData <- dplyr::select(SummaryData, -cluster)
       SummaryData <- dplyr::rename(SummaryData, `Module_id` = col)
-
       DT::datatable(SummaryData)
+      }
     })
 
     output$downloadcluster_assignments23_3 <- downloadHandler(
@@ -3668,10 +3745,17 @@ mod_module1_server <- function(id){
     })
 
     output$classification_results_imp_23_2 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df <- Classification_imp_23_2()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Feature"
+      df$Result_t <- format(df$Result_t, scientific = TRUE)
+      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
+      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
+      }
     })
 
     output$classification_plot_1_all_imp_23_2 <- renderPlot({
@@ -3702,6 +3786,9 @@ mod_module1_server <- function(id){
     })
 
     output$cluster_assignments_features23_2 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features23()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
       df <- df_list[[selected_index]]$df1_1
@@ -3714,9 +3801,13 @@ mod_module1_server <- function(id){
         df_features <- merge(df_features, AnnoMeta[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
       }
       DT::datatable(df_features)
+      }
     })
 
     output$cluster_assignments_summary23_2 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features23()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
       df <- df_list[[selected_index]]$df1_1
@@ -3726,6 +3817,7 @@ mod_module1_server <- function(id){
       df_summary <- dplyr::select(df_summary, -cluster)
       df_summary <- dplyr::rename(df_summary, `Module_id` = col)
       DT::datatable(df_summary)
+      }
     })
 
     # Render the download handler
@@ -3758,10 +3850,17 @@ mod_module1_server <- function(id){
     })
 
     output$classification_results_imp_23_3 <- DT::renderDataTable({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df <- Classification_imp_23_3()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Feature"
+      df$Result_t <- format(df$Result_t, scientific = TRUE)
+      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
+      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
+      }
     })
 
     output$classification_plot_1_all_imp_23_3 <- renderPlot({
@@ -3792,15 +3891,23 @@ mod_module1_server <- function(id){
     })
 
     output$Important_features_23_2 <- renderText({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features23()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
       df5_1 <- df_list[[selected_index]]$df5_1
+      }
     })
 
     output$Important_features_23_3 <- renderText({
+      if (is.null(Gene_exp())) {
+        return(NULL)
+      } else {
       df_list <- Important_Features23()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
       df5_2 <- df_list[[selected_index]]$df5_2
+      }
     })
 
     # Demodata
@@ -3836,7 +3943,17 @@ mod_module1_server <- function(id){
         demo_enrich_Gene(TRUE)
         demo_enrich_Prot_All(FALSE)
         demo_enrich_Gene_All (FALSE)
-        updateSelectInput(session, "databaseSelector", selected = "GO_Biological_Process_2023")
+
+        updateSelectInput(session, "Mapping1", choices = variables_mapping1(), selected = c("Metabolite", "KEGG"))
+        updateSelectInput(session, "Screening1", choices = variables_Screening1(), selected = c("Metabolite", "KEGG"))
+        updateSelectInput(session, "Mapping2", choices = variables_mapping2(), selected = "Symbol")
+        updateCheckboxInput(session, "runEnrichment2", value = TRUE)
+        updateSelectInput(session, "Screening2", choices = variables_Screening2(), selected = "Symbol")
+        updateSelectInput(session, "Screening12_1", choices = variables_Screening_12_1(), selected = c("Metabolite", "KEGG"))
+        updateSelectInput(session, "Screening12_2", choices = variables_Screening_12_2(), selected = "Symbol")
+
+
+        updateSelectInput(session, "databaseSelector2", selected = "GO_Biological_Process_2023")
         updateSliderInput(session, "pValueThresholdcor", value = 0.60)
         updateSliderInput(session, "pValueThreshold_imp_12_1", value = 0.05)
         updateSliderInput(session, "pValueThreshold_imp_12_2", value = 0.05)
@@ -3876,7 +3993,16 @@ mod_module1_server <- function(id){
         demo_enrich_Gene(FALSE)
         demo_enrich_Prot_All(TRUE)
         demo_enrich_Gene_All (TRUE)
-        updateSelectInput(session, "databaseSelector", selected = "KEGG_2019_Mouse")
+
+        updateSelectInput(session, "Mapping1", choices = variables_mapping1(), selected = c("Metabolite", "KEGG"))
+        updateSelectInput(session, "Screening1", choices = variables_Screening1(), selected = c("Metabolite", "KEGG"))
+        updateSelectInput(session, "Mapping2", choices = variables_mapping2(), selected = "Symbol")
+        updateCheckboxInput(session, "runEnrichment2", value = TRUE)
+        updateSelectInput(session, "Screening2", choices = variables_Screening2(), selected = "Symbol")
+        updateSelectInput(session, "Screening12_1", choices = variables_Screening_12_1(), selected = c("Metabolite", "KEGG"))
+        updateSelectInput(session, "Screening12_2", choices = variables_Screening_12_2(), selected = "Symbol")
+
+        updateSelectInput(session, "databaseSelector2", selected = "KEGG_2019_Mouse")
         updateSliderInput(session, "pValueThresholdcor", value = 0.90)
         updateSliderInput(session, "pValueThreshold_imp_12_1", value = 0.5)
         updateSliderInput(session, "pValueThreshold_imp_12_2", value = 0.5)
