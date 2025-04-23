@@ -1194,10 +1194,10 @@ mod_module1_server <- function(id){
           par_cor1 <- partial_cors(load_data = load_data1, rho = .25)
         } else if (demo_par_cor_Metab()) {
           Sys.sleep(5)
-          par_cor1 <- load_partial_cor_metab()
+          par_cor1 <- precargados_partial_cor_metab
         } else if (demo_par_cor_Metab_All()) {
           Sys.sleep(5)
-          par_cor1 <- load_partial_cor_metabAll()
+          par_cor1 <- precargados_partial_cor_metabAll
         }
         incProgress(100, detail = 'Complete!')
         list(par_cor1 = par_cor1)
@@ -1384,10 +1384,10 @@ mod_module1_server <- function(id){
           Sys.sleep(1)
         } else if (demo_enrich_Prot()) {
           Sys.sleep(5)
-          cluster_assignments_enrich_D1 <- load_enrichment()
+          cluster_assignments_enrich_D1 <- precargados_enrichment
         } else if (demo_enrich_Prot_All()) {
           Sys.sleep(5)
-          cluster_assignments_enrich_D1 <- load_enrichmentAll()
+          cluster_assignments_enrich_D1 <- precargados_enrichmentAll
         }
         incProgress(100, detail = 'Complete!')
         list(cluster_assignments_enrich_D1 = cluster_assignments_enrich_D1)
@@ -1749,10 +1749,10 @@ mod_module1_server <- function(id){
           par_cor <- partial_cors(load_data = load_data2, rho = .25)
         } else if (demo_par_cor_Prot()) {
           Sys.sleep(5)
-          par_cor <- load_partial_cor_RNA()
+          par_cor <- precargados_partial_cor_RNA
         } else if (demo_par_cor_Prot_All()) {
           Sys.sleep(5)
-          par_cor <- load_partial_cor_RNAAll()
+          par_cor <- precargados_partial_cor_RNAAll
         }
         incProgress(100, detail = 'Complete!')
         list(par_cor = par_cor)
