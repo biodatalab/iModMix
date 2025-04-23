@@ -1061,15 +1061,13 @@ mod_module1_server <- function(id){
 
     demo_par_cor_Metab <- reactiveVal(NULL)
     demo_par_cor_Prot <- reactiveVal(NULL)
-    demo_par_cor_Gene <- reactiveVal(NULL)
     demo_enrich_Prot <- reactiveVal(NULL)
-    demo_enrich_Gene <- reactiveVal(NULL)
 
     demo_par_cor_Metab_All <- reactiveVal(NULL)
     demo_par_cor_Prot_All <- reactiveVal(NULL)
-    demo_par_cor_Gene_All <- reactiveVal(NULL)
+
     demo_enrich_Prot_All <- reactiveVal(NULL)
-    demo_enrich_Gene_All  <- reactiveVal(NULL)
+
 
     ###### Data1
     # Data Input
@@ -1194,10 +1192,14 @@ mod_module1_server <- function(id){
           par_cor1 <- partial_cors(load_data = load_data1, rho = .25)
         } else if (demo_par_cor_Metab()) {
           Sys.sleep(5)
-          par_cor1 <- precargados_partial_cor_metab
+          par_cor1 <- load_partial_cor_metab()
+
+          #par_cor1 <- precargados_partial_cor_metab
         } else if (demo_par_cor_Metab_All()) {
           Sys.sleep(5)
-          par_cor1 <- precargados_partial_cor_metabAll
+          par_cor1 <- load_partial_cor_metabAll()
+
+          #par_cor1 <- precargados_partial_cor_metabAll
         }
         incProgress(100, detail = 'Complete!')
         list(par_cor1 = par_cor1)
@@ -1384,10 +1386,14 @@ mod_module1_server <- function(id){
           Sys.sleep(1)
         } else if (demo_enrich_Prot()) {
           Sys.sleep(5)
-          cluster_assignments_enrich_D1 <- precargados_enrichment
+          cluster_assignments_enrich_D1 <- load_enrichment()
+
+          #cluster_assignments_enrich_D1 <- precargados_enrichment
         } else if (demo_enrich_Prot_All()) {
           Sys.sleep(5)
-          cluster_assignments_enrich_D1 <- precargados_enrichmentAll
+          cluster_assignments_enrich_D1 <- load_enrichmentAll()
+
+          #cluster_assignments_enrich_D1 <- precargados_enrichmentAll
         }
         incProgress(100, detail = 'Complete!')
         list(cluster_assignments_enrich_D1 = cluster_assignments_enrich_D1)
@@ -3914,18 +3920,18 @@ mod_module1_server <- function(id){
         file_path_RNA_exp <- file.path(demo_data_path, "RNA_exp.rds")
         file_path_RNA_annot <- file.path(demo_data_path, "RNA_annot.rds")
         file_path_metadata <- file.path(demo_data_path, "Metadata.rds")
-        file_path_partial_cor_metab <- file.path(demo_data_path, "PartialCorMetabolites.rds")
-        file_path_partial_cor_RNA <- file.path(demo_data_path, "PartialCorGenes.rds")
-        file_path_enrichment <- file.path(demo_data_path, "Enrichment.rds")
+        # file_path_partial_cor_metab <- file.path(demo_data_path, "PartialCorMetabolites.rds")
+        # file_path_partial_cor_RNA <- file.path(demo_data_path, "PartialCorGenes.rds")
+        # file_path_enrichment <- file.path(demo_data_path, "Enrichment.rds")
 
         precargados_metab_exp <- readRDS(file_path_metab_exp)
         precargados_metab_annot <- readRDS(file_path_metab_annot)
         precargados_RNA_exp <- readRDS(file_path_RNA_exp)
         precargados_RNA_annot <- readRDS(file_path_RNA_annot)
         precargados_metadata <- readRDS(file_path_metadata)
-        precargados_partial_cor_metab <- readRDS(file_path_partial_cor_metab)
-        precargados_partial_cor_RNA <- readRDS(file_path_partial_cor_RNA)
-        precargados_enrichment <- readRDS(file_path_enrichment)
+        # precargados_partial_cor_metab <- readRDS(file_path_partial_cor_metab)
+        # precargados_partial_cor_RNA <- readRDS(file_path_partial_cor_RNA)
+        # precargados_enrichment <- readRDS(file_path_enrichment)
 
         incProgress(0, detail = 'Loading Metab_exp.csv')
         Metab_exp(precargados_metab_exp)
@@ -3952,9 +3958,9 @@ mod_module1_server <- function(id){
         demo_par_cor_Prot(TRUE)
         demo_par_cor_Prot_All(FALSE)
         demo_enrich_Prot(TRUE)
-        demo_enrich_Gene(TRUE)
+
         demo_enrich_Prot_All(FALSE)
-        demo_enrich_Gene_All(FALSE)
+
 
         updateSelectInput(session, "Mapping1", choices = variables_mapping1(), selected = c("Metabolite", "KEGG"))
         updateSelectInput(session, "Screening1", choices = variables_Screening1(), selected = c("Metabolite", "KEGG"))
@@ -3982,18 +3988,18 @@ mod_module1_server <- function(id){
         file_path_RNA_expAll <- file.path(demo_data_pathAll, "Prot_exp.rds")
         file_path_RNA_annotAll <- file.path(demo_data_pathAll, "Prot_annot.rds")
         file_path_metadataAll <- file.path(demo_data_pathAll, "Metadata.rds")
-        file_path_partial_cor_metabAll <- file.path(demo_data_pathAll, "PartialCorMetabolites.rds")
-        file_path_partial_cor_RNAAll <- file.path(demo_data_pathAll, "PartialCorProt.rds")
-        file_path_enrichmentAll <- file.path(demo_data_pathAll, "EnrichmentMouse.rds")
+        # file_path_partial_cor_metabAll <- file.path(demo_data_pathAll, "PartialCorMetabolites.rds")
+        # file_path_partial_cor_RNAAll <- file.path(demo_data_pathAll, "PartialCorProt.rds")
+        # file_path_enrichmentAll <- file.path(demo_data_pathAll, "EnrichmentMouse.rds")
 
         precargados_metab_expAll <- readRDS(file_path_metab_expAll)
         precargados_metab_annotAll <- readRDS(file_path_metab_annotAll)
         precargados_RNA_expAll <- readRDS(file_path_RNA_expAll)
         precargados_RNA_annotAll <- readRDS(file_path_RNA_annotAll)
         precargados_metadataAll <- readRDS(file_path_metadataAll)
-        precargados_partial_cor_metabAll <- readRDS(file_path_partial_cor_metabAll)
-        precargados_partial_cor_RNAAll <- readRDS(file_path_partial_cor_RNAAll)
-        precargados_enrichmentAll <- readRDS(file_path_enrichmentAll)
+        # precargados_partial_cor_metabAll <- readRDS(file_path_partial_cor_metabAll)
+        # precargados_partial_cor_RNAAll <- readRDS(file_path_partial_cor_RNAAll)
+        # precargados_enrichmentAll <- readRDS(file_path_enrichmentAll)
 
         incProgress(0, detail = 'Loading Metab_exp.csv')
         Metab_exp(precargados_metab_expAll)
@@ -4020,9 +4026,8 @@ mod_module1_server <- function(id){
         demo_par_cor_Prot(FALSE)
         demo_par_cor_Prot_All(TRUE)
         demo_enrich_Prot(FALSE)
-        demo_enrich_Gene(FALSE)
         demo_enrich_Prot_All(TRUE)
-        demo_enrich_Gene_All(TRUE)
+
 
         updateSelectInput(session, "Mapping1", choices = variables_mapping1(), selected = c("Metabolite", "KEGG"))
         updateSelectInput(session, "Screening1", choices = variables_Screening1(), selected = c("Metabolite", "KEGG"))
