@@ -2724,21 +2724,17 @@ mod_module1_server <- function(id){
       threshold <- input$pValueThresholdcor
       eigengenes_list <- list(Eigengene1()$Eigengenes, Eigengene2()$Eigengenes)
       cluster_list <- list(hierarchical_cluster1()$hcCluster_assignments, hierarchical_cluster2()$hcCluster_assignments)
-
       if (!is.null(Gene_exp())) {
         eigengenes_list <- c(eigengenes_list, list(Eigengene3()$Eigengenes))
         cluster_list <- c(cluster_list, list(hierarchical_cluster3()$hcCluster_assignments))
       }
-
       Cor_Prot_Metab <- Modules_correlation(eigengenes_list, cluster_list, threshold = threshold)
-
         Top_cor_Prot_metab <- Cor_Prot_Metab$Top_cor_Prot_metab
         Correlation_Plot <- Cor_Prot_Metab$Correlation_Plot
         Cor_list <- Cor_Prot_Metab$Cor_list
         edges <- Cor_Prot_Metab$edges
         nodes <- Cor_Prot_Metab$nodes
         n  <- Cor_Prot_Metab$n
-
         return(list(Top_cor_Prot_metab = Top_cor_Prot_metab,
                     Cor_list = Cor_list,
                     Correlation_Plot = Correlation_Plot,
@@ -2947,16 +2943,8 @@ mod_module1_server <- function(id){
     })
 
     output$ImportantVariables_12 <- DT::renderDataTable({
-      df4 = as.data.frame(ImpVar_D1_D2()$Top_correlations)
-      nodes <- as.data.frame(Cor_Data_n()$nodes)
-      df4$From <- paste0("D1", df4$from)
-      df4$To <- paste0("D2", df4$to)
-      names(df4)[names(df4) == "value"] = "Correlation"
-      df4from <- merge(df4, nodes, by.x = "From", by.y = "id", all.x = TRUE)
-      names(df4from)[names(df4from) == "label"] = "# of var into the D1_module"
-      df4to <- merge(df4from, nodes, by.x = "To", by.y = "id", all.x = TRUE)
-      names(df4to)[names(df4to) == "label"] = "# of var into the D2_module"
-      df4nodes = df4to[,c("From", "# of var into the D1_module", "To", "# of var into the D2_module", "Correlation")]
+      df4nodes = as.data.frame(ImpVar_D1_D2()$Top_correlations)
+      colnames(df4nodes) <- c("From", "# of var into the D1_module", "To", "# of var into the D2_module", "Correlation")
       rownames(df4nodes) <- NULL
       df4nodes <- df4nodes[order(-abs(df4nodes$Correlation)), ]
       DT::datatable(df4nodes)
@@ -3270,7 +3258,6 @@ mod_module1_server <- function(id){
 
         df_list[[i]] <- list(df1_1 = df1_1, df1_2 = df1_2, df2_1 = df2_1, df2_2 = df2_2, df4 = df4, df4_1 = df4_1, df4_2 = df4_2, df5_1 = df5_1, df5_2 = df5_2)
       }
-
       return(df_list)
     })
 
@@ -3278,23 +3265,13 @@ mod_module1_server <- function(id){
       if (is.null(Gene_exp())) {
         return(NULL)
       } else {
-        df4 = as.data.frame(ImpVar_D1_D3()$Top_correlations)
-        nodes <- as.data.frame(Cor_Data_n()$nodes)
-        df4$From <- paste0("D1", df4$from)
-        df4$To <- paste0("D3", df4$to)
-        names(df4)[names(df4) == "value"] = "Correlation"
-        df4from <- merge(df4, nodes, by.x = "From", by.y = "id", all.x = TRUE)
-        names(df4from)[names(df4from) == "label"] = "# of var into the D1_module"
-        df4to <- merge(df4from, nodes, by.x = "To", by.y = "id", all.x = TRUE)
-        names(df4to)[names(df4to) == "label"] = "# of var into the D2_module"
-        df4nodes = df4to[,c("From", "# of var into the D1_module", "To", "# of var into the D2_module", "Correlation")]
+        df4nodes = as.data.frame(ImpVar_D1_D3()$Top_correlations)
+        colnames(df4nodes) <- c("From", "# of var into the D1_module", "To", "# of var into the D2_module", "Correlation")
         rownames(df4nodes) <- NULL
         df4nodes <- df4nodes[order(-abs(df4nodes$Correlation)), ]
         DT::datatable(df4nodes)
       }
     })
-
-
 
     output$CorplotImp13 <- renderPlot({
       if (is.null(Gene_exp())) {
@@ -3653,16 +3630,8 @@ mod_module1_server <- function(id){
       if (is.null(Gene_exp())) {
         return(NULL)
       } else {
-        df4 = as.data.frame(ImpVar_D2_D3()$Top_correlations)
-        nodes <- as.data.frame(Cor_Data_n()$nodes)
-        df4$From <- paste0("D2", df4$from)
-        df4$To <- paste0("D3", df4$to)
-        names(df4)[names(df4) == "value"] = "Correlation"
-        df4from <- merge(df4, nodes, by.x = "From", by.y = "id", all.x = TRUE)
-        names(df4from)[names(df4from) == "label"] = "# of var into the D1_module"
-        df4to <- merge(df4from, nodes, by.x = "To", by.y = "id", all.x = TRUE)
-        names(df4to)[names(df4to) == "label"] = "# of var into the D2_module"
-        df4nodes = df4to[,c("From", "# of var into the D1_module", "To", "# of var into the D2_module", "Correlation")]
+        df4nodes = as.data.frame(ImpVar_D2_D3()$Top_correlations)
+        colnames(df4nodes) <- c("From", "# of var into the D1_module", "To", "# of var into the D2_module", "Correlation")
         rownames(df4nodes) <- NULL
         df4nodes <- df4nodes[order(-abs(df4nodes$Correlation)), ]
         DT::datatable(df4nodes)

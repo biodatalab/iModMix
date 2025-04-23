@@ -19,6 +19,20 @@ FeaturesAnnot_correlation <- function(Cor_Datai_Dataj, cluster_assignments_D1, c
   # Remove the "ME" prefix from Prot_module and Metab_module columns
   Top_correlations[c("from", "to")] <- lapply(Top_correlations[c("from", "to")], function(x) sub("^D[123]", "", x))
 
+  VarD1 <- as.data.frame(table(cluster_assignments_D1$col))
+  VarD2 <- as.data.frame(table(cluster_assignments_D2$col))
+
+  # Merge the counts with Top_correlations
+  Top_correlations <- merge(Top_correlations, VarD1, by.x = "from", by.y = "Var1", all.x = TRUE)
+  Top_correlations <- merge(Top_correlations, VarD2, by.x = "to", by.y = "Var1", all.x = TRUE)
+
+  # Rename columns for clarity
+  colnames(Top_correlations)[colnames(Top_correlations) == "Freq.x"] <- "# of var into the D1_module"
+  colnames(Top_correlations)[colnames(Top_correlations) == "Freq.y"] <- "# of var into the D2_module"
+
+  # Select and rename final columns
+  Top_correlations <- Top_correlations[, c("from", "# of var into the D1_module", "to", "# of var into the D2_module", "value")]
+
   # Initialize lists to store cluster assignments, annotation matrices, and expression matrices
   cluster_assignments_list <- list()
   expression_matrices_list <- list()
