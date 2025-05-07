@@ -20,11 +20,11 @@ FeaturesAnnot_correlation(
 
 \item{cluster_assignments_D2}{A data frame containing cluster assignments and Enrichr terms for proteins.}
 
+\item{load_data1}{A prepossessed data matrix resulting from "load data" function from Data1.}
+
+\item{load_data2}{A prepossessed data matrix resulting from "load data" function from Data2.}
+
 \item{top_n}{The number of top correlations to select.}
-
-\item{ExpressionD2}{A feature matrix (e.g., protein expression) with samples in rows and features (e.g., proteins) in columns. Row names must be unique.}
-
-\item{ExpressionD1}{A feature matrix (e.g., metabolite expression) with samples in rows and features (e.g., metabolites) in columns. Row names must be unique.}
 }
 \value{
 A list containing important features and correlation matrices.

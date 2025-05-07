@@ -7,9 +7,9 @@
 Eigengenes(load_data = load_data, cluster_assignments = cluster_assignments)
 }
 \arguments{
-\item{cluster_assignments}{A vector of cluster assignments for each feature.}
+\item{load_data}{A prepossessed data matrix resulting from "load data" function}
 
-\item{Expression_mat}{A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.}
+\item{cluster_assignments}{A vector of cluster assignments for each feature.}
 }
 \value{
 A list containing:

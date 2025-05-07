@@ -3,7 +3,7 @@ utils::globalVariables(c("missing_count"))
 #' Eigengenes
 #'
 #' @description Calculates module eigengenes using the WGCNA package.
-#' @param Expression_mat A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.
+#' @param load_data A prepossessed data matrix resulting from "load data" function
 #' @param cluster_assignments A vector of cluster assignments for each feature.
 #' @return A list containing:
 #' \item{module_eigenmetab_List_Me}{The full result from WGCNA::moduleEigengenes.}

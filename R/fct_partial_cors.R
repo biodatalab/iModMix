@@ -1,7 +1,8 @@
 #' partial_cors
 #'
 #' @description Calculates partial correlations based on graphical lasso (https://www.rdocumentation.org/packages/glassoFast/versions/1.0/topics/glassoFast).
-#' @param Expression_mat A feature matrix (e.g. gene expression) with samples in columns and features (e.g. genes) in rows. Row names must be unique.
+#' @param load_data A prepossessed data matrix resulting from "load data" function.
+#' @param rho The regularization parameter for lasso. (a non-negative value or a p by p matrix of regularization parameters).
 #' @return partial_cor_mat A partial correlation matrix with NA's in the diagonal.
 #'
 #' @export

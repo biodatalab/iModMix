@@ -2,8 +2,7 @@
 % Please edit documentation in R/fct_perform_classification.R
 \name{perform_classification}
 \alias{perform_classification}
-\title{perform_classification
-This function performs classification using different methods such as Welch’s T-test, Random Forest, and K-Nearest Neighbors.}
+\title{perform_classification}
 \usage{
 perform_classification(
   eigengene_data,
@@ -25,6 +24,5 @@ perform_classification(
 A data frame with metrics such as AUC, Accuracy, and Error Rate for each binary classification.
 }
 \description{
-perform_classification
-This function performs classification using different methods such as Welch’s T-test, Random Forest, and K-Nearest Neighbors.
+Performs classification using different methods such as Welch’s T-test, Random Forest, and K-Nearest Neighbors.
 }

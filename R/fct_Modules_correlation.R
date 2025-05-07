@@ -1,11 +1,10 @@
 #' Modules_correlation
 #'
 #' @description Calculates correlations between omic modules.
-#'
-#' @param eigengenes A feature matrix with the first principal component of each cluster
-#' @param cluster_assignments data frame containing cluster_assignments
-#' @param threshold A numeric value to filter correlations. Default is 0.5
-#' @return  Return the Top_correlations between Prot and metab eigengenes, graph of red, correlation plot
+#' @param eigengenes_list List with the first principal component of each cluster.
+#' @param cluster_list list containing cluster_assignments matrix.
+#' @param threshold A numeric value to filter correlations. Default is 0.5.
+#' @return  Return the Top_correlations between Prot and metab eigengenes, graph of red, correlation plot.
 #' @export
 Modules_correlation <- function(eigengenes_list, cluster_list, threshold = 0.50) {
   n <- length(eigengenes_list)

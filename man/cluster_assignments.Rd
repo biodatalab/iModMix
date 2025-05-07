@@ -10,6 +10,8 @@ cluster_assignments(cluster, PhenoData = NULL, selected_columns = NULL)
 \item{cluster}{A data frame containing cluster assignments.}
 
 \item{PhenoData}{A data frame with the annotation names of the Dataset. Should have a column called Feature_ID.}
+
+\item{selected_columns}{Columns selected for the user to merge in the cluster assignments table}
 }
 \value{
 A data frame containing cluster assignments and selected columns by user.

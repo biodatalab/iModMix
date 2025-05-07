@@ -23,17 +23,17 @@ Imports:
     enrichR,
     ggplot2,
     glassoFast,
-    igraph,
     impute,
     purrr,
     readxl,
     reshape2,
     stringr,
     tidyr,
-    viridis,
     visNetwork,
     shinyBS,
     vroom,
+    here,
+    httr,
     dplyr
 Encoding: UTF-8
 LazyData: true
@@ -41,7 +41,6 @@ RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0),
     ggfortify,
-    plotly,
     shinyWidgets,
     pROC,
     tuneR

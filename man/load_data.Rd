@@ -10,8 +10,8 @@ load_data(Expression_mat = Expression_mat)
 \item{Expression_mat}{A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.}
 }
 \value{
-A preprocessed data matrix.
+A prepossessed data matrix.
 }
 \description{
-A function to load and preprocess data from a file.
+A function to load and preprocess the expression data.
 }

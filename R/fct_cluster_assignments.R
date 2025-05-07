@@ -3,6 +3,7 @@
 #' @description Cluster assignments with annotation.
 #' @param cluster A data frame containing cluster assignments.
 #' @param PhenoData A data frame with the annotation names of the Dataset. Should have a column called Feature_ID.
+#' @param selected_columns Columns selected for the user to merge in the cluster assignments table
 #' @return A data frame containing cluster assignments and selected columns by user.
 #' @export
 cluster_assignments <- function(cluster, PhenoData = NULL, selected_columns = NULL) {

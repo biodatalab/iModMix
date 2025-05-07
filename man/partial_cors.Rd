@@ -4,10 +4,12 @@
 \alias{partial_cors}
 \title{partial_cors}
 \usage{
-partial_cors(load_data)
+partial_cors(load_data, rho = 0.25)
 }
 \arguments{
-\item{Expression_mat}{A feature matrix (e.g. gene expression) with samples in columns and features (e.g. genes) in rows. Row names must be unique.}
+\item{load_data}{A prepossessed data matrix resulting from "load data" function.}
+
+\item{rho}{The regularization parameter for lasso. (a non-negative value or a p by p matrix of regularization parameters).}
 }
 \value{
 partial_cor_mat A partial correlation matrix with NA's in the diagonal.

@@ -1,13 +1,11 @@
-utils::globalVariables(c("missing_count"))
-
 #' FeaturesAnnot_correlation
 #'
 #' @description Calculate correlation between the features of top correlated modules.
 #' @param Cor_Datai_Dataj A data frame with the first principal component of each protein cluster and their correlations.
 #' @param cluster_assignments_D2 A data frame containing cluster assignments and Enrichr terms for proteins.
 #' @param cluster_assignments_D1 A data frame containing cluster assignments for metabolites.
-#' @param ExpressionD2 A feature matrix (e.g., protein expression) with samples in rows and features (e.g., proteins) in columns. Row names must be unique.
-#' @param ExpressionD1 A feature matrix (e.g., metabolite expression) with samples in rows and features (e.g., metabolites) in columns. Row names must be unique.
+#' @param load_data1 A prepossessed data matrix resulting from "load data" function from Data1.
+#' @param load_data2 A prepossessed data matrix resulting from "load data" function from Data2.
 #' @param top_n The number of top correlations to select.
 #' @return A list containing important features and correlation matrices.
 #' @export

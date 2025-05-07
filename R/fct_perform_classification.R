@@ -1,6 +1,6 @@
 #' perform_classification
-#' This function performs classification using different methods such as Welch’s T-test, Random Forest, and K-Nearest Neighbors.
 #'
+#' @description Performs classification using different methods such as Welch’s T-test, Random Forest, and K-Nearest Neighbors.
 #' @param eigengene_data A data frame of eigengenes organized with patient IDs in rows and variables in columns.
 #' @param metadata A data frame containing metadata, with a column call "Sample" that matches patient IDs in eigengene_data.
 #' @param phenotype_variable The variable selected by the user in the Shiny app (response variable).
@@ -8,7 +8,6 @@
 #' @return A data frame with metrics such as AUC, Accuracy, and Error Rate for each binary classification.
 #'
 #' @export
-
 perform_classification <- function(eigengene_data, metadata, phenotype_variable, significance_threshold = 0.05) {
   requireNamespace("tuneR", quietly = TRUE)
   requireNamespace("pROC", quietly = TRUE)

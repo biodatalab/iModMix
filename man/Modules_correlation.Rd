@@ -7,14 +7,14 @@
 Modules_correlation(eigengenes_list, cluster_list, threshold = 0.5)
 }
 \arguments{
-\item{threshold}{A numeric value to filter correlations. Default is 0.5}
+\item{eigengenes_list}{List with the first principal component of each cluster.}
 
-\item{eigengenes}{A feature matrix with the first principal component of each cluster}
+\item{cluster_list}{list containing cluster_assignments matrix.}
 
-\item{cluster_assignments}{data frame containing cluster_assignments}
+\item{threshold}{A numeric value to filter correlations. Default is 0.5.}
 }
 \value{
-Return the Top_correlations between Prot and metab eigengenes, graph of red, correlation plot
+Return the Top_correlations between Prot and metab eigengenes, graph of red, correlation plot.
 }
 \description{
 Calculates correlations between omic modules.
