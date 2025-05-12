@@ -1,37 +1,63 @@
-# IModMix Tutorial
-`iModMix` is a novel network-based approach that integrates multi-omics data, including metabolomics, proteomics, and transcriptomics data, into a unified network to unveil associations across various layers of omics data and reveal significant associations with phenotypes of interest.
+---
+title: "iModMix -integrative Modules for Multi-omics data"
+author: "Isis Narvaez-Bandera"
+date: "`r Sys.Date()`"
+package: "`r packageVersion('iModMix')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    theme: united
+    highlight: tango
+fig_width: 7
+vignette: >
+    %\VignetteIndexEntry{Publication-ready integration omics data including unidentified metabolites}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+    %\usepackage[utf8]{inputenc}
+---
 
-# Introduction
-iModMix is an R package and Shiny App that can be viewed as a web interface through https://imodmix.moffitt.org/ or accessed locally by downloading and installing an app.R or docker container, or by installing an R-package. iMOdMIx is a novel approach that uses a graphical lasso to construct network modules for integration and analysis of multi-omics da 
+# Introducción
+
+`iModMix` is a novel network-based approach that integrates multi-omics data, including metabolomics, proteomics, and transcriptomics data, into a unified network to unveil associations across various layers of omics data and reveal significant associations with phenotypes of interest.
 
 iModMix can incorporate both identified and unidentified metabolites, addressing a key limitation of existing methodologies.
 
-iModMix is available as a user-friendly R Shiny application that requires no programming experience (https://imodmix.moffitt.org), and it includes example data from several publicly available multi-omic studies for exploration. An R package is available for advanced users (https://github.com/biodatalab/iModMix). 
+```{r, echo=FALSE}
 
-![Overview iModMix](https://github.com/user-attachments/assets/c341ef0f-4e02-4e28-b844-a0356c30d3f4)
+  suppressWarnings(library(knitr))
 
-## How to Install This App
-The iModMix suite can be downloaded (cloned) and installed through the GitHub repository. The downloaded file can be unzipped to a destination folder, which should be set as the working directory or file path. Of note, some of the example files (e.g., gene set files) use relative paths, so the program may fail to identify the file if a working directory is not properly set. The suite was developed in R version 4.2. 
-
-### Only the first time the app is installed, enter the following command in the console:
-```r
-install.packages("remotes")
-library(remotes)
-```
-
-### The following console command is to install from GitHub:
-```r
-remotes::install_github("biodatalab/iModmix")
-library(iModmix)
+  opts_chunk$set(tidy = FALSE, message = FALSE, warning = FALSE)
 
 ```
-### Install iModMix suite GitHub repository
-```r
-    * **Download and unzip repository https://github.com/biodatalab/iModMix**
-    * Set working directory to iModMix folder
-    * Install required R packages
-    * Suite of tools was built on R version 4.2
-    * R script for package installation is provided in the “1-Getting_Started” folder
+
+# Installation
+
+## 1. Download the package from Bioconductor
+
+```{r getPackage, eval=FALSE}
+
+  if (!requireNamespace('BiocManager', quietly = TRUE))
+    install.packages('BiocManager')
+
+  BiocManager::install('iModMix')
+
+```
+
+Note: to install development version:
+
+```{r getPackageDevel, eval=FALSE}
+
+  devtools::install_github('biodatalab/iModMix')
+
+```
+
+## 2. Load the package into R session
+
+```{r Load, message=FALSE}
+
+  library(iModMix)
 
 ```
 
@@ -179,11 +205,12 @@ Dots marking outliers and a legend describing the compared phenotype.
 ![](https://github.com/user-attachments/assets/9cad9a8f-cec8-4723-b871-fe99344e3ee0)
 
 
+
 ## iModMix package: Example to use
 
 This is a basic example which shows you how to analyze two datasets through iModMix package:
 
-```r
+```{r Load, message=FALSE}
 # Load the package
 library(iModMix)
 
@@ -215,4 +242,5 @@ Integration_Data1_Data2[["Top_cor_Prot_metab"]]
 ```
 
 ---
+
 
