@@ -1,8 +1,13 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
 # IModMix Tutorial
 `iModMix` is a novel network-based approach that integrates multi-omics data, including metabolomics, proteomics, and transcriptomics data, into a unified network to unveil associations across various layers of omics data and reveal significant associations with phenotypes of interest.
 
 # Introduction
-iModMix is an R package and Shiny App that can be viewed as a web interface through https://imodmix.moffitt.org/ or accessed locally by downloading and installing an app.R or docker container, or by installing an R-package. iMOdMIx is a novel approach that uses a graphical lasso to construct network modules for integration and analysis of multi-omics da 
+iModMix is an R package and Shiny App that can be viewed as a web interface through https://imodmix.moffitt.org/ or accessed locally by downloading and installing an app.R or docker container, or by installing an R-package. iModMix is a novel approach that uses a graphical lasso to construct network modules for integration and analysis of multi-omics data. 
 
 iModMix can incorporate both identified and unidentified metabolites, addressing a key limitation of existing methodologies.
 
@@ -38,7 +43,7 @@ library(iModmix)
 # Load Data
 
 ## Load Example Data
-iModMix includes two example datasets within the Shiny app. The first case study uses public data to validate our results. We used 24 normal and 52 tumor clear cell renal cell carcinoma (ccRCC) samples (Golkaram et al. 2022; Tang et al. 2023; Benedetti et al. 2023). The second case study includes untargeted metabolomics, highlighting iModMix’s ability to analyze and provide insight into unidentified metabolites. This study matched proteomics and metabolomics dataset was generated using two mouse models for lung adenocarcinoma (LUAD) (10 wild type, 10 knockout). 
+iModMix includes two example datasets within the Shiny app. The first case study uses public data to validate our results. We used 24 normal and 52 tumor clear cell renal cell carcinoma samples (ccRCC, RC20 dataset) (Golkaram et al. 2022; Tang et al. 2023; Benedetti et al. 2023). The second case study includes untargeted metabolomics, highlighting iModMix’s ability to analyze and provide insight into unidentified metabolites. This study (unpublished) matched proteomics and metabolomics dataset was generated using two mouse models for lung adenocarcinoma (LUAD) (10 wild type, 10 knockout). 
 
 ## Input User Data
 iModMix provides an intuitive method for users to input and preview a matrix expression, annotation and meta file.  
@@ -48,23 +53,22 @@ iModMix provides an intuitive method for users to input and preview a matrix exp
 
 ### Key Input Files
 1. Required Files
-    * Expression file where the feature ID are in the first column and the sample names are in the first-row header.
-    * Meta information file that consists of a matrix with the first column the sample name. The remaining columns should contain any variables of interest.
+    * Expression data file where the feature ID are in the first column and the sample names are in the first-row header.
+    * Meta file that consists of sample information as a matrix, with the first column containing the sample names. The remaining columns should contain any variables of interest.
     	
 2. Optional Files
     * Annotation file is an optional file where the feature ID are in the first column and the remaining columns should contain mapping information (i.e, Metabolite name, KEGG, Symbol). 
-    * Enrichment Analysis can be run in genemoics or proteomics data. To run the enrichment analysis, the Symbol information should be avaylable.
+    * Enrichment Analysis can be run on genomics or proteomics data. To run the enrichment analysis, the Symbol information should be available.
 
-Expression, annotation matrix and meta files should be formatted similarly to the example datasets shown below. 
+Expression data, annotation matrix and meta files should be formatted similarly to the example datasets shown below. 
 
-The matrix file should contain features in the first column and sample IDs in the first row. Table reflecting the uploaded file expression Data. Check if the number of samples and the number of features are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a feature of interest,
+The matrix file should contain features in the first column and sample IDs in the first row. Table reflecting the uploaded file expression Data. Check if the number of samples and the number of features are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a feature of interest.
                                       
 
 ![](https://github.com/user-attachments/assets/8cdfd5af-ee00-40d7-b72e-10f357b66275)
 
 
-The meta file should contain sample IDs in the first column and any accompanying meta information in subsequent columns. The sample IDs should match between the matrix and meta files. The meta file should include at least one column of variable of of interes. iModMix defaults to selecting the second column of the meta file as the variable of interest. This can easily be changed by the user by simply selecting a different column using the dropdown menus. 
-Table reflecting the uploaded file Metadata. Check if the number of samples and the number of entries listed at the bottom of the table are the same. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a sample.
+The meta file should contain sample IDs in the first column and any accompanying meta information in subsequent columns. The sample IDs should match between the matrix and meta files. The meta file should include at least one column of variable of of interest. iModMix defaults to selecting the second column of the meta file as the variable of interest. This can easily be changed by the user by simply selecting a different column using the dropdown menu on the table reflecting the uploaded file Metadata. Check if the number of samples and the number of entries listed at the bottom of the table are the same. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a sample.
                                      
 
 ![](https://github.com/user-attachments/assets/44fbdb7a-5298-4040-9490-5ef1137f3d5a)
@@ -113,7 +117,7 @@ The heatmap below shows eigenfeatures across samples. The vertical axis (y-axis)
 ![](https://github.com/user-attachments/assets/b341bd04-f22f-4644-88cd-02eac9f0fab6)
 
 
-Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. It returns a data frame with the following columns 
+Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu where the user can specify a significance threshold for the p-value, with the default set to 0.05. The previously determined eigenfeatures of each module are used as predictors and results generates a dataframe with the following columns 
 
 * **Variable**: Represents the ID of the module.
 * **Class**: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others.
@@ -163,17 +167,17 @@ The drop-down menu displays the details for each of the top slecetd highly corre
 ![](https://github.com/user-attachments/assets/eba0c466-f03f-4bde-bbcf-63956e04cd15)
 
 
-Displays the list of features within a Data 1 module that is highly correlated with a Data 2 module. The Data 1 module ID is specified first, followed by the list of constituent fetures. This information facilitates further pathway analysis and provides valuable insights into the relationships between features.
+Displays the list of features within a Data 1 module that is highly correlated with a Data 2 module. The Data 1 module ID is specified first, followed by the list of constituent features. This information facilitates further pathway analysis and provides valuable insights into the relationships between features.
 
-The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table.
+The full .csv file of the list of features from the Data 1 module can be downloaded at the bottom of the table.
 
 ![](https://github.com/user-attachments/assets/92fe0169-138b-4410-bdca-2d48f5719fa5)
 
 
-Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The features of top correlated module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. It returns a boxplot
+Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu to generate boxplots. The features of the top correlated modules, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05.
 
 * Class: Lists the two levels of the phenotypes being compared. 
 If there are more than two levels, it compares one level against the others. 
-Dots marking outliers and a legend describing the compared phenotype.
+Dots mark outliers and a legend is provided for the compared phenotypes.
                                      
 ![](https://github.com/user-attachments/assets/9cad9a8f-cec8-4723-b871-fe99344e3ee0)
