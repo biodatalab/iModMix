@@ -166,6 +166,8 @@ eigengenes_Data1[1:5, 1:5]
 
 ### Load expresion Data 2 and perform partial correlation, network construction and module eigengene calculation
 
+Since this is purely an example of how to run the entire analysis from start to finish, we are going to limit our analysis to 1000 first features.
+
 ```{r}
 # Get the path to the expression data file
 path_RNA_exp <- system.file("Example_data/ccRCC4_Data/RNA_exp.rds", package = "iModMix")
@@ -260,7 +262,7 @@ This step perform the integration of the datasets in the analysis. Is necessary 
 ```{r}
 # Summarize into list the diffrent egenfuatures 
 eigengenes_list <- list(eigengenes_Data1, eigengenes_Data2)
-cluster_list <- list(hcData1$cluster_assignments, hcData2$cluster_assignments)
+cluster_list <- list(cluster_assig_Data1, cluster_assig_Data2)
 Integration_Data1_Data2 <- Modules_correlation(eigengenes_list, cluster_list, threshold = 0.6)
 TopCorrelations <-Integration_Data1_Data2[["Top_cor_Prot_metab"]]
 head(TopCorrelations)
@@ -286,4 +288,25 @@ network <- visNetwork::visInteraction(network, navigationButtons = TRUE)
 network
       
 ```
+
+## Enrichment analysis for gene Symbol 
+
+Enrichment analysis can be perform is annotation data for proteomics or transcriptomics is uploaded, and the column Symbol is available.  Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the dataset cluster descriptions on table below. For the example transcrptomics Data2 we selec "GO_Biological_Process_2023". Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr.
+
+```{r}
+# Perform enrichment analysis per module
+selected_database <- "GO_Biological_Process_2023"
+# cluster_assignments_Data2_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assig_Data2, database = selected_database)
+# cluster_assignments_Data2_enrich[1:5,]
+```
+ 
+ Enrichment Analysis Results[1:5,]
+
+| feature | cluster      | col      | feature_name | enriched_Term                  | enriched_Overlap | enriched_Genes | enriched_P.value | enriched_Adjusted.P.value |
+|---------|--------------|----------|--------------|--------------------------------|------------------|----------------|------------------|----------------------------|
+| A1BG    | cluster_000005 | #66628D | A1BG         | Cilium Disassembly             | 1/5              | HDAC6          | 0.008968455      | 0.09813736                 |
+| NAT2    | cluster_000041 | #DD87B4 | NAT2         | NA                             | NA               | NA             | NA               | NA                         |
+| ADA     | cluster_000017 | #91569A | ADA          | Purine Ribonucleoside Metabolic Process | 1/6              | ADA            | 0.007477447      | 0.08081181                 |
+| CDH2    | cluster_000019 | #B45B76 | CDH2         | Detection Of Muscle Stretch    | 1/6              | CDH2           | 0.007179245      | 0.11473611                 |
+| AKT3    | cluster_000019 | #B45B76 | AKT3         | Detection Of Muscle Stretch    | 1/6              | CDH2           | 0.007179245      | 0.11473611                 |
 
