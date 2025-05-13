@@ -172,6 +172,7 @@ path_RNA_exp <- system.file("Example_data/ccRCC4_Data/RNA_exp.rds", package = "i
 
 # Load the expression data
 Data_exp2 <- readRDS(path_RNA_exp)
+Data_exp2 <- Data_exp2[1:1000,]
 
 # Check the expression data
 Data_exp2[1:5, 1:5]
@@ -180,30 +181,19 @@ Data_exp2[1:5, 1:5]
 load_data2 <- load_data(Data_exp2)
 ```
 
-Upload partial correlaed matrix already calculates for Data 2 
+Calculate correlated matrix  
 
 ```{r}
 # Partial correlation
-# parcorData2 <- partial_cors(load_data2, rho = 0.25) # Dont run this line. Take about ~10 min. 
-# Plase upload partial correlation alreday calculated
-
-path_parcorData2 <- system.file("Example_data/ccRCC4_Data/PartialCorGenes.rds", package = "iModMix")
-
-# Load the expression data
-parcorData2 <- readRDS(path_parcorData2)
+parcorData2 <- partial_cors(load_data2, rho = 0.25) 
+parcorData2[1:5, 1:5]
 ```
 
-Upload hierarchical clustering already calculates for Data 2
+Calculate hierarchical clustering 
 
 ```{r}
 # Perform hierarchical clustering 
-# hcData2 <- hierarchical_cluster(parcor_mat = parcorData2, tom = TRUE, min_module_size = 10) # Dont run this line. 
-# Plase upload phierarchical clustering alreday calculated
-
-# Load the precomputed hierarchical clustering results
-path_hcData2 <- system.file("Example_data/ccRCC4_Data/hcData2.rds", package = "iModMix")
-# Load the expression data
-hcData2 <- readRDS(path_hcData2)
+hcData2 <- hierarchical_cluster(parcor_mat = parcorData2, tom = TRUE, min_module_size = 10) 
 
 # Access the hierarchical clustering tree and module assignments
 hcClu2 <- hcData2$hclustTree
@@ -271,7 +261,7 @@ This step perform the integration of the datasets in the analysis. Is necessary 
 # Summarize into list the diffrent egenfuatures 
 eigengenes_list <- list(eigengenes_Data1, eigengenes_Data2)
 cluster_list <- list(hcData1$cluster_assignments, hcData2$cluster_assignments)
-Integration_Data1_Data2 <- Modules_correlation(eigengenes_list, cluster_list, threshold = 0.64)
+Integration_Data1_Data2 <- Modules_correlation(eigengenes_list, cluster_list, threshold = 0.6)
 TopCorrelations <-Integration_Data1_Data2[["Top_cor_Prot_metab"]]
 head(TopCorrelations)
 
