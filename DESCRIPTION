@@ -43,8 +43,5 @@ Suggests:
     ggfortify,
     shinyWidgets,
     pROC,
-    tuneR,
-    knitr,
-    rmarkdown
+    tuneR
 Config/testthat/edition: 3
-VignetteBuilder: knitr

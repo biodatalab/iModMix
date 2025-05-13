@@ -34,7 +34,7 @@ iModMix can incorporate both identified and unidentified metabolites, addressing
 
 # Installation
 
-## 1. Download the package from Bioconductor
+## Download the package from Bioconductor
 
 ```{r getPackage, eval=FALSE}
 
@@ -53,7 +53,7 @@ Note: to install development version:
 
 ```
 
-## 2. Load the package into R session
+## Load the package into R session
 
 ```{r Load, message=FALSE}
 
@@ -61,186 +61,239 @@ Note: to install development version:
 
 ```
 
-# Load Data
+# Example to integrate 2 omics datasets
 
-## Load Example Data
-iModMix includes two example datasets within the Shiny app. The first case study uses public data to validate our results. We used 24 normal and 52 tumor clear cell renal cell carcinoma (ccRCC) samples (Golkaram et al. 2022; Tang et al. 2023; Benedetti et al. 2023). The second case study includes untargeted metabolomics, highlighting iModMix’s ability to analyze and provide insight into unidentified metabolites. This study matched proteomics and metabolomics dataset was generated using two mouse models for lung adenocarcinoma (LUAD) (10 wild type, 10 knockout). 
+## Generate modules
 
-## Input User Data
-iModMix provides an intuitive method for users to input and preview a matrix expression, annotation and meta file.  
+### Load expresion Data 1 and metadata from clear cell renal cell carcinoma
 
-![](https://github.com/user-attachments/assets/c21c8c3e-46d9-4226-8024-92fd015bb653)
+This is a basic example which shows you how to analyze two datasets through iModMix package: We used 24 normal and 52 tumor clear cell renal cell carcinoma (ccRCC) samples (Golkaram et al. 2022; Tang et al. 2023; Benedetti et al. 2023) as a case study. It contained 23001 genes from RNA-seq and 904 identified metabolites from untargeted metabolomics.
 
+Input data: 
 
-### Key Input Files
-1. Required Files
-    * Expression file where the feature ID are in the first column and the sample names are in the first-row header.
-    * Meta information file that consists of a matrix with the first column the sample name. The remaining columns should contain any variables of interest.
-    	
-2. Optional Files
-    * Annotation file is an optional file where the feature ID are in the first column and the remaining columns should contain mapping information (i.e, Metabolite name, KEGG, Symbol). 
-    * Enrichment Analysis can be run in genemoics or proteomics data. To run the enrichment analysis, the Symbol information should be avaylable.
+* The expression datasets would be a matrix with genes as rows and samples as columns
+* The meta data should be a matrix with the first column named 'Sample' (note the capitalized 'S'). The second and others column names can be arbitrary, i.e. "disease" or "Genotype"
 
-Expression, annotation matrix and meta files should be formatted similarly to the example datasets shown below. 
-
-The matrix file should contain features in the first column and sample IDs in the first row. Table reflecting the uploaded file expression Data. Check if the number of samples and the number of features are correct. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a feature of interest,
-                                      
-
-![](https://github.com/user-attachments/assets/8cdfd5af-ee00-40d7-b72e-10f357b66275)
-
-
-The meta file should contain sample IDs in the first column and any accompanying meta information in subsequent columns. The sample IDs should match between the matrix and meta files. The meta file should include at least one column of variable of of interes. iModMix defaults to selecting the second column of the meta file as the variable of interest. This can easily be changed by the user by simply selecting a different column using the dropdown menus. 
-Table reflecting the uploaded file Metadata. Check if the number of samples and the number of entries listed at the bottom of the table are the same. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a sample.
-                                     
-
-![](https://github.com/user-attachments/assets/44fbdb7a-5298-4040-9490-5ef1137f3d5a)
-
-
-The annotation file should contain features ID in the first column. Table reflecting the uploaded file Annotation Data. Check if the total number of entries at bottom of table matches the total number of features in the Abundance Data. The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to confirm the details of a feature of interest.
-                                      
-
-![](https://github.com/user-attachments/assets/48937dde-b0dd-4652-8a48-43b13959221a)
-
-## iModmix Outputs
-
-### Individual Analysis
-
-Preview of: a) The partial correlations matrix resulted based on graphical lasso. b) The Hierarchical clustering with a dendrogram of genes and modules.  
-
-Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimate the partial correlation and captures only direct associations. Below is a preview of the sparse partial correlation of the first five features. The full .csv file for the sparse partial correlation calculations for all the features can be downloaded at the bottom of the table.
-
-Hierarchical clustering is used to identify common neighbors between the features. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram. 
-
-Axes: The vertical axis (y-axis) represents the dissimilarity between features, while the horizontal axis (x-axis) shows the modules. 
-Branches: Each line in the dendrogram represents a feature. Features that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles.
-
-![](https://github.com/user-attachments/assets/9aa463a2-6a39-4c78-94be-003ec2561f28)
-
-
-Let's see the cluster assignments. Hierarchical clustering generates multiple modules (clusters) to which each feature is assigned. The table below details the following columns:
-
-* **Feature**: Metabolite ID.
-* **Module_id**: The module where the metabolite is assigned and the color used on the hierarchical clustering dendrogram.
-* **Annotation Data**: If available, it can also show the KEGG ID, the metabolite name, and the information selected by the user.
-
-The arrows to the right of each column title can be used for sorting data from increasing or decreasing values. The search bar can also be used to find the details of a metabolomic feature of interest. The full .csv file of Cluster Assignments for all the metabolomic features can be downloaded at the bottom of the table.
-
-![](https://github.com/user-attachments/assets/6ca48ef2-a0da-490a-9685-c190c7d3a7cd)
-
-
-The first principal component (PC1) is calculated for each module, referred to as an eigenfeature. Eigenfeatures are useful for
-
-* Relating the modules to the phenotypes. 
-* Obtaining the correlation between omics datasets (integration). 
-    
-The full .csv file of calculations for PC1 for metabolomics modules can be downloaded at the bottom of the table. 
-The heatmap below shows eigenfeatures across samples. The vertical axis (y-axis) represents the eigenfeatures, and the horizontal axis (x-axis) displays the sample conditions.
-
-![](https://github.com/user-attachments/assets/b341bd04-f22f-4644-88cd-02eac9f0fab6)
-
-
-Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. It returns a data frame with the following columns 
-
-* **Variable**: Represents the ID of the module.
-* **Class**: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others.
-* **Result_t**: The t-statistic value.
-* **Result_pValue**: The p-value for the test.
-* **Adjusted_pValue**: p-value correction using the Benjamin-Hochberg method to control the False Discovery Rate (FDR).
-
-Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype.
-
-![](https://github.com/user-attachments/assets/9b28d4c6-bb4b-40a5-9df7-4c1bd5cbfd9d)
-
-
-The drop-down menu displays all modules generated by iModMix. Users can view the features within a selected module. If annotation data is available, it also can shows the KEGG ID and metabolite name.
-
-![](https://github.com/user-attachments/assets/fb1117a6-300b-4256-b908-9331b0abfcf0)
-
-
-PCA loading and heatmap plots are generated to visualize the behavior of each specific module across the phenotype.
-
-![](https://github.com/user-attachments/assets/9230dfa7-39ff-416a-a5c3-fe623ce2163c)
-
-
-Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the dataset cluster descriptions on table below. Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr. The search bar can also be used to find the details of a protein/gene or module of interest. The full .csv file of Cluster Enrichments for dataset can be downloaded at the bottom of the table.
-
-![](https://github.com/user-attachments/assets/4aa94f8a-2cc6-4efe-b5cb-9fcaa7c87080)
-
-
-### Multi-omics Analysis 
-
-Histogram depicting the correlation between datasets using Spearman correlation.
-                                     
-![](https://github.com/user-attachments/assets/1dbf9848-74fc-4605-b6b7-c520e8e71e40)
-
-
-An interactive module network showing each Data1 modules as a yellow diamond, Data2 module as a green triangle and Data3 modules as a blue circle. Clicking directly on the triangle or diamond identifies the module number. Correlation coefficients are seen on arrows connecting modules. Modules can be fluidly switched into different order and moved on the screen. The network can be downloaded as an html for saving.
-                                      
-![](https://github.com/user-attachments/assets/a19f842d-f9a2-418f-908f-b63efca1c45e)
-
-
-Table of the top highly correlated modules, with the number of features within each module, the correlation between modules.
-
-![](https://github.com/user-attachments/assets/cc80d58f-2c48-4611-83b5-634deec518d6)
-
-
-The drop-down menu displays the details for each of the top slecetd highly correlated modules. Select one option to see the features within each module and the correlation between each feature (Corrplot and table). The arrows to the right of each column title can be used to sort data from increasing or decreasing values. Users can also use the search bar to find the details of a feature of interest. The user can download the full .csv file of Module correlations at the bottom of the table.
-
-![](https://github.com/user-attachments/assets/eba0c466-f03f-4bde-bbcf-63956e04cd15)
-
-
-Displays the list of features within a Data 1 module that is highly correlated with a Data 2 module. The Data 1 module ID is specified first, followed by the list of constituent fetures. This information facilitates further pathway analysis and provides valuable insights into the relationships between features.
-
-The full .csv file of the list of metabolites to perform pathway analysis further can be downloaded at the bottom of the table.
-
-![](https://github.com/user-attachments/assets/92fe0169-138b-4410-bdca-2d48f5719fa5)
-
-
-Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The features of top correlated module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. It returns a boxplot
-
-* Class: Lists the two levels of the phenotypes being compared. 
-If there are more than two levels, it compares one level against the others. 
-Dots marking outliers and a legend describing the compared phenotype.
-                                     
-![](https://github.com/user-attachments/assets/9cad9a8f-cec8-4723-b871-fe99344e3ee0)
-
-
-
-## iModMix package: Example to use
-
-This is a basic example which shows you how to analyze two datasets through iModMix package:
-
-```{r Load, message=FALSE}
+```{r}
 # Load the package
 library(iModMix)
 
-# Run the Shiny app
-run_app()
+# Get the path to the expression data file
+path_Metab_exp <- system.file("Example_data/ccRCC4_Data/Metab_exp.rds", package = "iModMix")
 
-# Run through functions
-# Data 1 modules 
+# Load the expression data
+Data_exp1 <- readRDS(path_Metab_exp)
+
+# Check the expression data
+Data_exp1[1:5, 1:5]
+
+# Get the path to the Metadata file
+path_Metadata <- system.file("Example_data/ccRCC4_Data/Metadata.rds", package = "iModMix")
+
+# Load the Metadata
+Metadata <- readRDS(path_Metadata)
+
+# Check the Metadata
+head(Metadata)
+
+```
+
+### Perform preprocessing data
+
+The iModMix pipeline is expecting an input matrix of RNA Sequence counts. Usually we need to rotate (transpose) the input data so rows = treatments and columns = features.
+
+```{r}
+# Preprocess de data in the format require for iModMix
 load_data1 <- load_data(Data_exp1)
-parcorData1 <- partial_cors(load_data1)
+load_data1[1:5, 1:5]
+```
+
+### Perform Partial correlation, network construction and module eigengene calculation
+
+Partial correlation is usually the slowest step. Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimate the partial correlation and captures only direct associations. Below is a preview of the sparse partial correlation of the first five features. 
+
+```{r}
+# Perform Partial correlation 
+parcorData1 <- partial_cors(load_data1, rho = 0.25)
+parcorData1[1:5, 1:5]
+```
+Hierarchical clustering is used to identify common neighbors between the features. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram. 
+
+The dendogram plot is publication-ready and display a dendrogram of features and modules. 
+Axes: The vertical axis (y-axis) represents the dissimilarity between features, while the horizontal axis (x-axis) shows the modules. 
+Branches: Each line in the dendrogram represents a feature. Features that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles.
+
+
+```{r}
+# Perform hierarchical clustering 
 hcData1 <- hierarchical_cluster(parcor_mat = parcorData1, tom = TRUE, min_module_size = 10)
+
+hcClu = hcData1$hclustTree
+hcMod = as.matrix(hcData1$dynamicMods_numeric)
+WGCNA::plotDendroAndColors(dendro = hcClu,
+                                 colors = hcMod,
+                                 dendroLabels = FALSE,
+                                 hang = 0.03,
+                                 addGuide = TRUE,
+                                 guideHang = 0.05,
+                                 groupLabels = "Modules",
+                                 main = "Feature dendrogram and module assignments")
+```
+
+Let's see the cluster assignments. Hierarchical clustering generates multiple modules (clusters) to which each feature is assigned. The table below details the following columns:
+
+* **Feature**: Feature ID.
+* **cluster**: The module where the feature is assigned 
+* **col**: The color used on the hierarchical clustering dendrogram.
+
+```{r}
+# Perform cluster assignments
 cluster_assig_Data1 <- cluster_assignments(as.data.frame(hcData1$cluster_assignments))
+head(cluster_assig_Data1)
+```
+
+The 904 features were assigned into 34 modules. The first principal component (PC1) is calculated for each module, referred to as an eigenfeature. Eigenfeatures are useful for
+
+* Relating the modules to the phenotypes. 
+* Obtaining the correlation between omics datasets (integration). 
+
+```{r}
+# Obtain Eigenfeatures
 eigenData1 <- Eigengenes(load_data1, hcData1$cluster_assignments[,3])
 eigengenes_Data1 <- eigenData1$module_eigenmetab_Me
+eigengenes_Data1[1:5, 1:5]
+```
 
-# Data 2 modules 
+### Load expresion Data 2 and perform partial correlation, network construction and module eigengene calculation
+
+```{r}
+# Get the path to the expression data file
+path_RNA_exp <- system.file("Example_data/ccRCC4_Data/RNA_exp.rds", package = "iModMix")
+
+# Load the expression data
+Data_exp2 <- readRDS(path_RNA_exp)
+
+# Check the expression data
+Data_exp2[1:5, 1:5]
+
+#Preprocess de data in the format require for iModMix
 load_data2 <- load_data(Data_exp2)
-parcorData2 <- partial_cors(load_data2)
-hcData2 <- hierarchical_cluster(parcor_mat = parcorData2, tom = TRUE, min_module_size = 10)
+```
+
+Upload partial correlaed matrix already calculates for Data 2 
+
+```{r}
+# Partial correlation
+# parcorData2 <- partial_cors(load_data2, rho = 0.25) # Dont run this line. Take about ~10 min. 
+# Plase upload partial correlation alreday calculated
+
+path_parcorData2 <- system.file("Example_data/ccRCC4_Data/PartialCorGenes.rds", package = "iModMix")
+
+# Load the expression data
+parcorData2 <- readRDS(path_parcorData2)
+```
+
+Upload hierarchical clustering already calculates for Data 2
+
+```{r}
+# Perform hierarchical clustering 
+# hcData2 <- hierarchical_cluster(parcor_mat = parcorData2, tom = TRUE, min_module_size = 10) # Dont run this line. 
+# Plase upload phierarchical clustering alreday calculated
+
+# Load the precomputed hierarchical clustering results
+path_hcData2 <- system.file("Example_data/ccRCC4_Data/hcData2.rds", package = "iModMix")
+# Load the expression data
+hcData2 <- readRDS(path_hcData2)
+
+# Access the hierarchical clustering tree and module assignments
+hcClu2 <- hcData2$hclustTree
+hcMod2 <- as.matrix(hcData2$dynamicMods_numeric)
+
+# Plot the dendrogram
+WGCNA::plotDendroAndColors(dendro = hcClu2,
+                          colors = hcMod2,
+                          dendroLabels = FALSE,
+                          hang = 0.03,
+                          addGuide = TRUE,
+                          guideHang = 0.05,
+                          groupLabels = "Modules",
+                          main = "Feature dendrogram and module assignments")
+
+```
+
+Perform network construction and module eigengene calculation
+
+```{r}
+# Perform cluster assignment
 cluster_assig_Data2 <- cluster_assignments(as.data.frame(hcData2$cluster_assignments))
 eigenData2 <- Eigengenes(load_data2, hcData2$cluster_assignments[,3])
 eigengenes_Data2 <- eigenData2$module_eigenmetab_Me
+eigengenes_Data2[1:5, 1:5]
+```
+## Relate modules to phenotype
 
-# Integration of Data 1 and Data 2
-eigengenes_list <- list(eigengenes_Data1, eigengenes_Data2)
-cluster_list <- list(hcData1$hcCluster_assignments, hcData2$hcCluster_assignments)
-Integration_Data1_Data2 <- Modules_correlation(eigengenes_list, cluster_list, threshold = 0.5)
-Integration_Data1_Data2[["Top_cor_Prot_metab"]]
+Statistical analysis by Students t-test compares phenotypes chosen as variable of interest. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. It returns a data frame with the following columns 
+
+Here, TN variable (Tumor, Normal) is selected as the phenotype variable of interest 
+
+Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype.
+
+
+```{r}
+# Perform Classification
+Classification_Data <- perform_classification(eigengene_data = eigengenes_Data1,
+                                              metadata = Metadata,
+                                              phenotype_variable = "TN",
+                                              significance_threshold = 0.09)
+
+Classification_Data$result[1:10,]
+
+# Plot BoxPlot
+selected_variable <- "TN"
+levels <- unique(Metadata[[selected_variable]])
+class_label <- paste(levels, collapse = " vs ")
+plot <- Classification_Data$plots[[1]]
+        plot <- plot +
+          ggplot2::labs(title = class_label, fill = as.factor(levels),
+                        x = "Variables",
+                        y = "Class") +
+          ggplot2::theme(
+            axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
+          )
+plot
 ```
 
----
+## Multi-omics analysis: Integration of Data 1 and Data 2
 
+This step perform the integration of the datasets in the analysis. Is necessary list the eigenfuetues obtained from the previus steps. 
+
+```{r}
+# Summarize into list the diffrent egenfuatures 
+eigengenes_list <- list(eigengenes_Data1, eigengenes_Data2)
+cluster_list <- list(hcData1$cluster_assignments, hcData2$cluster_assignments)
+Integration_Data1_Data2 <- Modules_correlation(eigengenes_list, cluster_list, threshold = 0.64)
+TopCorrelations <-Integration_Data1_Data2[["Top_cor_Prot_metab"]]
+head(TopCorrelations)
+
+# Plot correlation
+Correlation_Plot <- Integration_Data1_Data2$Correlation_Plot
+hist(Correlation_Plot[[1]], main = "Correlation: Data 1 / Data 2 ")
+
+#Plot Network
+nodes <- as.data.frame(Integration_Data1_Data2$nodes)
+edges <- as.data.frame(Integration_Data1_Data2$edges)
+n <- Integration_Data1_Data2$n
+
+shapes <- c("diamond", "triangle", "dot")
+colors <- c("orange", "darkgreen", "darkblue")
+
+network <- visNetwork::visNetwork(nodes = nodes, edges = edges, width = "100%", height = "800px")
+network <- visNetwork::visLegend(network, useGroups = FALSE, 
+                                 addNodes = data.frame(label = paste0("Data", 1:n, " Modules"),
+                                 shape = shapes[1:n], color = colors[1:n]),
+                                 addEdges = data.frame(label = "Correlation", shape = "line", length = 200, color = "darkgreen"))
+network <- visNetwork::visInteraction(network, navigationButtons = TRUE)
+network
+      
+```
 

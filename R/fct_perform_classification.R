@@ -52,7 +52,7 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
       ggplot2::labs(title = paste(level_class[[1]], "vs", level_class[[2]]))
 
     plot_list[["Comparison"]] <- p
-    print(p)
+    #print(p)
 
   } else {
     for (class_label in levels(response)) {
@@ -83,7 +83,7 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
         ggplot2::labs(title = paste(class_label, " vs Rest"))
 
       plot_list[[paste(class_label, "vs Rest")]] <- p
-      print(p)
+      #print(p)
     }
   }
 
