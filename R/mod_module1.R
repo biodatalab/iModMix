@@ -1459,9 +1459,6 @@ mod_module1_server <- function(id){
       df <- Classification_Data1()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] <- "Module_id"
-      df$Result_t <- format(df$Result_t, scientific = TRUE)
-      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
-      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
     })
 
@@ -2005,9 +2002,6 @@ mod_module1_server <- function(id){
       df <- Classification_Data2()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Module_id"
-      df$Result_t <- format(df$Result_t, scientific = TRUE)
-      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
-      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
     })
 
@@ -2547,9 +2541,6 @@ mod_module1_server <- function(id){
       df <- Classification_Data3()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Module_id"
-      df$Result_t <- format(df$Result_t, scientific = TRUE)
-      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
-      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
     })
 
@@ -3043,9 +3034,6 @@ mod_module1_server <- function(id){
       df <- Classification_imp_12_1()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Feature"
-      df$Result_t <- format(df$Result_t, scientific = TRUE)
-      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
-      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
     })
 
@@ -3136,9 +3124,6 @@ mod_module1_server <- function(id){
       df <- Classification_imp_12_2()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Feature"
-      df$Result_t <- format(df$Result_t, scientific = TRUE)
-      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
-      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
     })
 
@@ -3386,9 +3371,6 @@ mod_module1_server <- function(id){
       df <- Classification_imp_13_1()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Feature"
-      df$Result_t <- format(df$Result_t, scientific = TRUE)
-      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
-      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
       }
     })
@@ -3491,9 +3473,6 @@ mod_module1_server <- function(id){
       df <- Classification_imp_13_3()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Feature"
-      df$Result_t <- format(df$Result_t, scientific = TRUE)
-      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
-      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
       }
     })
@@ -3750,9 +3729,6 @@ mod_module1_server <- function(id){
       df <- Classification_imp_23_2()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Feature"
-      df$Result_t <- format(df$Result_t, scientific = TRUE)
-      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
-      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
       }
     })
@@ -3855,9 +3831,6 @@ mod_module1_server <- function(id){
       df <- Classification_imp_23_3()$result
       rownames(df) <- NULL
       names(df)[names(df) == "Variable"] = "Feature"
-      df$Result_t <- format(df$Result_t, scientific = TRUE)
-      df$Result_pValue <- format(df$Result_pValue, scientific = TRUE)
-      df$Adjusted_pValue <- format(df$Adjusted_pValue, scientific = TRUE)
       DT::datatable(df)
       }
     })

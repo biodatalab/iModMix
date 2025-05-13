@@ -90,5 +90,9 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
   result <- do.call(rbind, result_list)
   result <- result[order(result$Result_pValue), ]
 
+  result$Result_t <- format(result$Result_t, scientific = TRUE)
+  result$Result_pValue <- format(result$Result_pValue, scientific = TRUE)
+  result$Adjusted_pValue <- format(result$Adjusted_pValue, scientific = TRUE)
+
   return(list(result = result, plots = plot_list))
 }
