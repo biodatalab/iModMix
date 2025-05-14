@@ -1,3 +1,5 @@
+utils::globalVariables(c("value", "feature", "Variable", "Expression", "Class"))
+
 #' module1 UI Function
 #'
 #' @description A shiny Module.
@@ -11,6 +13,7 @@
 #' @importFrom graphics hist legend
 #' @importFrom stats as.dist cor cov hclust na.omit prcomp quantile sd setNames t.test
 #' @importFrom utils read.csv str unzip write.csv
+#' @importFrom graphics par
 
 options(shiny.maxRequestSize=100*1024^2)
 
@@ -2763,14 +2766,14 @@ mod_module1_server <- function(id){
       Correlation_Plot <- Cor_Data_n()$Correlation_Plot
 
       if (length(Correlation_Plot) == 1) {
-        par(mfrow = c(1, 1))
+        graphics::par(mfrow = c(1, 1))
         hist(Correlation_Plot[[1]], main = "Correlation: Data 1 / Data 2 ")
       } else {
-        par(mfrow = c(1, 3))
+        graphics::par(mfrow = c(1, 3))
         hist(Correlation_Plot[[1]], main = "Correlation: Data 1 / Data 2")
         hist(Correlation_Plot[[2]], main = "Correlation: Data 1 / Data 3")
         hist(Correlation_Plot[[3]], main = "Correlation: Data 2 / Data 3")
-        par(mfrow = c(1, 1))  # Restablecer la disposición de los gráficos
+        graphics::par(mfrow = c(1, 1))  # Restablecer la disposición de los gráficos
       }
     })
 
@@ -3885,9 +3888,6 @@ mod_module1_server <- function(id){
         file_path_RNA_exp <- file.path(demo_data_path, "RNA_exp.rds")
         file_path_RNA_annot <- file.path(demo_data_path, "RNA_annot.rds")
         file_path_metadata <- file.path(demo_data_path, "Metadata.rds")
-        # file_path_partial_cor_metab <- file.path(demo_data_path, "PartialCorMetabolites.rds")
-        # file_path_partial_cor_RNA <- file.path(demo_data_path, "PartialCorGenes.rds")
-        # file_path_enrichment <- file.path(demo_data_path, "Enrichment.rds")
 
         precargados_metab_exp <- readRDS(file_path_metab_exp)
         precargados_metab_annot <- readRDS(file_path_metab_annot)
@@ -3950,9 +3950,6 @@ mod_module1_server <- function(id){
         file_path_RNA_expAll <- file.path(demo_data_pathAll, "Prot_exp.rds")
         file_path_RNA_annotAll <- file.path(demo_data_pathAll, "Prot_annot.rds")
         file_path_metadataAll <- file.path(demo_data_pathAll, "Metadata.rds")
-        # file_path_partial_cor_metabAll <- file.path(demo_data_pathAll, "PartialCorMetabolites.rds")
-        # file_path_partial_cor_RNAAll <- file.path(demo_data_pathAll, "PartialCorProt.rds")
-        # file_path_enrichmentAll <- file.path(demo_data_pathAll, "EnrichmentMouse.rds")
 
         precargados_metab_expAll <- readRDS(file_path_metab_expAll)
         precargados_metab_annotAll <- readRDS(file_path_metab_annotAll)

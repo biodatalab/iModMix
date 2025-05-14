@@ -6,6 +6,7 @@
 #' @param phenotype_variable The variable selected by the user in the Shiny app (response variable).
 #' @param significance_threshold A numeric value to filter p-value. Default is 00.5.
 #' @return A data frame with metrics such as AUC, Accuracy, and Error Rate for each binary classification.
+#' @importFrom stats p.adjust
 #'
 #' @export
 perform_classification <- function(eigengene_data, metadata, phenotype_variable, significance_threshold = 0.05) {
@@ -36,7 +37,7 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
         Result_pValue = round(t_test_result$p.value, 4)
       )
     })
-      t_test_results$Adjusted_pValue <- round(p.adjust(t_test_results$Result_pValue, method = "BH"), 4)
+      t_test_results$Adjusted_pValue <- round(stats::p.adjust(t_test_results$Result_pValue, method = "BH"), 4)
       t_test_results <- t_test_results[t_test_results$Result_pValue <= significance_threshold, ]
       t_test_results <- t_test_results[order(t_test_results$Result_pValue), ]
 
@@ -68,7 +69,7 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
         )
       })
 
-      t_test_results$Adjusted_pValue <- p.adjust(t_test_results$Result_pValue, method = "BH")
+      t_test_results$Adjusted_pValue <- stats::p.adjust(t_test_results$Result_pValue, method = "BH")
       t_test_results <- t_test_results[t_test_results$Result_pValue <= significance_threshold, ]
       t_test_results <- t_test_results[order(t_test_results$Result_pValue), ]
 
