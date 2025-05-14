@@ -13,7 +13,7 @@ iModMix can incorporate both identified and unidentified metabolites, addressing
 
 iModMix is available as a user-friendly R Shiny application that requires no programming experience (https://imodmix.moffitt.org), and it includes example data from several publicly available multi-omic studies for exploration. An R package is available for advanced users (https://github.com/biodatalab/iModMix). 
 
-![Overview iModMix](https://github.com/user-attachments/assets/c341ef0f-4e02-4e28-b844-a0356c30d3f4)
+![Overview iModMix](https://github.com/user-attachments/assets/08d1c5cb-8143-4be2-90fd-4d229e852ba9)
 
 ## How to Install This App
 The iModMix suite can be downloaded (cloned) and installed through the GitHub repository. The downloaded file can be unzipped to a destination folder, which should be set as the working directory or file path. Of note, some of the example files (e.g., gene set files) use relative paths, so the program may fail to identify the file if a working directory is not properly set. The suite was developed in R version 4.2. 
