@@ -67,12 +67,12 @@ Note: to install development version:
 
 ### Load expression Data 1 and metadata from clear cell renal cell carcinoma
 
-This is a basic example which shows you how to analyze two datasets through iModMix package: We used 24 normal and 52 tumor clear cell renal cell carcinoma (ccRCC) samples (Golkaram et al. 2022; Tang et al. 2023; Benedetti et al. 2023) as a case study. It contained 23001 genes from RNA-seq and 904 identified metabolites from untargeted metabolomics.
+Below is an example showing the step-by-step analysis of two datasets through iModMix package: We used 24 normal and 52 tumor clear cell renal cell carcinoma (ccRCC, RC20 dataset) samples (Golkaram et al. 2022; Tang et al. 2023; Benedetti et al. 2023) as the example case study. It contains 23001 genes from RNA-seq and 904 identified metabolites from untargeted metabolomics (https://doi.org/10.5281/zenodo.13988161).
 
 Input data: 
 
-* The expression datasets would be a matrix with genes as rows and samples as columns
-* The meta data should be a matrix with the first column named 'Sample' (note the capitalized 'S'). The second and others column names can be arbitrary, i.e. "disease" or "Genotype"
+* The expression dataset inputs must be arranged as a matrix with genes/proteins/features as rows and samples as columns
+* The meta data should be a matrix with the first column named 'Sample' (with a capitalized 'S'). The second column on are user assigned based on comparisons desired, i.e. "disease" or "Genotype"
 
 ```{r}
 # Load the package
@@ -98,28 +98,28 @@ head(Metadata)
 
 ```
 
-### Perform preprocessing data
+### Perform preprocessing of data
 
 The iModMix pipeline is expecting an input matrix of RNA Sequence counts. Usually we need to rotate (transpose) the input data so rows = treatments and columns = features.
 
 ```{r}
-# Preprocess de data in the format require for iModMix
+# Preprocess of data for iModMix upload
 load_data1 <- load_data(Data_exp1)
 load_data1[1:5, 1:5]
 ```
 
-### Perform Partial correlation, network construction and module eigengene calculation
+### Perform Partial correlation analysis, network construction and module eigengene calculation
 
-Partial correlation is usually the slowest step. Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimate the partial correlation and captures only direct associations. Below is a preview of the sparse partial correlation of the first five features. 
+Calculations for partial correlation is usually the slowest step. Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimate the partial correlation and captures only direct associations. Below is a preview of the sparse partial correlation of the first five features. 
 
 ```{r}
 # Perform Partial correlation 
 parcorData1 <- partial_cors(load_data1, rho = 0.25)
 parcorData1[1:5, 1:5]
 ```
-Hierarchical clustering is used to identify common neighbors between the features. Calculations are determined using the topographical overlap matrix (TOM) and based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram. 
+Hierarchical clustering is used to identify common neighbors between the features. Calculations are determined using the topographical overlap matrix (TOM) and are based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram. 
 
-The dendrogram plot is publication-ready and display a dendrogram of features and modules. 
+The dendrogram plot is publication-ready and displays a dendrogram of features and modules. 
 Axes: The vertical axis (y-axis) represents the dissimilarity between features, while the horizontal axis (x-axis) shows the modules. 
 Branches: Each line in the dendrogram represents a feature. Features that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles.
 
@@ -152,7 +152,7 @@ cluster_assig_Data1 <- cluster_assignments(as.data.frame(hcData1$cluster_assignm
 head(cluster_assig_Data1)
 ```
 
-The 904 features were assigned into 34 modules. The first principal component (PC1) is calculated for each module, referred to as an eigenfeature. Eigenfeatures are useful for
+The 904 features (identified metabolites) were assigned into 34 modules. The first principal component (PC1) is calculated for each module, referred to as an eigenfeature. Eigenfeatures are useful for
 
 * Relating the modules to the phenotypes. 
 * Obtaining the correlation between omics datasets (integration). 
@@ -164,9 +164,9 @@ eigengenes_Data1 <- eigenData1$module_eigenmetab_Me
 eigengenes_Data1[1:5, 1:5]
 ```
 
-### Load expresion Data 2 and perform partial correlation, network construction and module eigengene calculation
+### Load expression Data 2 and perform partial correlation analysis, network construction and module eigengene calculation
 
-Since this is purely an example of how to run the entire analysis from start to finish, we are going to limit our analysis to 1000 first features.
+Since this is purely an example of how to run the entire analysis from start to finish, we are going to limit our analysis to the first 1000 features.
 
 ```{r}
 # Get the path to the expression data file
@@ -179,7 +179,7 @@ Data_exp2 <- Data_exp2[1:1000,]
 # Check the expression data
 Data_exp2[1:5, 1:5]
 
-#Preprocess de data in the format require for iModMix
+#Preprocessing of data for iModMix upload
 load_data2 <- load_data(Data_exp2)
 ```
 
@@ -224,11 +224,11 @@ eigengenes_Data2[1:5, 1:5]
 ```
 ## Relate modules to phenotype
 
-Statistical analysis by Students t-test compares phenotypes chosen as variable of interest. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. It returns a data frame with the following columns 
+Statistical analysis by Students t-test compares phenotypes chosen as variable of interest and the user can specify a significance threshold for the p-value, the default p-value is set to 0.05. The eigenfeatures of each module, determined previously, are used as predictors. A data frame is generated with the following columns 
 
 Here, TN variable (Tumor, Normal) is selected as the phenotype variable of interest 
 
-Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype.
+Boxplots are automatically generated at the bottom for significant eigenfeatures, with outliers identified as individual dots and a legend is provided to describe the compared phenotypes.
 
 
 ```{r}
@@ -257,10 +257,10 @@ plot
 
 ## Multi-omics analysis: Integration of Data 1 and Data 2
 
-This step perform the integration of the datasets in the analysis. Is necessary list the eigenfuetues obtained from the previous steps. 
+This step perform the integration of the datasets previously analyzed using the eigenfeatures obtained from the steps above. 
 
 ```{r}
-# Summarize into list the diffrent egenfuatures 
+# Summarize into list the different eigenfeatures 
 eigengenes_list <- list(eigengenes_Data1, eigengenes_Data2)
 cluster_list <- list(cluster_assig_Data1, cluster_assig_Data2)
 Integration_Data1_Data2 <- Modules_correlation(eigengenes_list, cluster_list, threshold = 0.6)
@@ -289,9 +289,9 @@ network
       
 ```
 
-## Enrichment analysis for gene Symbol 
+## Enrichment analysis using gene Symbol 
 
-Enrichment analysis can be performed is annotation data for proteomics or transcriptomics is uploaded, and the column Symbol is available.  Drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the dataset cluster descriptions on table below. For the example transcriptomics Data2 we select "GO_Biological_Process_2023". Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr.
+Enrichment analysis can be performed if annotation data for proteomics or transcriptomics is uploaded with the column Symbol available.  The drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the dataset cluster descriptions on table below. For the example transcriptomics (Data2) we select "GO_Biological_Process_2023". Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr.
 
 ```{r}
 # Perform enrichment analysis per module
