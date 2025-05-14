@@ -1192,14 +1192,10 @@ mod_module1_server <- function(id){
           par_cor1 <- partial_cors(load_data = load_data1, rho = .25)
         } else if (demo_par_cor_Metab()) {
           Sys.sleep(5)
-          par_cor1 <- load_partial_cor_metab()
-
-          #par_cor1 <- precargados_partial_cor_metab
+          par_cor1 <- readRDS(file.path(here::here(),"/inst/Example_data/ccRCC4_Data", "PartialCorMetabolites.rds"))
         } else if (demo_par_cor_Metab_All()) {
           Sys.sleep(5)
-          par_cor1 <- load_partial_cor_metabAll()
-
-          #par_cor1 <- precargados_partial_cor_metabAll
+          par_cor1 <- readRDS(file.path(here::here(),"/inst/Example_data/FloresData_K_TK", "PartialCorMetabolites.rds"))
         }
         incProgress(100, detail = 'Complete!')
         list(par_cor1 = par_cor1)
@@ -1386,14 +1382,10 @@ mod_module1_server <- function(id){
           Sys.sleep(1)
         } else if (demo_enrich_Prot()) {
           Sys.sleep(5)
-          cluster_assignments_enrich_D1 <- load_enrichment()
-
-          #cluster_assignments_enrich_D1 <- precargados_enrichment
+          cluster_assignments_enrich_D1 <- readRDS(file.path(here::here(),"/inst/Example_data/ccRCC4_Data", "Enrichment.rds"))
         } else if (demo_enrich_Prot_All()) {
           Sys.sleep(5)
-          cluster_assignments_enrich_D1 <- load_enrichmentAll()
-
-          #cluster_assignments_enrich_D1 <- precargados_enrichmentAll
+          cluster_assignments_enrich_D1 <- readRDS(file.path(here::here(),"/inst/Example_data/FloresData_K_TK", "EnrichmentMouse.rds"))
         }
         incProgress(100, detail = 'Complete!')
         list(cluster_assignments_enrich_D1 = cluster_assignments_enrich_D1)
@@ -1752,10 +1744,10 @@ mod_module1_server <- function(id){
           par_cor <- partial_cors(load_data = load_data2, rho = .25)
         } else if (demo_par_cor_Prot()) {
           Sys.sleep(5)
-          par_cor <- precargados_partial_cor_RNA
+          par_cor <- readRDS(file.path(here::here(),"/inst/Example_data/ccRCC4_Data", "PartialCorGenes.rds"))
         } else if (demo_par_cor_Prot_All()) {
           Sys.sleep(5)
-          par_cor <- precargados_partial_cor_RNAAll
+          par_cor <- readRDS(file.path(here::here(),"/inst/Example_data/FloresData_K_TK", "PartialCorProt.rds"))
         }
         incProgress(100, detail = 'Complete!')
         list(par_cor = par_cor)
@@ -1940,10 +1932,10 @@ mod_module1_server <- function(id){
           Sys.sleep(1)
         } else if (demo_enrich_Prot()) {
           Sys.sleep(5)
-          cluster_assignments_Data2_enrich <- load_enrichment()
+          cluster_assignments_Data2_enrich <- readRDS(file.path(here::here(),"/inst/Example_data/ccRCC4_Data", "Enrichment.rds"))
         } else if (demo_enrich_Prot_All()) {
           Sys.sleep(5)
-          cluster_assignments_Data2_enrich <- load_enrichmentAll()
+          cluster_assignments_Data2_enrich <- readRDS(file.path(here::here(),"/inst/Example_data/FloresData_K_TK", "EnrichmentMouse.rds"))
         }
         incProgress(100, detail = 'Complete!')
         list(cluster_assignments_Data2_enrich = cluster_assignments_Data2_enrich)
@@ -3902,9 +3894,6 @@ mod_module1_server <- function(id){
         precargados_RNA_exp <- readRDS(file_path_RNA_exp)
         precargados_RNA_annot <- readRDS(file_path_RNA_annot)
         precargados_metadata <- readRDS(file_path_metadata)
-        # precargados_partial_cor_metab <- readRDS(file_path_partial_cor_metab)
-        # precargados_partial_cor_RNA <- readRDS(file_path_partial_cor_RNA)
-        # precargados_enrichment <- readRDS(file_path_enrichment)
 
         incProgress(0, detail = 'Loading Metab_exp.csv')
         Metab_exp(precargados_metab_exp)
@@ -3970,9 +3959,6 @@ mod_module1_server <- function(id){
         precargados_RNA_expAll <- readRDS(file_path_RNA_expAll)
         precargados_RNA_annotAll <- readRDS(file_path_RNA_annotAll)
         precargados_metadataAll <- readRDS(file_path_metadataAll)
-        # precargados_partial_cor_metabAll <- readRDS(file_path_partial_cor_metabAll)
-        # precargados_partial_cor_RNAAll <- readRDS(file_path_partial_cor_RNAAll)
-        # precargados_enrichmentAll <- readRDS(file_path_enrichmentAll)
 
         incProgress(0, detail = 'Loading Metab_exp.csv')
         Metab_exp(precargados_metab_expAll)

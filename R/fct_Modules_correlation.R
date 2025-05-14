@@ -14,7 +14,7 @@ Modules_correlation <- function(eigengenes_list, cluster_list, threshold = 0.50)
   cor_list <- list()
   for (i in 1:(n-1)) {
     for (j in (i+1):n) {
-      cor_matrix <- cor(eigengenes[[i]], eigengenes[[j]], method = 'spearman', use = "pairwise.complete.obs")
+      cor_matrix <- stats::cor(eigengenes[[i]], eigengenes[[j]], method = 'spearman', use = "pairwise.complete.obs")
       cor_df <- reshape2::melt(cor_matrix, varnames = c("from", "to"))
       cor_df$from <- sub("^ME", paste0("D", i), cor_df$from)
       cor_df$to <- sub("^ME", paste0("D", j), cor_df$to)
@@ -27,7 +27,7 @@ Modules_correlation <- function(eigengenes_list, cluster_list, threshold = 0.50)
   cor_listPlot <- list()
   for (i in 1:(n-1)) {
     for (j in (i+1):n) {
-      cor_matrix <- cor(eigengenes[[i]], eigengenes[[j]], method = 'spearman', use = "pairwise.complete.obs")
+      cor_matrix <- stats::cor(eigengenes[[i]], eigengenes[[j]], method = 'spearman', use = "pairwise.complete.obs")
       cor_listPlot[[paste0("cor_Data", i, "_Data", j)]] <- cor_matrix
     }
   }
