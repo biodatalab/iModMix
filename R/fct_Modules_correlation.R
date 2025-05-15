@@ -5,6 +5,37 @@
 #' @param cluster_list list containing cluster_assignments matrix.
 #' @param threshold A numeric value to filter correlations. Default is 0.5.
 #' @return  Return the Top_correlations between Prot and metab eigengenes, graph of red, correlation plot.
+#' @examples
+#' # Simulate eigengene matrices for two omics datasets
+#' set.seed(123)
+#' eig1 <- matrix(rnorm(100), nrow = 10, ncol = 5)
+#' colnames(eig1) <- paste0("ME", 1:5)
+#' eig2 <- matrix(rnorm(100), nrow = 10, ncol = 5)
+#' colnames(eig2) <- paste0("ME", 1:5)
+#'
+#' # Simulate cluster assignments for each omic
+#' cluster1 <- data.frame(
+#'   feature = paste0("F", 1:5),
+#'   cluster = paste0("cluster_", 1:5),
+#'   col = RColorBrewer::brewer.pal(5, "Set1"),
+#'   stringsAsFactors = FALSE
+#' )
+#' cluster2 <- data.frame(
+#'   feature = paste0("F", 6:10),
+#'   cluster = paste0("cluster_", 6:10),
+#'   col = RColorBrewer::brewer.pal(5, "Set2"),
+#'   stringsAsFactors = FALSE
+#' )
+#'
+#' # Run the correlation function
+#' result <- Modules_correlation(
+#'   eigengenes_list = list(eig1, eig2),
+#'   cluster_list = list(cluster1, cluster2),
+#'   threshold = 0.5
+#' )
+#'
+#' # View top correlations
+#' head(result$Top_cor_Prot_metab)
 #' @export
 Modules_correlation <- function(eigengenes_list, cluster_list, threshold = 0.50) {
   n <- length(eigengenes_list)
@@ -104,5 +135,3 @@ Modules_correlation <- function(eigengenes_list, cluster_list, threshold = 0.50)
               edges = edges,
               n = n))
 }
-
-

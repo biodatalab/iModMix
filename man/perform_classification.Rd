@@ -26,3 +26,29 @@ A data frame with metrics such as AUC, Accuracy, and Error Rate for each binary 
 \description{
 Performs classification using different methods such as Welch’s T-test, Random Forest, and K-Nearest Neighbors.
 }
+\examples{
+# Simulate eigengene data
+set.seed(123)
+eigengene_data <- as.data.frame(matrix(rnorm(100), nrow = 10, ncol = 10))
+colnames(eigengene_data) <- paste0("ME", 1:10)
+rownames(eigengene_data) <- paste0("Sample", 1:10)
+
+# Simulate metadata with a binary phenotype
+metadata <- data.frame(
+  Sample = paste0("Sample", 1:10),
+  Phenotype = rep(c("A", "B"), each = 5),
+  stringsAsFactors = FALSE
+)
+
+# Run classification
+result <- perform_classification(
+  eigengene_data = eigengene_data,
+  metadata = metadata,
+  phenotype_variable = "Phenotype",
+  significance_threshold = 0.05
+)
+
+# View results
+head(result$result)
+
+}

@@ -19,3 +19,23 @@ result_list List containing TOM_diss (TOM dissimilarity; NA if argument TOM = FA
 \description{
 Perform hierarchical clustering of a partial correlation matrix. By default uses the topological overlap measure (TOM)
 }
+\examples{
+# Simulate a small partial correlation matrix
+set.seed(123)
+mat <- matrix(rnorm(100), nrow = 10)
+colnames(mat) <- paste0("Gene", 1:10)
+rownames(mat) <- paste0("Sample", 1:10)
+
+# Compute covariance and partial correlation matrix
+cov_mat <- cov(mat)
+parcor_mat <- glassoFast::glassoFast(cov_mat, rho = 0.25)$wi
+diag(parcor_mat) <- NA
+colnames(parcor_mat) <- rownames(parcor_mat) <- paste0("Gene", 1:10)
+
+# Run hierarchical clustering
+result <- hierarchical_cluster(parcor_mat, tom = TRUE, min_module_size = 3)
+
+# View module assignments
+head(result$cluster_assignments)
+
+}

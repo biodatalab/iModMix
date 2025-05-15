@@ -17,3 +17,17 @@ partial_cor_mat A partial correlation matrix with NA's in the diagonal.
 \description{
 Calculates partial correlations based on graphical lasso (https://www.rdocumentation.org/packages/glassoFast/versions/1.0/topics/glassoFast).
 }
+\examples{
+# Simulate a small expression matrix
+set.seed(123)
+mat <- matrix(rnorm(100), nrow = 10, ncol = 10)
+colnames(mat) <- paste0("Gene", 1:10)
+rownames(mat) <- paste0("Sample", 1:10)
+
+# Run partial correlation
+partial_cor_matrix <- partial_cors(mat, rho = 0.25)
+
+# View a portion of the result
+partial_cor_matrix[1:5, 1:5]
+
+}

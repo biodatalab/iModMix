@@ -32,3 +32,49 @@ A list containing annotation matrices for the top correlated modules.
 \description{
 Calculate correlation between the features of top correlated modules.
 }
+\examples{
+# Simulated correlation data
+Cor_Prot_Metab <- data.frame(
+  Prot_module = c("blue", "green"),
+  Metab_module = c("red", "yellow"),
+  Correlation = c(0.9, 0.85),
+  stringsAsFactors = FALSE
+)
+
+# Simulated cluster assignments
+cluster_assignments_Prot <- data.frame(
+  feature = c("P1", "P2"),
+  col = c("blue", "green"),
+  stringsAsFactors = FALSE
+)
+cluster_assignments_metab <- data.frame(
+  feature = c("M1", "M2"),
+  col = c("red", "yellow"),
+  stringsAsFactors = FALSE
+)
+
+# Simulated annotation data
+Prot_annotation <- data.frame(
+  Feature_ID = c("P1", "P2"),
+  Symbol = c("GeneA", "GeneB"),
+  stringsAsFactors = FALSE
+)
+metab_annotation <- data.frame(
+  `row ID` = c("M1", "M2"),
+  HMDB = c("HMDB001", "HMDB002"),
+  stringsAsFactors = FALSE
+)
+
+# Run the function
+result <- annotation_matrices_list(
+  Cor_Prot_Metab,
+  cluster_assignments_Prot,
+  cluster_assignments_metab,
+  Prot_annotation,
+  metab_annotation,
+  top_n = 2
+)
+
+# View result
+names(result$annotation_matrices_list)
+}

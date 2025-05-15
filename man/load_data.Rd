@@ -15,3 +15,22 @@ A prepossessed data matrix.
 \description{
 A function to load and preprocess the expression data.
 }
+\examples{
+# Simulated expression matrix with missing values
+set.seed(123)
+mat <- matrix(rnorm(1000), nrow = 10, ncol = 100)
+colnames(mat) <- paste0("Gene", 1:100)
+rownames(mat) <- paste0("Sample", 1:10)
+mat[sample(length(mat), 50)] <- NA  # introduce some NAs
+
+# Add a Feature_ID column to mimic expected input
+Expression_mat <- cbind(Feature_ID = paste0("F", 1:10), mat)
+Expression_mat <- as.data.frame(Expression_mat)
+
+# Convert Feature_ID to character (if needed)
+Expression_mat$Feature_ID <- as.character(Expression_mat$Feature_ID)
+
+# Run the function
+processed_data <- load_data(Expression_mat)
+
+}

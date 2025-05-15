@@ -4,6 +4,27 @@
 #' @param cluster_assignments_ProtGenes (data frame containing cluster_assignments and HMDB/Symbol)
 #' @param database A list with all the available databases from enrichr
 #' @return result_list data frame containing cluster_assignments and Enrichr terms
+#' @examples
+#' if (interactive()) {
+#'   # Simulated cluster assignments with gene symbols
+#'   cluster_assignments <- data.frame(
+#'     feature = c("F1", "F2", "F3", "F4"),
+#'     cluster = c("cluster_1", "cluster_1", "cluster_2", "cluster_2"),
+#'     col = c("#FF0000", "#FF0000", "#00FF00", "#00FF00"),
+#'     feature_name = c("TP53", "BRCA1", "EGFR", "MYC"),
+#'     stringsAsFactors = FALSE
+#'   )
+#'
+#'   # Run enrichment analysis using Enrichr (requires internet connection)
+#'   enriched_results <- Assigment_genes_enrichr(
+#'     cluster_assignments_ProtGenes = cluster_assignments,
+#'     database = "GO_Biological_Process_2023"
+#'   )
+#'
+#'   # View results
+#'   head(enriched_results)
+#' }
+#'
 #' @export
 Assigment_genes_enrichr <- function(cluster_assignments_ProtGenes,
                                     database = "GO_Biological_Process_2023" ) {

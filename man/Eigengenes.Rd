@@ -20,3 +20,20 @@ A list containing:
 \description{
 Calculates module eigengenes using the WGCNA package.
 }
+\examples{
+# Simulate a small expression matrix
+set.seed(123)
+mat <- matrix(rnorm(100), nrow = 10, ncol = 10)
+colnames(mat) <- paste0("Gene", 1:10)
+rownames(mat) <- paste0("Sample", 1:10)
+
+# Simulate cluster assignments
+clusters <- rep(1:2, each = 5)
+
+# Run Eigengenes function
+result <- Eigengenes(load_data = mat, cluster_assignments = clusters)
+
+# View eigengene matrix
+head(result$module_eigenmetab_Me)
+
+}

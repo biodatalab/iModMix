@@ -32,3 +32,47 @@ A list containing important features and correlation matrices.
 \description{
 Calculate correlation between the features of top correlated modules.
 }
+\examples{
+# Simulated correlation data
+Cor_Datai_Dataj <- data.frame(
+  from = c("blue", "green"),
+  to = c("red", "yellow"),
+  value = c(0.9, 0.85),
+  stringsAsFactors = FALSE
+)
+
+# Simulated cluster assignments
+cluster_assignments_D1 <- data.frame(
+  feature = c("M1", "M2"),
+  col = c("blue", "green"),
+  stringsAsFactors = FALSE
+)
+cluster_assignments_D2 <- data.frame(
+  feature = c("P1", "P2"),
+  col = c("red", "yellow"),
+  stringsAsFactors = FALSE
+)
+
+# Simulated expression matrices
+load_data1 <- matrix(rnorm(20), nrow = 5, ncol = 4)
+colnames(load_data1) <- c("M1", "M2", "X1", "X2")
+rownames(load_data1) <- paste0("Sample", 1:5)
+
+load_data2 <- matrix(rnorm(20), nrow = 5, ncol = 4)
+colnames(load_data2) <- c("P1", "P2", "Y1", "Y2")
+rownames(load_data2) <- paste0("Sample", 1:5)
+
+# Run the function
+result <- FeaturesAnnot_correlation(
+  Cor_Datai_Dataj = Cor_Datai_Dataj,
+  cluster_assignments_D1 = cluster_assignments_D1,
+  cluster_assignments_D2 = cluster_assignments_D2,
+  load_data1 = load_data1,
+  load_data2 = load_data2,
+  top_n = 2
+)
+
+# View top correlations
+result$Top_correlations
+
+}

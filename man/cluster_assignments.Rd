@@ -19,3 +19,27 @@ A data frame containing cluster assignments and selected columns by user.
 \description{
 Cluster assignments with annotation.
 }
+\examples{
+# Simulated cluster assignment data
+cluster_df <- data.frame(
+  feature = paste0("F", 1:5),
+  cluster = paste0("cluster_", 1:5),
+  col = RColorBrewer::brewer.pal(5, "Set1"),
+  stringsAsFactors = FALSE
+)
+
+# Simulated annotation data
+pheno_df <- data.frame(
+  Feature_ID = paste0("F", 1:5),
+  Symbol = c("GeneA", "GeneB", "GeneC", "GeneD", "GeneE"),
+  Description = paste("Description", 1:5),
+  stringsAsFactors = FALSE
+)
+
+# Run without selected columns
+cluster_assignments(cluster_df, PhenoData = pheno_df)
+
+# Run with selected columns
+cluster_assignments(cluster_df, PhenoData = pheno_df, selected_columns = "Description")
+
+}
