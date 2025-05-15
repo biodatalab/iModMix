@@ -12,7 +12,7 @@
 FeaturesAnnot_correlation <- function(Cor_Datai_Dataj, cluster_assignments_D1, cluster_assignments_D2,
                                       load_data1 = load_data1, load_data2 = load_data2, top_n = 5)  {
   # Select the top n correlations
-  Top_correlations <- Cor_Datai_Dataj[order(-abs(Cor_Datai_Dataj$value)), ][1:top_n, ]
+  Top_correlations <- Cor_Datai_Dataj[order(-abs(Cor_Datai_Dataj$value)), ][seq_len(top_n), ]
 
   # Remove the "ME" prefix from Prot_module and Metab_module columns
   Top_correlations[c("from", "to")] <- lapply(Top_correlations[c("from", "to")], function(x) sub("^D[123]", "", x))
@@ -25,7 +25,7 @@ FeaturesAnnot_correlation <- function(Cor_Datai_Dataj, cluster_assignments_D1, c
   correlation_List_list <- list()
 
   # Loop through each top correlation and extract variables from clusters
-  for (i in 1:top_n) {
+  for (i in seq_len(top_n)) {
     Metab_module <- Top_correlations[i, "from"]
     Prot_module <- Top_correlations[i, "to"]
 

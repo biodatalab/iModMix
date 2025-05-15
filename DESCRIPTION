@@ -1,16 +1,19 @@
 Package: iModMix
 Title: Integrative Modules for Multi-Omics Data
-Version: 1.0
+Version: 0.99.0
 Authors@R: 
     person(given = "Isis",
            family = "Narvaez-Bandera",
            role = c("aut", "cre"),
-           email = "isis.narvaez-bandera@moffitt.org")
+           email = "isis.narvaez@upr.edu",
+           comment = c(ORCID = "0000-0001-7320-618X"))
 Description: The iModMix network-based method offers an integrated framework for analyzing multi-omics data, including metabolomics, proteomics, and transcriptomics data, enabling the exploration of intricate molecular associations within heterogeneous biological systems.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 7.3.2
+biocViews: Software, Network, Clustering, Visualization, Transcriptomics, Proteomics, Metabolomics, GeneExpression, PrincipalComponent
+URL: https://github.com/biodatalab/iModMix
+BugReports: https://github.com/biodatalab/iModMix/issues
 Imports: 
     config (>= 0.3.2),
     golem (>= 0.4.1),

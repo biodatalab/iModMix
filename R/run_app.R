@@ -4,6 +4,8 @@
 #' See `?golem::get_golem_options` for more details.
 #' @inheritParams shiny::shinyApp
 #'
+#'
+#' @return A Shiny application object that launches the iModMix interface.
 #' @export
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options

@@ -310,3 +310,9 @@ selected_database <- "GO_Biological_Process_2023"
 | CDH2    | cluster_000019 | #B45B76 | CDH2         | Detection Of Muscle Stretch    | 1/6              | CDH2           | 0.007179245      | 0.11473611                 |
 | AKT3    | cluster_000019 | #B45B76 | AKT3         | Detection Of Muscle Stretch    | 1/6              | CDH2           | 0.007179245      | 0.11473611                 |
 
+
+# Session Information
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```

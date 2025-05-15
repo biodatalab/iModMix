@@ -31,7 +31,7 @@ load_data <- function(Expression_mat = Expression_mat) {
   # Limit the number of columns to 20000 if necessary
   feature_mat_t <- if (length(sd_values) > 20000) {
     if (length(filtered_indices) > 20000) {
-      feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[1:20000]]
+      feature_mat_t[, order(sd_values[filtered_indices], decreasing = TRUE)[seq_len(20000)]]
     } else {
       feature_mat_t[, filtered_indices]
     }

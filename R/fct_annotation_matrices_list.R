@@ -11,14 +11,13 @@
 #' @export
 annotation_matrices_list <- function(Cor_Prot_Metab, cluster_assignments_Prot, cluster_assignments_metab, Prot_annotation = NULL, metab_annotation = NULL, top_n = 5) {
   # Select the top n correlations
-  Top_correlations <- Cor_Prot_Metab[order(-abs(Cor_Prot_Metab$Correlation)), ][1:top_n, ]
+  Top_correlations <- Cor_Prot_Metab[order(-abs(Cor_Prot_Metab$Correlation)), ][seq_len(top_n), ]
 
   # Initialize lists to store cluster assignments, annotation matrices, and expression matrices
   annotation_matrices_list <- list()
 
-
   # Loop through each top correlation and extract variables from clusters
-  for (i in 1:top_n) {
+  for (i in seq_len(top_n)) {
     Prot_module <- Top_correlations[i, "Prot_module"]
     Metab_module <- Top_correlations[i, "Metab_module"]
 
@@ -42,12 +41,7 @@ annotation_matrices_list <- function(Cor_Prot_Metab, cluster_assignments_Prot, c
       annotation_matrices_list[[paste("Annotation_Matrix_Cluster_Metab_", i)]] <- cluster_annotation_matrix_Metab
     }
 
-    # Return the lists
-    return(list(
-      annotation_matrices_list = annotation_matrices_list
-    ))
-
   }
-
+  return(list(annotation_matrices_list = annotation_matrices_list))
 
 }
