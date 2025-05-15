@@ -28,7 +28,7 @@
 hierarchical_cluster = function(parcor_mat, tom = TRUE, min_module_size = 10) {
   # needed here? do any of our functions use multithreading?
   WGCNA::enableWGCNAThreads()
-  if (tom == TRUE) {
+  if (tom) {
     # TOMsimilarity() requires a positive matrix
     tom_sim = WGCNA::TOMsimilarity(abs(parcor_mat))
     # TOM dissimilarity
@@ -40,7 +40,7 @@ hierarchical_cluster = function(parcor_mat, tom = TRUE, min_module_size = 10) {
                                                 deepSplit = 2, pamRespectsDendro = FALSE,
                                                 minClusterSize = min_module_size,
                                                 verbose = 0)
-  } else if (tom == FALSE) {
+  } else {
     # hierarchical clustering with partial correlation matrix
     hclustTree = hclust(as.dist(parcor_mat), method = "average")
     dynamicMods = dynamicTreeCut::cutreeDynamic(dendro = hclustTree,
@@ -48,8 +48,6 @@ hierarchical_cluster = function(parcor_mat, tom = TRUE, min_module_size = 10) {
                                                 deepSplit = 2, pamRespectsDendro = FALSE,
                                                 minClusterSize = min_module_size,
                                                 verbose = 0)
-  } else {
-    stop("Error: invalid tom argument. Must be TRUE/FALSE.")
   }
   # starts counting assignments at 0 (0 is unassigned), so add 1 to all values to conform to R counting (starts at 1)
   dynamicMods = dynamicMods + 1

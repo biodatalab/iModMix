@@ -1158,7 +1158,8 @@ mod_module1_server <- function(id){
           ggplot2::ggplot(combined_data, ggplot2::aes_string(x = "PC1", y = "PC2", color = color_column)) +
             ggplot2::geom_point()
         } else {
-          print("Select a phenotype.")
+          showNotification("Please select a phenotype to color the PCA plot.", type = "message")
+          return(NULL)
         }
       }
     })
@@ -1206,7 +1207,7 @@ mod_module1_server <- function(id){
     })
 
     output$matrizTable <- renderPrint({
-      as.matrix(partial_cors1()$par_cor1[1:5,1:5])
+      as.matrix(partial_cors1()$par_cor1[seq_len(5), seq_len(5)])
     })
 
     # Render the download handler
@@ -1485,7 +1486,7 @@ mod_module1_server <- function(id){
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
-        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+        plots_list <- lapply(seq_along(levels_selected_variable), function(i) {
           Classification_Data1()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)
@@ -1711,7 +1712,8 @@ mod_module1_server <- function(id){
           ggplot2::ggplot(combined_data, ggplot2::aes_string(x = "PC1", y = "PC2", color = color_column)) +
             ggplot2::geom_point()
         } else {
-          print("Select a phenotype.")
+          showNotification("Please select a phenotype to color the PCA plot.", type = "message")
+          return(NULL)
         }
       }
     })
@@ -1758,7 +1760,7 @@ mod_module1_server <- function(id){
     })
 
     output$matrizTable2 <- renderPrint({
-      partial_cors2()$par_cor[1:5,1:5]
+      partial_cors2()$par_cor[seq_len(5), seq_len(5)]
     })
 
     # Render the download handler
@@ -2028,7 +2030,7 @@ mod_module1_server <- function(id){
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
-        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+        plots_list <- lapply(seq_along(levels_selected_variable), function(i) {
           Classification_Data2()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)
@@ -2261,7 +2263,8 @@ mod_module1_server <- function(id){
           ggplot2::ggplot(combined_data, ggplot2::aes_string(x = "PC1", y = "PC2", color = color_column)) +
             ggplot2::geom_point()
         } else {
-          print("Select a phenotype.")
+          showNotification("Please select a phenotype to color the PCA plot.", type = "message")
+          return(NULL)
         }
       }
     })
@@ -2300,7 +2303,7 @@ mod_module1_server <- function(id){
     })
 
     output$matrizTable3 <- renderPrint({
-      partial_cors3()$par_cor[1:5,1:5]
+      partial_cors3()$par_cor[seq_len(5), seq_len(5)]
     })
 
     # Render the download handler
@@ -2567,7 +2570,7 @@ mod_module1_server <- function(id){
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
-        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+        plots_list <- lapply(seq_along(levels_selected_variable), function(i) {
           Classification_Data3()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)
@@ -2789,8 +2792,8 @@ mod_module1_server <- function(id){
       colors <- c("orange", "darkgreen", "darkblue")
 
       network <- visNetwork::visNetwork(nodes = nodes, edges = edges, width = "100%", height = "800px")
-      network <- visNetwork::visLegend(network, useGroups = FALSE, addNodes = data.frame(label = paste0("Data", 1:n, " Modules"),
-                                                                                            shape = shapes[1:n], color = colors[1:n]),
+      network <- visNetwork::visLegend(network, useGroups = FALSE, addNodes = data.frame(label = paste0("Data", seq_len(n), " Modules"),
+                                                                                            shape = shapes[seq_len(n)], color = colors[seq_len(n)]),
                                        addEdges = data.frame(label = "Correlation", shape = "line", length = 200, color = "darkgreen"))
       network <- visNetwork::visInteraction(network, navigationButtons = TRUE)
 
@@ -2801,7 +2804,7 @@ mod_module1_server <- function(id){
         nodes <- merge(nodes, Enriched_Data1[, c("col", "enriched_Term")], by.x = "id", by.y = "col", all.x = TRUE)
         nodes$enriched_Term0 <- ifelse(nchar(nodes$enriched_Term) > 20, paste0(substring(nodes$enriched_Term, 1, 20), "..."), nodes$enriched_Term)
         nodes$label <- ifelse(grepl("^D1", nodes$id), paste(nodes$label, nodes$enriched_Term, sep = "\n"), nodes$label)
-        nodes = nodes[,1:7]
+        nodes <- nodes[, seq_len(min(7, ncol(nodes)))]
       }
 
       if (input$runEnrichment2) {
@@ -2811,7 +2814,7 @@ mod_module1_server <- function(id){
         nodes <- merge(nodes, Enriched_Data2[, c("col", "enriched_Term")], by.x = "id", by.y = "col", all.x = TRUE)
         nodes$enriched_Term0 <- ifelse(nchar(nodes$enriched_Term) > 20, paste0(substring(nodes$enriched_Term, 1, 20), "..."), nodes$enriched_Term)
         nodes$label <- ifelse(grepl("^D2", nodes$id), paste(nodes$label, nodes$enriched_Term, sep = "\n"), nodes$label)
-        nodes = nodes[,1:7]
+        nodes <- nodes[, seq_len(min(7, ncol(nodes)))]
       }
 
       if (input$runEnrichment3) {
@@ -2821,12 +2824,12 @@ mod_module1_server <- function(id){
         nodes <- merge(nodes, Enriched_Data3[, c("col", "enriched_Term")], by.x = "id", by.y = "col", all.x = TRUE)
         nodes$enriched_Term0 <- ifelse(nchar(nodes$enriched_Term) > 20, paste0(substring(nodes$enriched_Term, 1, 20), "..."), nodes$enriched_Term)
         nodes$label <- ifelse(grepl("^D3", nodes$id), paste(nodes$label, nodes$enriched_Term, sep = "\n"), nodes$label)
-        nodes = nodes[,1:7]
+        nodes <- nodes[, seq_len(min(7, ncol(nodes)))]
       }
 
       network <- visNetwork::visNetwork(nodes = nodes, edges = edges, width = "100%", height = "800px")
-      network <- visNetwork::visLegend(network, useGroups = FALSE, addNodes = data.frame(label = paste0("Data", 1:n, " Modules"),
-                                                                                         shape = shapes[1:n], color = colors[1:n]),
+      network <- visNetwork::visLegend(network, useGroups = FALSE, addNodes = data.frame(label = paste0("Data", seq_len(n), " Modules"),
+                                                                                         shape = shapes[seq_len(n)], color = colors[seq_len(n)]),
                                        addEdges = data.frame(label = "Correlation", shape = "line", length = 200, color = "darkgreen"))
       network <- visNetwork::visInteraction(network, navigationButtons = TRUE)
 
@@ -2851,7 +2854,7 @@ mod_module1_server <- function(id){
 
     observeEvent(input$TopModules_12, {
       n <- input$TopModules_12
-      choices <- setNames(as.list(1:n), paste0("Top_", 1:n))
+      choices <- setNames(as.list(seq_len(n)), paste0("Top_", seq_len(n)))
       updateSelectInput(session, "visualization_list_12", choices = choices)
     })
 
@@ -2917,7 +2920,7 @@ mod_module1_server <- function(id){
       n <- input$visualization_list_12
       df_list <- list()
 
-      for (i in 1:n) {
+      for (i in seq_len(n)) {
         df1_1 <- as.data.frame(ImpVar_D1_D2()$cluster_assignments[[2*i - 1]])
         df1_2 <- as.data.frame(ImpVar_D1_D2()$cluster_assignments[[2*i]])
         df2_1 <- as.data.frame(ImpVar_D1_D2()$expression_matrices[[2*i - 1]])
@@ -3050,7 +3053,7 @@ mod_module1_server <- function(id){
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
-        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+        plots_list <- lapply(seq_along(levels_selected_variable), function(i) {
           Classification_imp_12_1()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)
@@ -3140,7 +3143,7 @@ mod_module1_server <- function(id){
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
-        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+        plots_list <- lapply(seq_along(levels_selected_variable), function(i) {
           Classification_imp_12_2()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)
@@ -3165,7 +3168,7 @@ mod_module1_server <- function(id){
 
     observeEvent(input$TopModules_13, {
       n <- input$TopModules_13
-      choices <- setNames(as.list(1:n), paste0("Top_", 1:n))
+      choices <- setNames(as.list(seq_len(n)), paste0("Top_", seq_len(n)))
       updateSelectInput(session, "visualization_list_13", choices = choices)
     })
 
@@ -3231,7 +3234,7 @@ mod_module1_server <- function(id){
       n <- input$visualization_list_13
       df_list <- list()
 
-      for (i in 1:n) {
+      for (i in seq_len(n)) {
         df1_1 <- as.data.frame(ImpVar_D1_D3()$cluster_assignments[[2*i - 1]])
         df1_2 <- as.data.frame(ImpVar_D1_D3()$cluster_assignments[[2*i]])
         df2_1 <- as.data.frame(ImpVar_D1_D3()$expression_matrices[[2*i - 1]])
@@ -3388,7 +3391,7 @@ mod_module1_server <- function(id){
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
-        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+        plots_list <- lapply(seq_len(levels_selected_variable), function(i) {
           Classification_imp_13_1()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)
@@ -3490,7 +3493,7 @@ mod_module1_server <- function(id){
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
-        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+        plots_list <- lapply(seq_len(levels_selected_variable), function(i) {
           Classification_imp_13_3()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)
@@ -3523,7 +3526,7 @@ mod_module1_server <- function(id){
 
     observeEvent(input$TopModules_23, {
       n <- input$TopModules_23
-      choices <- setNames(as.list(1:n), paste0("Top_", 1:n))
+      choices <- setNames(as.list(seq_len(n)), paste0("Top_", seq_len(n)))
       updateSelectInput(session, "visualization_list_23", choices = choices)
     })
 
@@ -3589,7 +3592,7 @@ mod_module1_server <- function(id){
       n <- input$visualization_list_23
       df_list <- list()
 
-      for (i in 1:n) {
+      for (i in seq_len(n)) {
         df1_1 <- as.data.frame(ImpVar_D2_D3()$cluster_assignments[[2*i - 1]])
         df1_2 <- as.data.frame(ImpVar_D2_D3()$cluster_assignments[[2*i]])
         df2_1 <- as.data.frame(ImpVar_D2_D3()$expression_matrices[[2*i - 1]])
@@ -3746,7 +3749,7 @@ mod_module1_server <- function(id){
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
-        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+        plots_list <- lapply(seq_along(levels_selected_variable), function(i) {
           Classification_imp_23_2()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)
@@ -3848,7 +3851,7 @@ mod_module1_server <- function(id){
         return(plot)
       } else {
         # Print multiple boxplot charts, one for each level of the selected variable
-        plots_list <- lapply(1:length(levels_selected_variable), function(i) {
+        plots_list <- lapply(seq_along(levels_selected_variable), function(i) {
           Classification_imp_23_3()$plots[[i]]
         })
         plot <- cowplot::plot_grid(plotlist = plots_list)

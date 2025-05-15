@@ -43,8 +43,9 @@ Modules_correlation <- function(eigengenes_list, cluster_list, threshold = 0.50)
   clusters <- cluster_list
 
   cor_list <- list()
-  for (i in 1:(n-1)) {
-    for (j in (i+1):n) {
+
+  for (i in seq_len(n - 1)) {
+    for (j in seq(i + 1, n)) {
       cor_matrix <- stats::cor(eigengenes[[i]], eigengenes[[j]], method = 'spearman', use = "pairwise.complete.obs")
       cor_df <- reshape2::melt(cor_matrix, varnames = c("from", "to"))
       cor_df$from <- sub("^ME", paste0("D", i), cor_df$from)
@@ -56,15 +57,16 @@ Modules_correlation <- function(eigengenes_list, cluster_list, threshold = 0.50)
   }
 
   cor_listPlot <- list()
-  for (i in 1:(n-1)) {
-    for (j in (i+1):n) {
+
+  for (i in seq_len(n - 1)) {
+    for (j in seq(i + 1, n)) {
       cor_matrix <- stats::cor(eigengenes[[i]], eigengenes[[j]], method = 'spearman', use = "pairwise.complete.obs")
       cor_listPlot[[paste0("cor_Data", i, "_Data", j)]] <- cor_matrix
     }
   }
 
   cor_top_list <- lapply(cor_list, function(cor_df) {
-    cor_top_list1 <- cor_df[1:3, ]
+    cor_top_list1 <- cor_df[seq_len(min(3, nrow(cor_df))), ]
     cor_top_list2 <- subset(cor_df, abs(value) >= threshold)
     if (nrow(cor_top_list1) >= nrow(cor_top_list2)) {
       cor_top_list1
@@ -87,7 +89,7 @@ Modules_correlation <- function(eigengenes_list, cluster_list, threshold = 0.50)
   shapes <- c("diamond", "triangle", "dot")
   colors <- c("orange", "darkgreen", "darkblue")
 
-  for (k in 1:length(cor_top_list)) {
+  for (k in seq_along(cor_top_list)) {
     if (length(cor_top_list) == 1) {
       i <- 1
       j <- 2
