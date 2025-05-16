@@ -1131,8 +1131,8 @@ mod_module1_server <- function(id){
 
     load_data1 <- reactive({
       req(Metab_exp())
-      Expression_mat = Metab_exp()
-      feature_mat_t_imp_data = load_data(Expression_mat = Expression_mat)
+      Expression_mat <- Metab_exp()
+      feature_mat_t_imp_data <- load_data(Expression_mat = Expression_mat)
       return(list(feature_mat_t_imp_data = feature_mat_t_imp_data))
     })
 
@@ -1191,7 +1191,7 @@ mod_module1_server <- function(id){
       withProgress(message = 'Calculating partial correlations Data 1...', value = 0, {
         if (is.null(demo_par_cor_Metab()) && is.null(demo_par_cor_Metab_All())) {
           req(load_data1()$feature_mat_t_imp_data)
-          load_data1 = load_data1()$feature_mat_t_imp_data
+          load_data1 <- load_data1()$feature_mat_t_imp_data
           Sys.sleep(5)
           par_cor1 <- partial_cors(load_data = load_data1, rho = .25)
         } else if (demo_par_cor_Metab()) {
@@ -1222,11 +1222,11 @@ mod_module1_server <- function(id){
     )
 
     hierarchical_cluster1 <- reactive({
-      par_cor = as.matrix(partial_cors1()$par_cor1)
-      hc = hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
-      hclusterTree = hc$hclustTree
-      hcDynMods = hc$dynamicMods_numeric
-      hcCluster_assignments = hc$cluster_assignments
+      par_cor <- as.matrix(partial_cors1()$par_cor1)
+      hc <- hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
+      hclusterTree <- hc$hclustTree
+      hcDynMods <- hc$dynamicMods_numeric
+      hcCluster_assignments <- hc$cluster_assignments
       return(list(hclusterTree = hclusterTree, hcDynMods = hcDynMods, hcCluster_assignments = hcCluster_assignments))
     })
 
@@ -1239,8 +1239,8 @@ mod_module1_server <- function(id){
     })
 
     output$hc_plot <- renderPlot({
-      hcClu = hierarchical_cluster1()$hclusterTree
-      hcMod = as.matrix(hierarchical_cluster1()$hcDynMods)
+      hcClu <- hierarchical_cluster1()$hclusterTree
+      hcMod <- as.matrix(hierarchical_cluster1()$hcDynMods)
       WGCNA::plotDendroAndColors(dendro = hcClu,
                                  colors = hcMod,
                                  dendroLabels = FALSE,
@@ -1258,8 +1258,8 @@ mod_module1_server <- function(id){
       },
       content = function(file) {
         png(file)
-        hcClu = hierarchical_cluster1()$hclusterTree
-        hcMod = hierarchical_cluster1()$hcDynMods
+        hcClu <- hierarchical_cluster1()$hclusterTree
+        hcMod <- hierarchical_cluster1()$hcDynMods
         WGCNA::plotDendroAndColors(dendro = hcClu,
                                    colors = hcMod,
                                    dendroLabels = FALSE,
@@ -1273,11 +1273,11 @@ mod_module1_server <- function(id){
     )
 
     cluster_assignments_Data1 <- reactive({
-      cluster = as.data.frame(hierarchical_cluster1()$hcCluster_assignments)
+      cluster <- as.data.frame(hierarchical_cluster1()$hcCluster_assignments)
       if (is.null(Metab_annot())) {
         cluster_assignments_D1 <- cluster_assignments(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
       } else {
-        Metab_annot = Metab_annot()
+        Metab_annot <- Metab_annot()
         annot_Uni <- Metab_annot[Metab_annot$Feature_ID %in% colnames(partial_cors1()$par_cor), ]
         cluster_assignments_D1 <- cluster_assignments(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping1)
       }
@@ -1285,9 +1285,9 @@ mod_module1_server <- function(id){
     })
 
     output$tableClusterAssig <- DT::renderDataTable({
-      df1 = cluster_assignments_Data1()$cluster_assignments_D1
-      df1 = df1[, -which(names(df1) == "cluster")]
-      df1 = df1[, -which(names(df1) == "feature_name")]
+      df1 <- cluster_assignments_Data1()$cluster_assignments_D1
+      df1 <- df1[, -which(names(df1) == "cluster")]
+      df1 <- df1[, -which(names(df1) == "feature_name")]
       names(df1)[names(df1) == "feature"]  <- "Feature_ID"
       names(df1)[names(df1) == "col"] <- "Module_id"
       DT::datatable(df1)
@@ -1305,14 +1305,14 @@ mod_module1_server <- function(id){
 
     Eigengene1 <- reactive({
       req(load_data1()$feature_mat_t_imp_data)
-      load_data = load_data1()$feature_mat_t_imp_data
-      Cluster_assignments = hierarchical_cluster1()$hcCluster_assignments[,3]
-      Eigengenes = Eigengenes( load_data = load_data, cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
+      load_data <- load_data1()$feature_mat_t_imp_data
+      Cluster_assignments <- hierarchical_cluster1()$hcCluster_assignments[,3]
+      Eigengenes <- Eigengenes( load_data = load_data, cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
       return(list(Eigengenes = Eigengenes))
     })
 
     output$tableEigengene <- DT::renderDataTable({
-      df2 = as.data.frame(Eigengene1()$Eigengenes)
+      df2 <- as.data.frame(Eigengene1()$Eigengenes)
       df2[] <- lapply(df2, function(x) if(is.numeric(x)) round(x, digits = 4) else x)
       DT::datatable(df2)
     })
@@ -1328,7 +1328,7 @@ mod_module1_server <- function(id){
     )
 
     output$heatmapEigenMetab <- renderPlot({
-      metab_heatmap_plot = ComplexHeatmap::Heatmap(
+      metab_heatmap_plot <- ComplexHeatmap::Heatmap(
         as.data.frame(t(Eigengene1()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
         row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
         heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
@@ -1346,7 +1346,7 @@ mod_module1_server <- function(id){
       },
       content = function(file) {
         png(file)
-        metab_heatmap_plot = ComplexHeatmap::Heatmap(
+        metab_heatmap_plot <- ComplexHeatmap::Heatmap(
           as.data.frame(t(Eigengene1()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
           row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
           heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
@@ -1360,7 +1360,7 @@ mod_module1_server <- function(id){
     )
 
     databaseSelectorListData1 <- reactive({
-      gene_set_library = readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE)
+      gene_set_library <- readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE)
       choices <- gene_set_library[[1]]
       data.frame(choices = choices)
     })
@@ -1398,8 +1398,8 @@ mod_module1_server <- function(id){
     })
 
     output$tableClusterAssigAnnot1 <- DT::renderDataTable({
-      df3 = Data1_enrich()$cluster_assignments_enrich_D1
-      names(df3)[names(df3) == "col"] = "Module_id"
+      df3 <- Data1_enrich()$cluster_assignments_enrich_D1
+      names(df3)[names(df3) == "col"] <- "Module_id"
       df3$enriched_P.value <- round(df3$enriched_P.value, digits = 4)
       df3$enriched_Adjusted.P.value <- round(df3$enriched_Adjusted.P.value, digits = 4)
       DT::datatable(df3)
@@ -1438,10 +1438,10 @@ mod_module1_server <- function(id){
 
 
     Classification_Data1 <- reactive({
-      eigengenes_metab = as.data.frame(Eigengene1()$Eigengenes)
+      eigengenes_metab <- as.data.frame(Eigengene1()$Eigengenes)
       metadata <- as.data.frame(metadata())
-      phenotype_variable = input$phenotypeSelector
-      significance_threshold = input$pValueThreshold
+      phenotype_variable <- input$phenotypeSelector
+      significance_threshold <- input$pValueThreshold
       Classification_Data <- perform_classification( eigengene_data = eigengenes_metab,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
@@ -1514,7 +1514,7 @@ mod_module1_server <- function(id){
       cluster_expression_matrix_Metab <- load_data1()$feature_mat_t_imp_data[, colnames(load_data1()$feature_mat_t_imp_data) %in% cluster_variables_Metab, drop = FALSE]
       combined_data <- merge(metadata()[,c("Sample", selected_variable)], cluster_expression_matrix_Metab, by.x = "Sample", by.y = "row.names", all.x = TRUE)
       heatmap_data_sub_order <- combined_data[order(combined_data[[selected_variable]]), ]
-      data_heat= t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
+      data_heat <- t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
       pca_res <- prcomp(cluster_expression_matrix_Metab)
       return(list(pca_res = pca_res, data_heat= data_heat, heatmap_data_sub_order = heatmap_data_sub_order, cluster_variables_MetabKEGG = cluster_variables_MetabKEGG))
     })
@@ -1537,10 +1537,10 @@ mod_module1_server <- function(id){
         "FeaturesOnMetabolomicsModule.csv"
       },
       content = function(file) {
-        df2 = as.data.frame(loadings_metab()$cluster_variables_MetabKEGG)
-        names(df2) = "Feature_ID"
+        df2 <- as.data.frame(loadings_metab()$cluster_variables_MetabKEGG)
+        names(df2) <- "Feature_ID"
         if (!is.null(Metab_annot())) {
-          AnnoMeta = as.data.frame(Metab_annot())
+          AnnoMeta <- as.data.frame(Metab_annot())
           df2 <- merge(df2, AnnoMeta[, c("Feature_ID", "KEGG", "Metabolite")], by = "Feature_ID", all.x = TRUE)
         }
         write.csv(df2, file, row.names = FALSE)
@@ -1573,12 +1573,12 @@ mod_module1_server <- function(id){
         col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
       }
       # Column annotation
-      column_anno = ComplexHeatmap::HeatmapAnnotation(
+      column_anno <- ComplexHeatmap::HeatmapAnnotation(
         selected_variable = as.factor(loadings_metab()$heatmap_data_sub_order[[selected_variable]]),
         col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
         annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
       )
-      metab_heatmap_plot = ComplexHeatmap::Heatmap(
+      metab_heatmap_plot <- ComplexHeatmap::Heatmap(
         loadings_metab()$data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
         row_title = "Metabolite Abundance", column_title = "Tissues", name = "Z-score",
         heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
@@ -1605,13 +1605,13 @@ mod_module1_server <- function(id){
           col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
         }
 
-        column_anno = ComplexHeatmap::HeatmapAnnotation(
+        column_anno <- ComplexHeatmap::HeatmapAnnotation(
           selected_variable = as.factor(loadings_metab()$heatmap_data_sub_order[[selected_variable]]),
           col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
           annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
         )
 
-        metab_heatmap_plot = ComplexHeatmap::Heatmap(
+        metab_heatmap_plot <- ComplexHeatmap::Heatmap(
           loadings_metab()$data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
           row_title = "Metabolite Abundance", column_title = "Tissues", name = "Z-score",
           heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
@@ -1686,8 +1686,8 @@ mod_module1_server <- function(id){
 
     load_data2 <- reactive({
       req(Prot_exp())
-      Expression_mat = Prot_exp()
-      feature_mat_t_imp_data = load_data(Expression_mat = Expression_mat)
+      Expression_mat <- Prot_exp()
+      feature_mat_t_imp_data <- load_data(Expression_mat = Expression_mat)
       return(list(feature_mat_t_imp_data = feature_mat_t_imp_data))
     })
 
@@ -1745,7 +1745,7 @@ mod_module1_server <- function(id){
       withProgress(message = 'Calculating partial correlations Data 2...', value = 0, {
         if (is.null(demo_par_cor_Prot()) && is.null(demo_par_cor_Prot_All())) {
           req(load_data2()$feature_mat_t_imp_data)
-          load_data2 = load_data2()$feature_mat_t_imp_data
+          load_data2 <- load_data2()$feature_mat_t_imp_data
           Sys.sleep(5)
           par_cor <- partial_cors(load_data = load_data2, rho = .25)
         } else if (demo_par_cor_Prot()) {
@@ -1777,11 +1777,11 @@ mod_module1_server <- function(id){
     )
 
     hierarchical_cluster2 <- reactive({
-      par_cor = partial_cors2()$par_cor
-      hc = hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
-      hclusterTree = hc$hclustTree
-      hcDynMods = hc$dynamicMods_numeric
-      hcCluster_assignments = hc$cluster_assignments
+      par_cor <- partial_cors2()$par_cor
+      hc <- hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
+      hclusterTree <- hc$hclustTree
+      hcDynMods <- hc$dynamicMods_numeric
+      hcCluster_assignments <- hc$cluster_assignments
       return(list(hclusterTree = hclusterTree,
                   hcDynMods = hcDynMods,
                   hcCluster_assignments = hcCluster_assignments ))
@@ -1796,8 +1796,8 @@ mod_module1_server <- function(id){
     })
 
     output$hc_plot2 <- renderPlot({
-      hcClu = hierarchical_cluster2()$hclusterTree
-      hcMod = hierarchical_cluster2()$hcDynMods
+      hcClu <- hierarchical_cluster2()$hclusterTree
+      hcMod <- hierarchical_cluster2()$hcDynMods
       WGCNA::plotDendroAndColors(dendro = hcClu,
                                  colors = hcMod,
                                  dendroLabels = FALSE,
@@ -1815,8 +1815,8 @@ mod_module1_server <- function(id){
       },
       content = function(file) {
         png(file)
-        hcClu = hierarchical_cluster2()$hclusterTree
-        hcMod = hierarchical_cluster2()$hcDynMods
+        hcClu <- hierarchical_cluster2()$hclusterTree
+        hcMod <- hierarchical_cluster2()$hcDynMods
         WGCNA::plotDendroAndColors(dendro = hcClu,
                                    colors = hcMod,
                                    dendroLabels = FALSE,
@@ -1830,11 +1830,11 @@ mod_module1_server <- function(id){
     )
 
     cluster_assignments_Data2 <- reactive({
-      cluster = as.data.frame(hierarchical_cluster2()$hcCluster_assignments)
+      cluster <- as.data.frame(hierarchical_cluster2()$hcCluster_assignments)
       if (is.null(Prot_annot())) {
         cluster_assignments_D2 <- cluster_assignments(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
       } else {
-        Prot_annot = Prot_annot()
+        Prot_annot <- Prot_annot()
         annot_Uni <- Prot_annot[Prot_annot$Feature_ID %in% colnames(partial_cors2()$par_cor), ]
         cluster_assignments_D2 <- cluster_assignments(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping2)
       }
@@ -1842,11 +1842,11 @@ mod_module1_server <- function(id){
     })
 
     output$tableClusterAssig2 <- DT::renderDataTable({
-      df1 = cluster_assignments_Data2()$cluster_assignments_D2
-      df1 = df1[, -which(names(df1) == "cluster")]
-      df1 = df1[, -which(names(df1) == "feature_name")]
-      names(df1)[names(df1) == "feature"] = "Feature_ID"
-      names(df1)[names(df1) == "col"] = "Module_id"
+      df1 <- cluster_assignments_Data2()$cluster_assignments_D2
+      df1 <- df1[, -which(names(df1) == "cluster")]
+      df1 <- df1[, -which(names(df1) == "feature_name")]
+      names(df1)[names(df1) == "feature"] <- "Feature_ID"
+      names(df1)[names(df1) == "col"] <- "Module_id"
       DT::datatable(df1)
     })
 
@@ -1862,15 +1862,15 @@ mod_module1_server <- function(id){
 
     Eigengene2 <- reactive({
       req(load_data2()$feature_mat_t_imp_data)
-      load_data = load_data2()$feature_mat_t_imp_data
-      Cluster_assignments = hierarchical_cluster2()$hcCluster_assignments[,3]
-      Eigengenes = Eigengenes(load_data = load_data,
+      load_data <- load_data2()$feature_mat_t_imp_data
+      Cluster_assignments <- hierarchical_cluster2()$hcCluster_assignments[,3]
+      Eigengenes <- Eigengenes(load_data = load_data,
                               cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
       return(list(Eigengenes = Eigengenes))
     })
 
     output$tableEigengene2 <- DT::renderDataTable({
-      df3 = as.data.frame(Eigengene2()$Eigengenes)
+      df3 <- as.data.frame(Eigengene2()$Eigengenes)
       df3[] <- lapply(df3, function(x) if(is.numeric(x)) round(x, digits = 4) else x)
       DT::datatable(df3)
     })
@@ -1886,7 +1886,7 @@ mod_module1_server <- function(id){
     )
 
     output$heatmapEigenProt <- renderPlot({
-      metab_heatmap_plot = ComplexHeatmap::Heatmap(
+      metab_heatmap_plot <- ComplexHeatmap::Heatmap(
         as.data.frame(t(Eigengene2()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
         row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
         heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
@@ -1903,7 +1903,7 @@ mod_module1_server <- function(id){
       },
       content = function(file) {
         png(file)
-        metab_heatmap_plot = ComplexHeatmap::Heatmap(
+        metab_heatmap_plot <- ComplexHeatmap::Heatmap(
           as.data.frame(t(Eigengene2()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
           row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
           heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
@@ -1918,7 +1918,7 @@ mod_module1_server <- function(id){
 
 
     databaseSelectorListData2 <- reactive({
-      gene_set_library = readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE)
+      gene_set_library <- readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE)
       choices <- gene_set_library[[1]]
       data.frame(choices = choices)
     })
@@ -1951,9 +1951,9 @@ mod_module1_server <- function(id){
     })
 
     output$tableClusterAssigAnnot2 <- DT::renderDataTable({
-      df3 = Data2_enrich()$cluster_assignments_Data2_enrich
-      df3 = df3[, -which(names(df3) == "cluster")]
-      names(df3)[names(df3) == "col"] = "Module_id"
+      df3 <- Data2_enrich()$cluster_assignments_Data2_enrich
+      df3 <- df3[, -which(names(df3) == "cluster")]
+      names(df3)[names(df3) == "col"] <- "Module_id"
       df3$enriched_P.value <- round(df3$enriched_P.value, digits = 4)
       df3$enriched_Adjusted.P.value <- round(df3$enriched_Adjusted.P.value, digits = 4)
       DT::datatable(df3)
@@ -1985,10 +1985,10 @@ mod_module1_server <- function(id){
     })
 
     Classification_Data2 <- reactive({
-      eigengenes_prot = as.data.frame(Eigengene2()$Eigengenes)
+      eigengenes_prot <- as.data.frame(Eigengene2()$Eigengenes)
       metadata <- as.data.frame(metadata())
-      phenotype_variable = input$phenotypeSelector2
-      significance_threshold = input$pValueThreshold2
+      phenotype_variable <- input$phenotypeSelector2
+      significance_threshold <- input$pValueThreshold2
       Classification_Data2 <- perform_classification( eigengene_data = eigengenes_prot,
                                                          metadata = metadata,
                                                          phenotype_variable = phenotype_variable,
@@ -2001,7 +2001,7 @@ mod_module1_server <- function(id){
     output$classification_results2 <- DT::renderDataTable({
       df <- Classification_Data2()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "Module_id"
+      names(df)[names(df) == "Variable"] <- "Module_id"
       DT::datatable(df)
     })
 
@@ -2061,18 +2061,18 @@ mod_module1_server <- function(id){
       cluster_expression_matrix_Prot <- load_data2()$feature_mat_t_imp_data[, colnames(load_data2()$feature_mat_t_imp_data) %in% cluster_variables_Prot, drop = FALSE]
       combined_data <- merge(metadata()[,c("Sample", selected_variable)], cluster_expression_matrix_Prot, by.x = "Sample", by.y = "row.names", all.x = TRUE)
       heatmap_data_sub_order <- combined_data[order(combined_data[[selected_variable]]), ]
-      data_heat= t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
+      data_heat <- t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
       pca_res <- prcomp(cluster_expression_matrix_Prot)
       return(list(pca_res = pca_res, data_heat= data_heat, heatmap_data_sub_order = heatmap_data_sub_order, cluster_variables_ProtSymbol = cluster_variables_ProtSymbol))
     })
 
     output$ModuleFeaturesAnnot2 <- DT::renderDataTable({
       req(loadings_Prot())
-      df2 = as.data.frame(loadings_Prot()$cluster_variables_ProtSymbol)
-      names(df2) = "Feature_ID"
+      df2 <- as.data.frame(loadings_Prot()$cluster_variables_ProtSymbol)
+      names(df2) <- "Feature_ID"
       selected_columns <- input$Screening2
       if (!is.null(Prot_annot()) && !is.null(selected_columns)) {
-        AnnoProt = as.data.frame(Prot_annot())
+        AnnoProt <- as.data.frame(Prot_annot())
         df2 <- merge(df2, AnnoProt[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
       }
       DT::datatable(df2, rownames = FALSE)
@@ -2084,11 +2084,11 @@ mod_module1_server <- function(id){
         "FeaturesOnProteomicsModule.csv"
       },
       content = function(file) {
-        df2 = as.data.frame(loadings_Prot()$cluster_variables_ProtSymbol)
-        names(df2) = "Feature_ID"
+        df2 <- as.data.frame(loadings_Prot()$cluster_variables_ProtSymbol)
+        names(df2) <- "Feature_ID"
         selected_columns <- input$Screening2
         if (!is.null(Prot_annot()) && !is.null(selected_columns)) {
-          AnnoProt = as.data.frame(Prot_annot())
+          AnnoProt <- as.data.frame(Prot_annot())
           df2 <- merge(df2, AnnoProt[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
         }
         write.csv(df2, file, row.names = FALSE)
@@ -2123,13 +2123,13 @@ mod_module1_server <- function(id){
       }
 
       # Column annotation
-      column_anno = ComplexHeatmap::HeatmapAnnotation(
+      column_anno <- ComplexHeatmap::HeatmapAnnotation(
         selected_variable = as.factor(loadings_Prot()$heatmap_data_sub_order[[selected_variable]]),
         col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
         annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
       )
 
-      Prot_heatmap_plot = ComplexHeatmap::Heatmap(
+      Prot_heatmap_plot <- ComplexHeatmap::Heatmap(
         loadings_Prot()$data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
         row_title = "Genes Abundance", column_title = "Tissues", name = "Z-score",
         heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
@@ -2156,13 +2156,13 @@ mod_module1_server <- function(id){
           col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
         }
 
-        column_anno = ComplexHeatmap::HeatmapAnnotation(
+        column_anno <- ComplexHeatmap::HeatmapAnnotation(
           selected_variable = as.factor(loadings_Prot()$heatmap_data_sub_order[[selected_variable]]),
           col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
           annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
         )
 
-        Prot_heatmap_plot = ComplexHeatmap::Heatmap(
+        Prot_heatmap_plot <- ComplexHeatmap::Heatmap(
           loadings_Prot()$data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
           row_title = "Genes Abundance", column_title = "Tissues", name = "Z-score",
           heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
@@ -2239,8 +2239,8 @@ mod_module1_server <- function(id){
 
     load_data3 <- reactive({
       req(Gene_exp())
-      Expression_mat = Gene_exp()
-      feature_mat_t_imp_data = load_data(Expression_mat = Expression_mat)
+      Expression_mat <- Gene_exp()
+      feature_mat_t_imp_data <- load_data(Expression_mat = Expression_mat)
       return(list(feature_mat_t_imp_data = feature_mat_t_imp_data))
     })
 
@@ -2297,7 +2297,7 @@ mod_module1_server <- function(id){
     partial_cors3 <- reactive({
       withProgress(message = 'Calculating partial correlations Data 3...', value = 0, {
           req(load_data3()$feature_mat_t_imp_data)
-          load_data3 = load_data3()$feature_mat_t_imp_data
+          load_data3 <- load_data3()$feature_mat_t_imp_data
           Sys.sleep(5)
           par_cor <- partial_cors(load_data = load_data3, rho = .25)
         incProgress(100, detail = 'Complete!')
@@ -2320,11 +2320,11 @@ mod_module1_server <- function(id){
     )
 
     hierarchical_cluster3 <- reactive({
-      par_cor = partial_cors3()$par_cor
-      hc = hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
-      hclusterTree = hc$hclustTree
-      hcDynMods = hc$dynamicMods_numeric
-      hcCluster_assignments = hc$cluster_assignments
+      par_cor <- partial_cors3()$par_cor
+      hc <- hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
+      hclusterTree <- hc$hclustTree
+      hcDynMods <- hc$dynamicMods_numeric
+      hcCluster_assignments <- hc$cluster_assignments
       return(list(hclusterTree = hclusterTree,
                   hcDynMods = hcDynMods,
                   hcCluster_assignments = hcCluster_assignments ))
@@ -2339,8 +2339,8 @@ mod_module1_server <- function(id){
     })
 
     output$hc_plot3 <- renderPlot({
-      hcClu = hierarchical_cluster3()$hclusterTree
-      hcMod = hierarchical_cluster3()$hcDynMods
+      hcClu <- hierarchical_cluster3()$hclusterTree
+      hcMod <- hierarchical_cluster3()$hcDynMods
       WGCNA::plotDendroAndColors(dendro = hcClu,
                                  colors = hcMod,
                                  dendroLabels = FALSE,
@@ -2358,8 +2358,8 @@ mod_module1_server <- function(id){
       },
       content = function(file) {
         png(file)
-        hcClu = hierarchical_cluster3()$hclusterTree
-        hcMod = hierarchical_cluster3()$hcDynMods
+        hcClu <- hierarchical_cluster3()$hclusterTree
+        hcMod <- hierarchical_cluster3()$hcDynMods
         WGCNA::plotDendroAndColors(dendro = hcClu,
                                    colors = hcMod,
                                    dendroLabels = FALSE,
@@ -2373,11 +2373,11 @@ mod_module1_server <- function(id){
     )
 
     cluster_assignments_Data3 <- reactive({
-      cluster = as.data.frame(hierarchical_cluster3()$hcCluster_assignments)
+      cluster <- as.data.frame(hierarchical_cluster3()$hcCluster_assignments)
       if (is.null(Gene_annot())) {
         cluster_assignments_D3 <- cluster_assignments(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
       } else {
-        Gene_annot = Gene_annot()
+        Gene_annot <- Gene_annot()
         annot_Uni <- Gene_annot[Gene_annot$Feature_ID %in% colnames(partial_cors3()$par_cor), ]
         cluster_assignments_D3 <- cluster_assignments(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping3)
       }
@@ -2385,11 +2385,11 @@ mod_module1_server <- function(id){
     })
 
     output$tableClusterAssig3 <- DT::renderDataTable({
-      df1 = cluster_assignments_Data3()$cluster_assignments_D3
-      df1 = df1[, -which(names(df1) == "cluster")]
-      df1 = df1[, -which(names(df1) == "feature_name")]
-      names(df1)[names(df1) == "feature"] = "Feature_ID"
-      names(df1)[names(df1) == "col"] = "Module_id"
+      df1 <- cluster_assignments_Data3()$cluster_assignments_D3
+      df1 <- df1[, -which(names(df1) == "cluster")]
+      df1 <- df1[, -which(names(df1) == "feature_name")]
+      names(df1)[names(df1) == "feature"] <- "Feature_ID"
+      names(df1)[names(df1) == "col"] <- "Module_id"
       DT::datatable(df1)
     })
 
@@ -2404,7 +2404,7 @@ mod_module1_server <- function(id){
     )
 
     databaseSelectorListData3 <- reactive({
-      gene_set_library = readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE)
+      gene_set_library <- readxl::read_excel("inst/Example_data/Gene_set_Library.xlsx", col_names = FALSE)
       choices <- gene_set_library[[1]]
       data.frame(choices = choices)
     })
@@ -2428,9 +2428,9 @@ mod_module1_server <- function(id){
     })
 
     output$tableClusterAssigAnnot3 <- DT::renderDataTable({
-      df3 = Data3_enrich()$cluster_assignments_Data3_enrich
-      df3 = df3[, -which(names(df3) == "cluster")]
-      names(df3)[names(df3) == "col"] = "Module_id"
+      df3 <- Data3_enrich()$cluster_assignments_Data3_enrich
+      df3 <- df3[, -which(names(df3) == "cluster")]
+      names(df3)[names(df3) == "col"] <- "Module_id"
       df3$enriched_P.value <- round(df3$enriched_P.value, digits = 4)
       df3$enriched_Adjusted.P.value <- round(df3$enriched_Adjusted.P.value, digits = 4)
       DT::datatable(df3)
@@ -2448,15 +2448,15 @@ mod_module1_server <- function(id){
 
     Eigengene3 <- reactive({
       req(load_data3()$feature_mat_t_imp_data)
-      load_data = load_data3()$feature_mat_t_imp_data
-      Cluster_assignments = hierarchical_cluster3()$hcCluster_assignments[,3]
-      Eigengenes = Eigengenes(load_data = load_data,
+      load_data <- load_data3()$feature_mat_t_imp_data
+      Cluster_assignments <- hierarchical_cluster3()$hcCluster_assignments[,3]
+      Eigengenes <- Eigengenes(load_data = load_data,
                               cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
       return(list(Eigengenes = Eigengenes))
     })
 
     output$tableEigengene3 <- DT::renderDataTable({
-      df3 = as.data.frame(Eigengene3()$Eigengenes)
+      df3 <- as.data.frame(Eigengene3()$Eigengenes)
       df3[] <- lapply(df3, function(x) if(is.numeric(x)) round(x, digits = 4) else x)
       DT::datatable(df3)
     })
@@ -2472,7 +2472,7 @@ mod_module1_server <- function(id){
     )
 
     output$heatmapEigenGene <- renderPlot({
-      heatmap_plot = ComplexHeatmap::Heatmap(
+      heatmap_plot <- ComplexHeatmap::Heatmap(
         as.data.frame(t(Eigengene3()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
         row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
         heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
@@ -2489,7 +2489,7 @@ mod_module1_server <- function(id){
       },
       content = function(file) {
         png(file)
-        heatmap_plot = ComplexHeatmap::Heatmap(
+        heatmap_plot <- ComplexHeatmap::Heatmap(
           as.data.frame(t(Eigengene3()$Eigengenes)), cluster_columns = FALSE, cluster_rows = TRUE,
           row_title = "Eigenfeatures", column_title = "Samples", name = "Z-score",
           heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
@@ -2525,10 +2525,10 @@ mod_module1_server <- function(id){
     })
 
     Classification_Data3 <- reactive({
-      eigengenes_prot = as.data.frame(Eigengene3()$Eigengenes)
+      eigengenes_prot <- as.data.frame(Eigengene3()$Eigengenes)
       metadata <- as.data.frame(metadata())
-      phenotype_variable = input$phenotypeSelector3
-      significance_threshold = input$pValueThreshold3
+      phenotype_variable <- input$phenotypeSelector3
+      significance_threshold <- input$pValueThreshold3
       Classification_Data <- perform_classification( eigengene_data = eigengenes_prot,
                                                      metadata = metadata,
                                                      phenotype_variable = phenotype_variable,
@@ -2541,7 +2541,7 @@ mod_module1_server <- function(id){
     output$classification_results3 <- DT::renderDataTable({
       df <- Classification_Data3()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "Module_id"
+      names(df)[names(df) == "Variable"] <- "Module_id"
       DT::datatable(df)
     })
 
@@ -2601,18 +2601,18 @@ mod_module1_server <- function(id){
       cluster_expression_matrix_Prot <- load_data3()$feature_mat_t_imp_data[, colnames(load_data3()$feature_mat_t_imp_data) %in% cluster_variables_Prot, drop = FALSE]
       combined_data <- merge(metadata()[,c("Sample", selected_variable)], cluster_expression_matrix_Prot, by.x = "Sample", by.y = "row.names", all.x = TRUE)
       heatmap_data_sub_order <- combined_data[order(combined_data[[selected_variable]]), ]
-      data_heat= t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
+      data_heat <- t(as.matrix(heatmap_data_sub_order[ , 3:ncol(heatmap_data_sub_order)]))
       pca_res <- prcomp(cluster_expression_matrix_Prot)
       return(list(pca_res = pca_res, data_heat= data_heat, heatmap_data_sub_order = heatmap_data_sub_order, cluster_variables_ProtSymbol = cluster_variables_ProtSymbol))
     })
 
     output$ModuleFeaturesAnnot3 <- DT::renderDataTable({
       req(loadings_Gene())
-      df2 = as.data.frame(loadings_Gene()$cluster_variables_ProtSymbol)
-      names(df2) = "Feature_ID"
+      df2 <- as.data.frame(loadings_Gene()$cluster_variables_ProtSymbol)
+      names(df2) <- "Feature_ID"
       selected_columns <- input$Screening3
       if (!is.null(Prot_annot()) && !is.null(selected_columns)) {
-        AnnoProt = as.data.frame(Prot_annot())
+        AnnoProt <- as.data.frame(Prot_annot())
         df2 <- merge(df2, AnnoProt[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
       }
       DT::datatable(df2, rownames = FALSE)
@@ -2625,11 +2625,11 @@ mod_module1_server <- function(id){
         "FeaturesOnData3Module.csv"
       },
       content = function(file) {
-        df2 = as.data.frame(loadings_Gene()$cluster_variables_ProtSymbol)
-        names(df2) = "Feature_ID"
+        df2 <- as.data.frame(loadings_Gene()$cluster_variables_ProtSymbol)
+        names(df2) <- "Feature_ID"
         selected_columns <- input$Screening3
         if (!is.null(Prot_annot()) && !is.null(selected_columns)) {
-          AnnoProt = as.data.frame(Prot_annot())
+          AnnoProt <- as.data.frame(Prot_annot())
           df2 <- merge(df2, AnnoProt[, c("Feature_ID", selected_columns)], by = "Feature_ID", all.x = TRUE)
         }
         write.csv(df2, file, row.names = FALSE)
@@ -2664,13 +2664,13 @@ mod_module1_server <- function(id){
       }
 
       # Column annotation
-      column_anno = ComplexHeatmap::HeatmapAnnotation(
+      column_anno <- ComplexHeatmap::HeatmapAnnotation(
         selected_variable = as.factor(loadings_Gene()$heatmap_data_sub_order[[selected_variable]]),
         col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
         annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
       )
 
-      heatmap_plot = ComplexHeatmap::Heatmap(
+      heatmap_plot <- ComplexHeatmap::Heatmap(
         loadings_Gene()$data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
         row_title = "Genes Abundance", column_title = "Tissues", name = "Z-score",
         heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
@@ -2697,13 +2697,13 @@ mod_module1_server <- function(id){
           col_palette <- RColorBrewer::brewer.pal(length(levels_selected_variable), "Set1")
         }
 
-        column_anno = ComplexHeatmap::HeatmapAnnotation(
+        column_anno <- ComplexHeatmap::HeatmapAnnotation(
           selected_variable = as.factor(loadings_Gene()$heatmap_data_sub_order[[selected_variable]]),
           col = list(selected_variable = setNames(col_palette, levels_selected_variable)),
           annotation_legend_param = list(selected_variable = list(title_position = "topleft", legend_direction = "vertical"))
         )
 
-        heatmap_plot = ComplexHeatmap::Heatmap(
+        heatmap_plot <- ComplexHeatmap::Heatmap(
           loadings_Gene()$data_heat, cluster_columns = FALSE, cluster_rows = TRUE,
           row_title = "Genes Abundance", column_title = "Tissues", name = "Z-score",
           heatmap_legend_param = list(title_position = "topleft", legend_direction = "vertical"),
@@ -2742,17 +2742,17 @@ mod_module1_server <- function(id){
     })
 
     output$tableCorrelation <- DT::renderDataTable({
-      TopCor = as.data.frame(Cor_Data_n()$Top_cor_Prot_metab)
+      TopCor <- as.data.frame(Cor_Data_n()$Top_cor_Prot_metab)
       nodes <- as.data.frame(Cor_Data_n()$nodes)
       df4from <- merge(TopCor, nodes, by.x = "from", by.y = "id", all.x = TRUE)
-      names(df4from)[names(df4from) == "label"] = "# of var into the From_module"
+      names(df4from)[names(df4from) == "label"] <- "# of var into the From_module"
       df4 <- merge(df4from, nodes, by.x = "to", by.y = "id", all.x = TRUE)
-      names(df4)[names(df4) == "from"] = "From_module_id"
-      names(df4)[names(df4) == "to"] = "To_module_id"
-      names(df4)[names(df4) == "value.x"] = "Correlation"
-      names(df4)[names(df4) == "label"] = "# of var into the To_module"
+      names(df4)[names(df4) == "from"] <- "From_module_id"
+      names(df4)[names(df4) == "to"] <- "To_module_id"
+      names(df4)[names(df4) == "value.x"] <- "Correlation"
+      names(df4)[names(df4) == "label"] <- "# of var into the To_module"
       rownames(df4) <- NULL
-      df4 = df4[,c("From_module_id", "# of var into the From_module", "To_module_id", "# of var into the To_module", "Correlation")]
+      df4 <- df4[,c("From_module_id", "# of var into the From_module", "To_module_id", "# of var into the To_module", "Correlation")]
       df4 <- df4[order(-abs(df4$Correlation)), ]
       DT::datatable(df4)
     })
@@ -2894,13 +2894,13 @@ mod_module1_server <- function(id){
 
     ImpVar_D1_D2 <- reactive({
       top_n <- input$TopModules_12
-      Cor_Data1_Data2 = as.data.frame(Cor_Data_n()$Cor_list[[1]])
-      cluster_assignments_D1 = cluster_assignments_Data1()$cluster_assignments_D1
-      cluster_assignments_D2 = cluster_assignments_Data2()$cluster_assignments_D2
+      Cor_Data1_Data2 <- as.data.frame(Cor_Data_n()$Cor_list[[1]])
+      cluster_assignments_D1 <- cluster_assignments_Data1()$cluster_assignments_D1
+      cluster_assignments_D2 <- cluster_assignments_Data2()$cluster_assignments_D2
       req(load_data1()$feature_mat_t_imp_data)
-      load_data1 = load_data1()$feature_mat_t_imp_data
+      load_data1 <- load_data1()$feature_mat_t_imp_data
       req(load_data2()$feature_mat_t_imp_data)
-      load_data2 = load_data2()$feature_mat_t_imp_data
+      load_data2 <- load_data2()$feature_mat_t_imp_data
       ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Datai_Dataj = Cor_Data1_Data2,
                                                      cluster_assignments_D1 = cluster_assignments_D1,
                                                      cluster_assignments_D2 = cluster_assignments_D2,
@@ -2941,7 +2941,7 @@ mod_module1_server <- function(id){
     })
 
     output$ImportantVariables_12 <- DT::renderDataTable({
-      df4nodes = as.data.frame(ImpVar_D1_D2()$Top_correlations)
+      df4nodes <- as.data.frame(ImpVar_D1_D2()$Top_correlations)
       colnames(df4nodes) <- c("From", "# of var into the D1_module", "To", "# of var into the D2_module", "Correlation")
       rownames(df4nodes) <- NULL
       df4nodes <- df4nodes[order(-abs(df4nodes$Correlation)), ]
@@ -2980,7 +2980,7 @@ mod_module1_server <- function(id){
       df <- df_list[[selected_index]]$df1_2
       df_features <- dplyr::select(df, feature)
       df_features <- dplyr::distinct(df_features)
-      names(df_features)[names(df_features) == "feature"] = "Feature_ID"
+      names(df_features)[names(df_features) == "feature"] <- "Feature_ID"
       selected_columns <- input$Screening12_2
       if (!is.null(Prot_annot()) && !is.null(selected_columns)) {
         AnnoMeta <- as.data.frame(Prot_annot())
@@ -3020,8 +3020,8 @@ mod_module1_server <- function(id){
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
       df2_1 <- as.data.frame(df_list[[selected_index]]$df2_1)
       metadata <- as.data.frame(metadata())
-      phenotype_variable = input$phenotypeSelector_imp_12_1
-      significance_threshold = input$pValueThreshold_imp_12_1
+      phenotype_variable <- input$phenotypeSelector_imp_12_1
+      significance_threshold <- input$pValueThreshold_imp_12_1
       Classification_Data <- perform_classification( eigengene_data = df2_1,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
@@ -3071,7 +3071,7 @@ mod_module1_server <- function(id){
       df <- df_list[[selected_index]]$df1_1
       df_features <- dplyr::select(df, feature)
       df_features <- dplyr::distinct(df_features)
-      names(df_features)[names(df_features) == "feature"] = "Feature_ID"
+      names(df_features)[names(df_features) == "feature"] <- "Feature_ID"
       selected_columns <- input$Screening12_1
       if (!is.null(Metab_annot()) && !is.null(selected_columns)) {
         AnnoMeta <- as.data.frame(Metab_annot())
@@ -3110,8 +3110,8 @@ mod_module1_server <- function(id){
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_12))
       df2_2 <- df_list[[selected_index]]$df2_2
       metadata <- as.data.frame(metadata())
-      phenotype_variable = input$phenotypeSelector_imp_12_2
-      significance_threshold = input$pValueThreshold_imp_12_2
+      phenotype_variable <- input$phenotypeSelector_imp_12_2
+      significance_threshold <- input$pValueThreshold_imp_12_2
       Classification_Data <- perform_classification( eigengene_data = df2_2,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
@@ -3124,7 +3124,7 @@ mod_module1_server <- function(id){
     output$classification_results_imp_12_2 <- DT::renderDataTable({
       df <- Classification_imp_12_2()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "Feature"
+      names(df)[names(df) == "Variable"] <- "Feature"
       DT::datatable(df)
     })
 
@@ -3208,13 +3208,13 @@ mod_module1_server <- function(id){
 
     ImpVar_D1_D3 <- reactive({
       top_n <- input$TopModules_13
-      Cor_Data1_Data3 = as.data.frame(Cor_Data_n()$Cor_list[[2]])
-      cluster_assignments_D1 = cluster_assignments_Data1()$cluster_assignments_D1
-      cluster_assignments_D3 = cluster_assignments_Data3()$cluster_assignments_D3
+      Cor_Data1_Data3 <- as.data.frame(Cor_Data_n()$Cor_list[[2]])
+      cluster_assignments_D1 <- cluster_assignments_Data1()$cluster_assignments_D1
+      cluster_assignments_D3 <- cluster_assignments_Data3()$cluster_assignments_D3
       req(load_data1()$feature_mat_t_imp_data)
-      load_data1 = load_data1()$feature_mat_t_imp_data
+      load_data1 <- load_data1()$feature_mat_t_imp_data
       req(load_data3()$feature_mat_t_imp_data)
-      load_data3 = load_data3()$feature_mat_t_imp_data
+      load_data3 <- load_data3()$feature_mat_t_imp_data
       ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Datai_Dataj = Cor_Data1_Data3,
                                                      cluster_assignments_D1 = cluster_assignments_D1,
                                                      cluster_assignments_D2 = cluster_assignments_D3,
@@ -3257,7 +3257,7 @@ mod_module1_server <- function(id){
       if (is.null(Gene_exp())) {
         return(NULL)
       } else {
-        df4nodes = as.data.frame(ImpVar_D1_D3()$Top_correlations)
+        df4nodes <- as.data.frame(ImpVar_D1_D3()$Top_correlations)
         colnames(df4nodes) <- c("From", "# of var into the D1_module", "To", "# of var into the D2_module", "Correlation")
         rownames(df4nodes) <- NULL
         df4nodes <- df4nodes[order(-abs(df4nodes$Correlation)), ]
@@ -3282,7 +3282,7 @@ mod_module1_server <- function(id){
       df_list <- Important_Features13()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
       df4 <- df_list[[selected_index]]$df4
-      names(df4)[names(df4) == "Data2"] = "Data3"
+      names(df4)[names(df4) == "Data2"] <- "Data3"
       DT::datatable(data.frame(df4))
       }
     })
@@ -3309,7 +3309,7 @@ mod_module1_server <- function(id){
       df <- df_list[[selected_index]]$df1_2
       df_features <- dplyr::select(df, feature)
       df_features <- dplyr::distinct(df_features)
-      names(df_features)[names(df_features) == "feature"] = "Feature_ID"
+      names(df_features)[names(df_features) == "feature"] <- "Feature_ID"
       selected_columns <- input$Screening13_3
       if (!is.null(Gene_annot()) && !is.null(selected_columns)) {
         AnnoMeta <- as.data.frame(Gene_annot())
@@ -3354,8 +3354,8 @@ mod_module1_server <- function(id){
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
       df2_1 <- as.data.frame(df_list[[selected_index]]$df2_1)
       metadata <- as.data.frame(metadata())
-      phenotype_variable = input$phenotypeSelector_imp_13_1
-      significance_threshold = input$pValueThreshold_imp_13_1
+      phenotype_variable <- input$phenotypeSelector_imp_13_1
+      significance_threshold <- input$pValueThreshold_imp_13_1
       Classification_Data <- perform_classification( eigengene_data = df2_1,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
@@ -3371,7 +3371,7 @@ mod_module1_server <- function(id){
       } else {
       df <- Classification_imp_13_1()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "Feature"
+      names(df)[names(df) == "Variable"] <- "Feature"
       DT::datatable(df)
       }
     })
@@ -3412,7 +3412,7 @@ mod_module1_server <- function(id){
       df <- df_list[[selected_index]]$df1_1
       df_features <- dplyr::select(df, feature)
       df_features <- dplyr::distinct(df_features)
-      names(df_features)[names(df_features) == "feature"] = "Feature_ID"
+      names(df_features)[names(df_features) == "feature"] <- "Feature_ID"
       selected_columns <- input$Screening13_1
       if (!is.null(Metab_annot()) && !is.null(selected_columns)) {
         AnnoMeta <- as.data.frame(Metab_annot())
@@ -3456,8 +3456,8 @@ mod_module1_server <- function(id){
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_13))
       df2_2 <- df_list[[selected_index]]$df2_2
       metadata <- as.data.frame(metadata())
-      phenotype_variable = input$phenotypeSelector_imp_13_3
-      significance_threshold = input$pValueThreshold_imp_13_3
+      phenotype_variable <- input$phenotypeSelector_imp_13_3
+      significance_threshold <- input$pValueThreshold_imp_13_3
       Classification_Data <- perform_classification( eigengene_data = df2_2,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
@@ -3473,7 +3473,7 @@ mod_module1_server <- function(id){
       } else {
       df <- Classification_imp_13_3()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "Feature"
+      names(df)[names(df) == "Variable"] <- "Feature"
       DT::datatable(df)
       }
     })
@@ -3566,13 +3566,13 @@ mod_module1_server <- function(id){
 
     ImpVar_D2_D3 <- reactive({
       top_n <- input$TopModules_23
-      Cor_Data2_Data3 = as.data.frame(Cor_Data_n()$Cor_list[[3]])
-      cluster_assignments_D2 = cluster_assignments_Data2()$cluster_assignments_D2
-      cluster_assignments_D3 = cluster_assignments_Data3()$cluster_assignments_D3
+      Cor_Data2_Data3 <- as.data.frame(Cor_Data_n()$Cor_list[[3]])
+      cluster_assignments_D2 <- cluster_assignments_Data2()$cluster_assignments_D2
+      cluster_assignments_D3 <- cluster_assignments_Data3()$cluster_assignments_D3
       req(load_data2()$feature_mat_t_imp_data)
-      load_data2 = load_data2()$feature_mat_t_imp_data
+      load_data2 <- load_data2()$feature_mat_t_imp_data
       req(load_data3()$feature_mat_t_imp_data)
-      load_data3 = load_data3()$feature_mat_t_imp_data
+      load_data3 <- load_data3()$feature_mat_t_imp_data
       ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Datai_Dataj = Cor_Data2_Data3,
                                                      cluster_assignments_D1 = cluster_assignments_D2,
                                                      cluster_assignments_D2 = cluster_assignments_D3,
@@ -3616,7 +3616,7 @@ mod_module1_server <- function(id){
       if (is.null(Gene_exp())) {
         return(NULL)
       } else {
-        df4nodes = as.data.frame(ImpVar_D2_D3()$Top_correlations)
+        df4nodes <- as.data.frame(ImpVar_D2_D3()$Top_correlations)
         colnames(df4nodes) <- c("From", "# of var into the D1_module", "To", "# of var into the D2_module", "Correlation")
         rownames(df4nodes) <- NULL
         df4nodes <- df4nodes[order(-abs(df4nodes$Correlation)), ]
@@ -3641,8 +3641,8 @@ mod_module1_server <- function(id){
       df_list <- Important_Features23()
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
       df4 <- df_list[[selected_index]]$df4
-      names(df4)[names(df4) == "Data2"] = "Data3"
-      names(df4)[names(df4) == "Data1"] = "Data2"
+      names(df4)[names(df4) == "Data2"] <- "Data3"
+      names(df4)[names(df4) == "Data1"] <- "Data2"
       DT::datatable(data.frame(df4))
       }
     })
@@ -3669,7 +3669,7 @@ mod_module1_server <- function(id){
       df <- df_list[[selected_index]]$df1_2
       df_features <- dplyr::select(df, feature)
       df_features <- dplyr::distinct(df_features)
-      names(df_features)[names(df_features) == "feature"] = "Feature_ID"
+      names(df_features)[names(df_features) == "feature"] <- "Feature_ID"
       selected_columns <- input$Screening23_3
       if (!is.null(Gene_annot()) && !is.null(selected_columns)) {
         AnnoMeta <- as.data.frame(Gene_annot())
@@ -3712,8 +3712,8 @@ mod_module1_server <- function(id){
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
       df2_1 <- as.data.frame(df_list[[selected_index]]$df2_1)
       metadata <- as.data.frame(metadata())
-      phenotype_variable = input$phenotypeSelector_imp_23_2
-      significance_threshold = input$pValueThreshold_imp_23_2
+      phenotype_variable <- input$phenotypeSelector_imp_23_2
+      significance_threshold <- input$pValueThreshold_imp_23_2
       Classification_Data <- perform_classification( eigengene_data = df2_1,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
