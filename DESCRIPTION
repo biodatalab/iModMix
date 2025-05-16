@@ -35,7 +35,8 @@ Imports:
     shinyBS,
     httr,
     dplyr,
-    stats
+    stats,
+    iModMixData
 Suggests: 
     testthat (>= 3.0.0),
     ggfortify,
@@ -49,6 +50,7 @@ Suggests:
     vroom,
     here,
     enrichR,
-    rmarkdown
+    rmarkdown,
+    ExperimentHub
 Config/testthat/edition: 3
 VignetteBuilder: knitr

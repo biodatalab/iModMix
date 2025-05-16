@@ -25,11 +25,9 @@ vignette: >
 iModMix can incorporate both identified and unidentified metabolites, addressing a key limitation of existing methodologies.
 
 ```{r, echo=FALSE}
+suppressWarnings(library(knitr))
 
-  suppressWarnings(library(knitr))
-
-  opts_chunk$set(tidy = FALSE, message = FALSE, warning = FALSE)
-
+opts_chunk$set(tidy = FALSE, message = FALSE, warning = FALSE)
 ```
 
 # Installation
@@ -37,28 +35,23 @@ iModMix can incorporate both identified and unidentified metabolites, addressing
 ## Download the package from Bioconductor
 
 ```{r getPackage, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager")
+}
 
-  if (!requireNamespace('BiocManager', quietly = TRUE))
-    install.packages('BiocManager')
-
-  BiocManager::install('iModMix')
-
+BiocManager::install("iModMix")
 ```
 
 Note: to install development version:
 
 ```{r getPackageDevel, eval=FALSE}
-
-  devtools::install_github('biodatalab/iModMix')
-
+devtools::install_github("biodatalab/iModMix")
 ```
 
 ## Load the package into R session
 
 ```{r Load, message=FALSE}
-
-  library(iModMix)
-
+library(iModMix)
 ```
 
 # Example to integrate 2 omics datasets
@@ -95,7 +88,6 @@ Metadata <- readRDS(path_Metadata)
 
 # Check the Metadata
 head(Metadata)
-
 ```
 
 ### Perform preprocessing of data
@@ -113,7 +105,7 @@ load_data1[1:5, 1:5]
 Calculations for partial correlation is usually the slowest step. Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimate the partial correlation and captures only direct associations. Below is a preview of the sparse partial correlation of the first five features. 
 
 ```{r}
-# Perform Partial correlation 
+# Perform Partial correlation
 parcorData1 <- partial_cors(load_data1, rho = 0.25)
 parcorData1[1:5, 1:5]
 ```
@@ -125,19 +117,21 @@ Branches: Each line in the dendrogram represents a feature. Features that are cl
 
 
 ```{r}
-# Perform hierarchical clustering 
+# Perform hierarchical clustering
 hcData1 <- hierarchical_cluster(parcor_mat = parcorData1, tom = TRUE, min_module_size = 10)
 
-hcClu = hcData1$hclustTree
-hcMod = as.matrix(hcData1$dynamicMods_numeric)
-WGCNA::plotDendroAndColors(dendro = hcClu,
-                                 colors = hcMod,
-                                 dendroLabels = FALSE,
-                                 hang = 0.03,
-                                 addGuide = TRUE,
-                                 guideHang = 0.05,
-                                 groupLabels = "Modules",
-                                 main = "Feature dendrogram and module assignments")
+hcClu <- hcData1$hclustTree
+hcMod <- as.matrix(hcData1$dynamicMods_numeric)
+WGCNA::plotDendroAndColors(
+  dendro = hcClu,
+  colors = hcMod,
+  dendroLabels = FALSE,
+  hang = 0.03,
+  addGuide = TRUE,
+  guideHang = 0.05,
+  groupLabels = "Modules",
+  main = "Feature dendrogram and module assignments"
+)
 ```
 
 Let's see the cluster assignments. Hierarchical clustering generates multiple modules (clusters) to which each feature is assigned. The table below details the following columns:
@@ -159,7 +153,7 @@ The 904 features (identified metabolites) were assigned into 34 modules. The fir
 
 ```{r}
 # Obtain Eigenfeatures
-eigenData1 <- Eigengenes(load_data1, hcData1$cluster_assignments[,3])
+eigenData1 <- Eigengenes(load_data1, hcData1$cluster_assignments[, 3])
 eigengenes_Data1 <- eigenData1$module_eigenmetab_Me
 eigengenes_Data1[1:5, 1:5]
 ```
@@ -174,12 +168,12 @@ path_RNA_exp <- system.file("Example_data/ccRCC4_Data/RNA_exp.rds", package = "i
 
 # Load the expression data
 Data_exp2 <- readRDS(path_RNA_exp)
-Data_exp2 <- Data_exp2[1:1000,]
+Data_exp2 <- Data_exp2[1:1000, ]
 
 # Check the expression data
 Data_exp2[1:5, 1:5]
 
-#Preprocessing of data for iModMix upload
+# Preprocessing of data for iModMix upload
 load_data2 <- load_data(Data_exp2)
 ```
 
@@ -187,30 +181,31 @@ Calculate correlated matrix
 
 ```{r}
 # Partial correlation
-parcorData2 <- partial_cors(load_data2, rho = 0.25) 
+parcorData2 <- partial_cors(load_data2, rho = 0.25)
 parcorData2[1:5, 1:5]
 ```
 
 Calculate hierarchical clustering 
 
 ```{r}
-# Perform hierarchical clustering 
-hcData2 <- hierarchical_cluster(parcor_mat = parcorData2, tom = TRUE, min_module_size = 10) 
+# Perform hierarchical clustering
+hcData2 <- hierarchical_cluster(parcor_mat = parcorData2, tom = TRUE, min_module_size = 10)
 
 # Access the hierarchical clustering tree and module assignments
 hcClu2 <- hcData2$hclustTree
 hcMod2 <- as.matrix(hcData2$dynamicMods_numeric)
 
 # Plot the dendrogram
-WGCNA::plotDendroAndColors(dendro = hcClu2,
-                          colors = hcMod2,
-                          dendroLabels = FALSE,
-                          hang = 0.03,
-                          addGuide = TRUE,
-                          guideHang = 0.05,
-                          groupLabels = "Modules",
-                          main = "Feature dendrogram and module assignments")
-
+WGCNA::plotDendroAndColors(
+  dendro = hcClu2,
+  colors = hcMod2,
+  dendroLabels = FALSE,
+  hang = 0.03,
+  addGuide = TRUE,
+  guideHang = 0.05,
+  groupLabels = "Modules",
+  main = "Feature dendrogram and module assignments"
+)
 ```
 
 Perform network construction and module eigengene calculation
@@ -218,7 +213,7 @@ Perform network construction and module eigengene calculation
 ```{r}
 # Perform cluster assignment
 cluster_assig_Data2 <- cluster_assignments(as.data.frame(hcData2$cluster_assignments))
-eigenData2 <- Eigengenes(load_data2, hcData2$cluster_assignments[,3])
+eigenData2 <- Eigengenes(load_data2, hcData2$cluster_assignments[, 3])
 eigengenes_Data2 <- eigenData2$module_eigenmetab_Me
 eigengenes_Data2[1:5, 1:5]
 ```
@@ -233,25 +228,29 @@ Boxplots are automatically generated at the bottom for significant eigenfeatures
 
 ```{r}
 # Perform Classification
-Classification_Data <- perform_classification(eigengene_data = eigengenes_Data1,
-                                              metadata = Metadata,
-                                              phenotype_variable = "TN",
-                                              significance_threshold = 0.09)
+Classification_Data <- perform_classification(
+  eigengene_data = eigengenes_Data1,
+  metadata = Metadata,
+  phenotype_variable = "TN",
+  significance_threshold = 0.09
+)
 
-Classification_Data$result[1:10,]
+Classification_Data$result[1:10, ]
 
 # Plot BoxPlot
 selected_variable <- "TN"
 levels <- unique(Metadata[[selected_variable]])
 class_label <- paste(levels, collapse = " vs ")
 plot <- Classification_Data$plots[[1]]
-        plot <- plot +
-          ggplot2::labs(title = class_label, fill = as.factor(levels),
-                        x = "Variables",
-                        y = "Class") +
-          ggplot2::theme(
-            axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
-          )
+plot <- plot +
+  ggplot2::labs(
+    title = class_label, fill = as.factor(levels),
+    x = "Variables",
+    y = "Class"
+  ) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)
+  )
 plot
 ```
 
@@ -260,18 +259,18 @@ plot
 This step perform the integration of the datasets previously analyzed using the eigenfeatures obtained from the steps above. 
 
 ```{r}
-# Summarize into list the different eigenfeatures 
+# Summarize into list the different eigenfeatures
 eigengenes_list <- list(eigengenes_Data1, eigengenes_Data2)
 cluster_list <- list(cluster_assig_Data1, cluster_assig_Data2)
 Integration_Data1_Data2 <- Modules_correlation(eigengenes_list, cluster_list, threshold = 0.6)
-TopCorrelations <-Integration_Data1_Data2[["Top_cor_Prot_metab"]]
+TopCorrelations <- Integration_Data1_Data2[["Top_cor_Prot_metab"]]
 head(TopCorrelations)
 
 # Plot correlation
 Correlation_Plot <- Integration_Data1_Data2$Correlation_Plot
 hist(Correlation_Plot[[1]], main = "Correlation: Data 1 / Data 2 ")
 
-#Plot Network
+# Plot Network
 nodes <- as.data.frame(Integration_Data1_Data2$nodes)
 edges <- as.data.frame(Integration_Data1_Data2$edges)
 n <- Integration_Data1_Data2$n
@@ -280,13 +279,16 @@ shapes <- c("diamond", "triangle", "dot")
 colors <- c("orange", "darkgreen", "darkblue")
 
 network <- visNetwork::visNetwork(nodes = nodes, edges = edges, width = "100%", height = "800px")
-network <- visNetwork::visLegend(network, useGroups = FALSE, 
-                                 addNodes = data.frame(label = paste0("Data", 1:n, " Modules"),
-                                 shape = shapes[1:n], color = colors[1:n]),
-                                 addEdges = data.frame(label = "Correlation", shape = "line", length = 200, color = "darkgreen"))
+network <- visNetwork::visLegend(network,
+  useGroups = FALSE,
+  addNodes = data.frame(
+    label = paste0("Data", 1:n, " Modules"),
+    shape = shapes[1:n], color = colors[1:n]
+  ),
+  addEdges = data.frame(label = "Correlation", shape = "line", length = 200, color = "darkgreen")
+)
 network <- visNetwork::visInteraction(network, navigationButtons = TRUE)
 network
-      
 ```
 
 ## Enrichment analysis using gene Symbol 

@@ -13,14 +13,12 @@
 #' eigengene_data <- as.data.frame(matrix(rnorm(100), nrow = 10, ncol = 10))
 #' colnames(eigengene_data) <- paste0("ME", 1:10)
 #' rownames(eigengene_data) <- paste0("Sample", 1:10)
-#'
 #' # Simulate metadata with a binary phenotype
 #' metadata <- data.frame(
 #'   Sample = paste0("Sample", 1:10),
 #'   Phenotype = rep(c("A", "B"), each = 5),
 #'   stringsAsFactors = FALSE
 #' )
-#'
 #' # Run classification
 #' result <- perform_classification(
 #'   eigengene_data = eigengene_data,
@@ -34,14 +32,10 @@
 #'
 #' @export
 perform_classification <- function(eigengene_data, metadata, phenotype_variable, significance_threshold = 0.05) {
-  requireNamespace("tuneR", quietly = TRUE)
-  requireNamespace("pROC", quietly = TRUE)
   requireNamespace("ggplot2", quietly = TRUE)
-
   if (is.null(phenotype_variable)) {
     return(NULL)
   }
-
   metadata_subset <- metadata[, c("Sample", phenotype_variable), drop = FALSE]
   merged_data <- merge(eigengene_data, metadata_subset, by.x = "row.names", by.y = "Sample")
   predictors <- names(merged_data)[-c(1, ncol(merged_data))]
@@ -65,7 +59,6 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
       t_test_results <- t_test_results[t_test_results$Result_pValue <= significance_threshold, ]
       t_test_results <- t_test_results[order(t_test_results$Result_pValue), ]
 
-
     result_list[["Comparison"]] <- t_test_results
 
     boxplot_data <- tidyr::gather(merged_data, key = "Variable", value = "Expression", predictors)
@@ -77,7 +70,6 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
       ggplot2::labs(title = paste(level_class[[1]], "vs", level_class[[2]]))
 
     plot_list[["Comparison"]] <- p
-    #print(p)
 
   } else {
     for (class_label in levels(response)) {
@@ -108,16 +100,12 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
         ggplot2::labs(title = paste(class_label, " vs Rest"))
 
       plot_list[[paste(class_label, "vs Rest")]] <- p
-      #print(p)
     }
   }
-
   result <- do.call(rbind, result_list)
   result <- result[order(result$Result_pValue), ]
-
   result$Result_t <- format(result$Result_t, scientific = TRUE)
   result$Result_pValue <- format(result$Result_pValue, scientific = TRUE)
   result$Adjusted_pValue <- format(result$Adjusted_pValue, scientific = TRUE)
-
   return(list(result = result, plots = plot_list))
 }

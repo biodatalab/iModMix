@@ -1,0 +1,27 @@
+
+iModMix 1.0.0
+=============
+
+**Initial Release**
+
+- Introduction of `iModMix`, a novel network-based approach that integrates multi-omics data, including metabolomics, proteomics, and transcriptomics data.
+- Ability to incorporate both identified and unidentified metabolites.
+- Functions for loading and preprocessing data, performing partial correlation analysis, hierarchical clustering, and module eigengene calculation.
+- Integration of multiple omics datasets to reveal significant associations with phenotypes of interest.
+- Visualization tools for dendrograms, module assignments, and network plots.
+- Enrichment analysis using gene symbols with support for various databases.
+
+Key Features
+------------
+
+- `load_data()`: Function to load and preprocess expression data.
+- `partial_cors()`: Function to perform partial correlation analysis using Graphical Lasso.
+- `hierarchical_cluster()`: Function to perform hierarchical clustering using TOM or partial correlation matrix.
+- `cluster_assignments()`: Function to assign clusters to features based on hierarchical clustering.
+- `Eigengenes()`: Function to calculate module eigengenes.
+- `perform_classification()`: Function to relate modules to phenotypes using statistical analysis.
+- `Modules_correlation()`: Function to integrate multiple omics datasets and calculate correlations.
+- `Assigment_genes_enrichr()`: Function to perform enrichment analysis using gene symbols.
+
+- Created documentation and examples for the functions.
+- Added vignette to demonstrate the usage of the package.

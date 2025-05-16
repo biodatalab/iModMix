@@ -1199,6 +1199,7 @@ mod_module1_server <- function(id){
           par_cor1 <- readRDS(file.path(here::here(),"/inst/Example_data/ccRCC4_Data", "PartialCorMetabolites.rds"))
         } else if (demo_par_cor_Metab_All()) {
           Sys.sleep(5)
+          #par_cor1 <- iModMixData::loadPartialCorMetabolites()
           par_cor1 <- readRDS(file.path(here::here(),"/inst/Example_data/FloresData_K_TK", "PartialCorMetabolites.rds"))
         }
         incProgress(100, detail = 'Complete!')
@@ -1287,8 +1288,8 @@ mod_module1_server <- function(id){
       df1 = cluster_assignments_Data1()$cluster_assignments_D1
       df1 = df1[, -which(names(df1) == "cluster")]
       df1 = df1[, -which(names(df1) == "feature_name")]
-      names(df1)[names(df1) == "feature"] = "Feature_ID"
-      names(df1)[names(df1) == "col"] = "Module_id"
+      names(df1)[names(df1) == "feature"]  <- "Feature_ID"
+      names(df1)[names(df1) == "col"] <- "Module_id"
       DT::datatable(df1)
     })
 
@@ -1749,9 +1750,11 @@ mod_module1_server <- function(id){
           par_cor <- partial_cors(load_data = load_data2, rho = .25)
         } else if (demo_par_cor_Prot()) {
           Sys.sleep(5)
+          #par_cor <- iModMixData::loadPartialCorGenes()
           par_cor <- readRDS(file.path(here::here(),"/inst/Example_data/ccRCC4_Data", "PartialCorGenes.rds"))
         } else if (demo_par_cor_Prot_All()) {
           Sys.sleep(5)
+          #par_cor <- iModMixData::loadPartialCorProt()
           par_cor <- readRDS(file.path(here::here(),"/inst/Example_data/FloresData_K_TK", "PartialCorProt.rds"))
         }
         incProgress(100, detail = 'Complete!')
@@ -3031,7 +3034,7 @@ mod_module1_server <- function(id){
     output$classification_results_imp_12_1 <- DT::renderDataTable({
       df <- Classification_imp_12_1()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "Feature"
+      names(df)[names(df) == "Variable"] <- "Feature"
       DT::datatable(df)
     })
 
@@ -3726,7 +3729,7 @@ mod_module1_server <- function(id){
       } else {
       df <- Classification_imp_23_2()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "Feature"
+      names(df)[names(df) == "Variable"] <- "Feature"
       DT::datatable(df)
       }
     })
@@ -3767,7 +3770,7 @@ mod_module1_server <- function(id){
       df <- df_list[[selected_index]]$df1_1
       df_features <- dplyr::select(df, feature)
       df_features <- dplyr::distinct(df_features)
-      names(df_features)[names(df_features) == "feature"] = "Feature_ID"
+      names(df_features)[names(df_features) == "feature"] <- "Feature_ID"
       selected_columns <- input$Screening23_2
       if (!is.null(Prot_annot()) && !is.null(selected_columns)) {
         AnnoMeta <- as.data.frame(Prot_annot())
@@ -3811,8 +3814,8 @@ mod_module1_server <- function(id){
       selected_index <- as.numeric(sub("Top_", "", input$visualization_list_23))
       df2_2 <- df_list[[selected_index]]$df2_2
       metadata <- as.data.frame(metadata())
-      phenotype_variable = input$phenotypeSelector_imp_23_3
-      significance_threshold = input$pValueThreshold_imp_23_3
+      phenotype_variable <- input$phenotypeSelector_imp_23_3
+      significance_threshold <- input$pValueThreshold_imp_23_3
       Classification_Data <- perform_classification( eigengene_data = df2_2,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
@@ -3828,7 +3831,7 @@ mod_module1_server <- function(id){
       } else {
       df <- Classification_imp_23_3()$result
       rownames(df) <- NULL
-      names(df)[names(df) == "Variable"] = "Feature"
+      names(df)[names(df) == "Variable"] <- "Feature"
       DT::datatable(df)
       }
     })
