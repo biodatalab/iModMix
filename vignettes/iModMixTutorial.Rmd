@@ -60,12 +60,16 @@ library(iModMix)
 
 ### Load expression Data 1 and metadata from clear cell renal cell carcinoma
 
-Below is an example showing the step-by-step analysis of two datasets through iModMix package: We used 24 normal and 52 tumor clear cell renal cell carcinoma (ccRCC, RC20 dataset) samples (Golkaram et al. 2022; Tang et al. 2023; Benedetti et al. 2023) as the example case study. It contains 23001 genes from RNA-seq and 904 identified metabolites from untargeted metabolomics (https://doi.org/10.5281/zenodo.13988161).
+Below is an example showing the step-by-step analysis of two datasets through iModMix package: We used 24 normal and 52 tumor clear cell renal cell carcinoma (ccRCC, RC20 dataset) samples (Golkaram et al. 2022; Tang et al. 2023; Benedetti et al. 2023) as the example case study.  (https://doi.org/10.5281/zenodo.13988161).
+
+- Data 1: It contained 904 identified metabolites from untargeted metabolomics. 
+- Data 2: It contained 23001 genes from RNA-seq. Since this is purely an example of how to run the entire analysis from start to finish, we are going to limit our analysis to the first 1000 features.
 
 Input data: 
 
 * The expression dataset inputs must be arranged as a matrix with genes/proteins/features as rows and samples as columns
-* The meta data should be a matrix with the first column named 'Sample' (with a capitalized 'S'). The second column on are user assigned based on comparisons desired, i.e. "disease" or "Genotype"
+* The Metadata should be a matrix with the first column named 'Sample' (with a capitalized 'S'). The second column on are user assigned based on comparisons desired, i.e. "disease" or "Genotype"
+* The Metadata should include unique sample IDs that match the sample IDs in your abundance/expression matrix files. Ensure that sample IDs are consistent across all datasets with thw same number of samples. This column enables linking omics data through samples.
 
 ```{r}
 # Load the package
@@ -91,8 +95,12 @@ head(Metadata)
 ```
 
 ### Perform preprocessing of data
+The iModMix downstream pipeline requires an input matrix of RNA-seq counts. The load_data function performs the following steps:
+* Transposes the input data so that rows represent samples and columns represent features
+* Applies feature selection (SD below the 25th percentile) 
+* Handles missing values (KNN)
+This step is optional. If the input matrix already has samples as rows, features as columns, and contains no missing values, users may skip it.
 
-The iModMix pipeline is expecting an input matrix of RNA Sequence counts. Usually we need to rotate (transpose) the input data so rows = treatments and columns = features.
 
 ```{r}
 # Preprocess of data for iModMix upload

@@ -50,7 +50,7 @@ Proteomics or Genomics Data: It should have the following columns:
 - Symbol: Include corresponding Symbols to enable enrichment analysis.
 
 ```{r, echo=F, fig.align="center", fig.width=2, out.width="90%", fig.cap="Example annotation data that can be uploaded in the 'Metabolomics Annotation Data' and 'Proteomics/Genomics Annotation data' tabs."}
-knitr::include_graphics(paste0(here::here(),"/documentation/Annotation.png"), error = FALSE)
+knitr::include_graphics(paste0(here::here(),"/inst/documentation/Annotation.png"), error = FALSE)
 ```
 
 ## Preparing Data for Use with Our Tool
@@ -63,6 +63,28 @@ To ensure your data is ready for analysis, please follow these guidelines:
 - Unique Identifiers: Ensure that each Feature_ID is unique. Use make.names() for conflicts, and avoid duplicates to prevent errors.
 - Web-based Tools for ID Conversion: If you need to convert identifiers, consider using web-based tools like the Uniprot batch conversion tool for genes/proteins or DAVID for genes.
 - Ensure that the sample IDs in your metadata file match those in your omics data files. If there are discrepancies, an error will occur. Make sure all samples are labeled correctly with no extra or missing samples.
+
+## Example data.
+
+Two case studies are available to help you get started with iModMix. You can use this data to run the application and explore its features.
+
+**Case Study 1.** Clear cell renal cell carcinoma (ccRCC, RC20) Dataset with Identified Metabolites
+We used 76 clear cell renal cell carcinoma (ccRCC) samples, 24 normal and 52 tumor (Golkaram et al. 2022; Tang et al. 2023; Benedetti et al. 2023) as a case study. 
+
+- Data 1: It contained 904 identified metabolites from untargeted metabolomics. 
+- Data 2: It contained 23001 genes from RNA-seq
+
+Applying iModMix identified 751 gene modules and 34 metabolite modules. Differential expression analysis of the modules through t-test confirmed changes in metabolite abundance between highlighting reduced levels of gamma-glutamyltyrosine (module ME#BA3241, P-value: 0.0003), creatinine/C00791 (module ME#C06162 P-value: 4.2681E-15), xanthosine/C01762 (module ME#66628D P-value: 0.0015), docosahexaenoate (DHA; 22:6n3)/C06429 (module ME#904A67 P-value: 4.6906E-12), and 1-methyladenosine/C02494 (module ME#E1C62F P-value: 8.1847E-14) in tumors compared to normal tissue. Conversely, metabolites with increased abundance in tumors compared to normal tissues included proline/C00148, glutamine/C00064 (module ME#6C856F, P-value: 0.006), maltose/C00208 and 1-methylnicotinamide/C02918 (module ME#904A67  P-value: 4.6906E-12). 
+
+**Case Study 2.** Lung Adenocarcinoma (LUAD) Dataset with Unidentified Metabolites
+Matched proteomics and metabolomics dataset was generated using two mouse models for lung adenocarcinoma (LUAD) (10 wild type, 10 knockout).
+
+- Data 1:  It contained 7353 metabolomics features (identified and unidentified) 
+- Data 2: It contained 7928 protein groups. 
+
+Applying iModMix generated 412 gene modules, and 287 metabolite modules. Strong correlations were observed between these modules, with correlations as high as 0.93. The correlations observed between variables in the 2 and 3 correlated pairs are notably high, with numerous correlations between proteins and both identified and unidentified metabolites exceeding 0.9. These strong correlations offer valuable insights into the unidentified metabolites, providing crucial information about their potential relationships and helping to elucidate their behavior.
+
+
 
 
   

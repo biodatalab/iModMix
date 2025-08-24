@@ -32,14 +32,12 @@ set.seed(123)
 eigengene_data <- as.data.frame(matrix(rnorm(100), nrow = 10, ncol = 10))
 colnames(eigengene_data) <- paste0("ME", 1:10)
 rownames(eigengene_data) <- paste0("Sample", 1:10)
-
 # Simulate metadata with a binary phenotype
 metadata <- data.frame(
   Sample = paste0("Sample", 1:10),
   Phenotype = rep(c("A", "B"), each = 5),
   stringsAsFactors = FALSE
 )
-
 # Run classification
 result <- perform_classification(
   eigengene_data = eigengene_data,
