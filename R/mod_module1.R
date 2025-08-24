@@ -151,6 +151,14 @@ mod_module1_ui <- function(id) {
                             shinyBS::bsPopover(id = "surfInfoMPC", title = "More information",
                               content = HTML("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimate the partial correlation and captures only direct associations.</p> <p>Below is a preview of the sparse partial correlation of the first five features. The full .csv file for the sparse partial correlation calculations for all the features can be downloaded at the bottom of the table.</p>"),
                               placement = "right", trigger = "hover", options = list(container = "body")),
+                            fileInput(
+                              ns("PartialCorrelationData1"),
+                              accept = c('text/csv',
+                                         'text/comma-separated-values',
+                                         'text/plain',
+                                         '.csv'),
+                              label = h5("If you already have it, upload your partial correlation Data 1")
+                            ),
                             verbatimTextOutput(ns("matrizTable")),
                             downloadButton(ns("downloadParCor"),
                                            "Partial correlation matrix"),
@@ -216,6 +224,7 @@ mod_module1_ui <- function(id) {
                             shinyBS::bsPopover(id = "surf-infoMCPEf", title = "More information",
                                       content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> Variable: Represents the ID of the module. </li> <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> Result_t: The t-statistic value. </li> <li> Result_pValue: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
+                            checkboxInput(ns("runClassificationPheno1"),  label = "Run Classification between phenotypes", value = FALSE),
                             fluidRow(
                               column(6,
                             selectInput(ns("phenotypeSelector"),
@@ -266,10 +275,12 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadModuleFeaturesAnnot1"),
                                            "Module Features"),
                             h4("PCA loading by module"),
+                            checkboxInput(ns("runPCAloading1"),  label = "Visualize PCA loading", value = FALSE),
                             plotOutput(ns("Loadings1")),
                             downloadButton(ns("downloadLoadings1"),
                                            "PCA_Loadings"),
                             h4("Heatmap by module"),
+                            checkboxInput(ns("runHeatmap1"),  label = "Visualize Heatmap", value = FALSE),
                             plotOutput(ns("heatmap1")),
                             downloadButton(ns("downloadHeatmap1"),
                                            "Heatmap")
@@ -314,6 +325,14 @@ mod_module1_ui <- function(id) {
                                       content = HTML(paste0("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimated the partial correlation and captures only direct associations.  </p> <p> Preview of the sparse partial correlation of the first five proteins/genes. The full .csv file for the sparse partial correlation calculations for all the proteins/genes can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
                                ),
+                            fileInput(
+                              ns("PartialCorrelationData2"),
+                              accept = c('text/csv',
+                                         'text/comma-separated-values',
+                                         'text/plain',
+                                         '.csv'),
+                              label = h5("If you already have it, upload your partial correlation Data 2")
+                            ),
                             verbatimTextOutput(ns("matrizTable2")),
                             downloadButton(ns("downloadParCor2"),
                                            "Partial correlation"),
@@ -380,6 +399,7 @@ mod_module1_ui <- function(id) {
                             shinyBS::bsPopover(id = "surf-info_PGCPef", title = "More information",
                                       content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> Variable: Represents the ID of the module. </li> <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> Result_t: The t-statistic value. </li> <li> Result_pValue: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
+                            checkboxInput(ns("runClassificationPheno2"),  label = "Run Classification between phenotypes", value = FALSE),
                             fluidRow(
                               column(6,
                                      selectInput(ns("phenotypeSelector2"),
@@ -432,10 +452,12 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadModuleFeaturesAnnot2"),
                                            "Module Features"),
                             h4("PCA loading by module"),
+                            checkboxInput(ns("runPCAloading2"),  label = "Visualize PCA loading", value = FALSE),
                             plotOutput(ns("Loadings2")),
                             downloadButton(ns("downloadLoadings2"),
                                            "PCA_Loadings"),
                             h4("Heatmap by module"),
+                            checkboxInput(ns("runHeatmap2"),  label = "Visualize Heatmap", value = FALSE),
                             plotOutput(ns("heatmap2")),
                             downloadButton(ns("downloadHeatmap2"),
                                            "Heatmap")
@@ -480,6 +502,14 @@ mod_module1_ui <- function(id) {
                                       content = HTML(paste0("<p>Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimated the partial correlation and captures only direct associations.  </p> <p> Preview of the sparse partial correlation of the first five proteins/genes. The full .csv file for the sparse partial correlation calculations for all the proteins/genes can be downloaded at the bottom of the table. </p>")),
                                       placement = "right", trigger = "hover", options = list(container = "body")
                                ),
+                            fileInput(
+                              ns("PartialCorrelationData3"),
+                              accept = c('text/csv',
+                                         'text/comma-separated-values',
+                                         'text/plain',
+                                         '.csv'),
+                              label = h5("If you already have it, upload your partial correlation Data 3")
+                            ),
                             verbatimTextOutput(ns("matrizTable3")),
                             downloadButton(ns("downloadParCor3"),
                                            "Partial correlation"),
@@ -546,6 +576,7 @@ mod_module1_ui <- function(id) {
                             shinyBS::bsPopover(id = "surf-info_3GCPef", title = "More information",
                                       content = HTML(paste0("<p>Statistical analysis by Students t-test compares phenotypes chosen from a drop-down menu. The eigenfeatures of each module, determined previously, are used as predictors. The user can also specify a significance threshold for the p-value, with the default set to 0.05. </p> <p> It returns a data frame with the following columns: </p> <ul> <li> Variable: Represents the ID of the module. </li> <li> Class: Lists the two levels of the phenotypes being compared. If there are more than two levels, it compares one level against the others. </li>  <li> Result_t: The t-statistic value. </li> <li> Result_pValue: The p-value for the test. </li> </ul> <p> Boxplots are automatically generated at the bottom for significant eigenfeatures, with dots marking outliers and a legend describing the compared phenotype. </p> ")),
                                       placement = "right", trigger = "hover", options = list(container = "body")),
+                            checkboxInput(ns("runClassificationPheno3"),  label = "Run Classification between phenotypes", value = FALSE),
                             fluidRow(
                               column(6,
                                      selectInput(ns("phenotypeSelector3"),
@@ -598,10 +629,12 @@ mod_module1_ui <- function(id) {
                             downloadButton(ns("downloadModuleFeaturesAnnot3"),
                                            "Module Features"),
                             h4("PCA loading by module"),
+                            checkboxInput(ns("runPCAloading3"),  label = "Visualize PCA loading", value = FALSE),
                             plotOutput(ns("Loadings3")),
                             downloadButton(ns("downloadLoadings3"),
                                            "PCA_Loadings"),
                             h4("Heatmap by module"),
+                            checkboxInput(ns("runHeatmap3"),  label = "Visualize Heatmap", value = FALSE),
                             plotOutput(ns("heatmap3")),
                             downloadButton(ns("downloadHeatmap3"),
                                            "Heatmap")
@@ -1189,18 +1222,27 @@ mod_module1_server <- function(id){
     # Module Assigments
     partial_cors1 <- reactive({
       withProgress(message = 'Calculating partial correlations Data 1...', value = 0, {
-        if (is.null(demo_par_cor_Metab()) && is.null(demo_par_cor_Metab_All())) {
+        # If no demo flags are set and no file is uploaded, calculate from data
+        if (is.null(demo_par_cor_Metab()) && is.null(demo_par_cor_Metab_All()) && is.null(input$PartialCorrelationData1)) {
           req(load_data1()$feature_mat_t_imp_data)
           load_data1 <- load_data1()$feature_mat_t_imp_data
           Sys.sleep(5)
           par_cor1 <- partial_cors(load_data = load_data1, rho = .25)
+          # If user uploaded a file, read it
+        } else if (!is.null(input$PartialCorrelationData1)) {
+          req(input$PartialCorrelationData1)
+          user_file1 <- input$PartialCorrelationData1$datapath
+          par_cor1 <- read.csv(user_file1, row.names = 1)  # Assuming it's a square matrix with row/column names
+          incProgress(100, detail = 'User file loaded!')
+          # If demo flag for ccRCC4 is set, load that file
         } else if (demo_par_cor_Metab()) {
           Sys.sleep(5)
-          par_cor1 <- readRDS(file.path(here::here(),"/inst/Example_data/ccRCC4_Data", "PartialCorMetabolites.rds"))
+          par_cor1 <- readRDS(file.path(here::here(), "inst/Example_data/ccRCC4_Data", "PartialCorMetabolites.rds"))
+          # If demo flag for FloresData is set, load that file
         } else if (demo_par_cor_Metab_All()) {
           Sys.sleep(5)
           #par_cor1 <- iModMixData::loadPartialCorMetabolites()
-          par_cor1 <- readRDS(file.path(here::here(),"/inst/Example_data/FloresData_K_TK", "PartialCorMetabolites.rds"))
+          par_cor1 <- readRDS(file.path(here::here(), "inst/Example_data/FloresData_K_TK", "PartialCorMetabolites.rds"))
         }
         incProgress(100, detail = 'Complete!')
         list(par_cor1 = par_cor1)
@@ -1438,6 +1480,7 @@ mod_module1_server <- function(id){
 
 
     Classification_Data1 <- reactive({
+      req(input$runClassificationPheno1)
       eigengenes_metab <- as.data.frame(Eigengene1()$Eigengenes)
       metadata <- as.data.frame(metadata())
       phenotype_variable <- input$phenotypeSelector
@@ -1548,6 +1591,7 @@ mod_module1_server <- function(id){
     )
 
     output$Loadings1 <- renderPlot({
+      req(input$runPCAloading1)
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
       ggplot2::autoplot(loadings_metab()$pca_res, data = metadata(), colour = input$phenotypeSelector, loadings = TRUE)
@@ -1565,6 +1609,7 @@ mod_module1_server <- function(id){
     )
 
     output$heatmap1 <- renderPlot({
+      req(input$runHeatmap1)
       selected_variable <- input$phenotypeSelector
       levels_selected_variable <- unique(metadata()[[selected_variable]])
       if (length(levels_selected_variable) == 2) {
@@ -1743,12 +1788,18 @@ mod_module1_server <- function(id){
     # Module Assigments
     partial_cors2 <- reactive({
       withProgress(message = 'Calculating partial correlations Data 2...', value = 0, {
-        if (is.null(demo_par_cor_Prot()) && is.null(demo_par_cor_Prot_All())) {
+        if (is.null(demo_par_cor_Prot()) && is.null(demo_par_cor_Prot_All()) && is.null(input$PartialCorrelationData2)) {
           req(load_data2()$feature_mat_t_imp_data)
           load_data2 <- load_data2()$feature_mat_t_imp_data
           Sys.sleep(5)
           par_cor <- partial_cors(load_data = load_data2, rho = .25)
-        } else if (demo_par_cor_Prot()) {
+        } else if (!is.null(input$PartialCorrelationData2)) {
+          req(input$PartialCorrelationData2)
+          user_file2 <- input$PartialCorrelationData2$datapath
+          par_cor <- read.csv(user_file2, row.names = 1)  # Assuming it's a square matrix with row/column names
+          incProgress(100, detail = 'User file loaded!')
+          # If demo flag for ccRCC4 is set, load that file
+        }else if (demo_par_cor_Prot()) {
           Sys.sleep(5)
           #par_cor <- iModMixData::loadPartialCorGenes()
           par_cor <- readRDS(file.path(here::here(),"/inst/Example_data/ccRCC4_Data", "PartialCorGenes.rds"))
@@ -1777,7 +1828,7 @@ mod_module1_server <- function(id){
     )
 
     hierarchical_cluster2 <- reactive({
-      par_cor <- partial_cors2()$par_cor
+      par_cor <- as.matrix(partial_cors2()$par_cor)
       hc <- hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
       hclusterTree <- hc$hclustTree
       hcDynMods <- hc$dynamicMods_numeric
@@ -1985,6 +2036,7 @@ mod_module1_server <- function(id){
     })
 
     Classification_Data2 <- reactive({
+      req(input$runClassificationPheno2)
       eigengenes_prot <- as.data.frame(Eigengene2()$Eigengenes)
       metadata <- as.data.frame(metadata())
       phenotype_variable <- input$phenotypeSelector2
@@ -2096,6 +2148,7 @@ mod_module1_server <- function(id){
     )
 
     output$Loadings2 <- renderPlot({
+      req(input$runPCAloading2)
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
       ggplot2::autoplot(loadings_Prot()$pca_res, data = metadata(), colour = input$phenotypeSelector2, loadings = TRUE)
@@ -2113,6 +2166,7 @@ mod_module1_server <- function(id){
     )
 
     output$heatmap2 <- renderPlot({
+      req(input$runHeatmap2)
       selected_variable <- input$phenotypeSelector2
       levels_selected_variable <- unique(metadata()[[selected_variable]])
 
@@ -2296,11 +2350,18 @@ mod_module1_server <- function(id){
     # Module Assigments
     partial_cors3 <- reactive({
       withProgress(message = 'Calculating partial correlations Data 3...', value = 0, {
+        if (is.null(input$PartialCorrelationData3)) {
           req(load_data3()$feature_mat_t_imp_data)
           load_data3 <- load_data3()$feature_mat_t_imp_data
           Sys.sleep(5)
           par_cor <- partial_cors(load_data = load_data3, rho = .25)
-        incProgress(100, detail = 'Complete!')
+          incProgress(100, detail = 'Complete!')
+        } else {
+          req(input$PartialCorrelationData3)
+          user_file3 <- input$PartialCorrelationData3$datapath
+          par_cor <- read.csv(user_file3, row.names = 1)  # Assuming it's a square matrix with row/column names
+          incProgress(100, detail = 'User file loaded!')
+        }
         list(par_cor = par_cor)
       })
     })
@@ -2320,7 +2381,7 @@ mod_module1_server <- function(id){
     )
 
     hierarchical_cluster3 <- reactive({
-      par_cor <- partial_cors3()$par_cor
+      par_cor <- as.matrix(partial_cors3()$par_cor)
       hc <- hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
       hclusterTree <- hc$hclustTree
       hcDynMods <- hc$dynamicMods_numeric
@@ -2525,6 +2586,7 @@ mod_module1_server <- function(id){
     })
 
     Classification_Data3 <- reactive({
+      req(input$runClassificationPheno3)
       eigengenes_prot <- as.data.frame(Eigengene3()$Eigengenes)
       metadata <- as.data.frame(metadata())
       phenotype_variable <- input$phenotypeSelector3
@@ -2637,6 +2699,7 @@ mod_module1_server <- function(id){
     )
 
     output$Loadings3 <- renderPlot({
+      req(input$runPCAloading3)
       requireNamespace("ggplot2", quietly = TRUE)
       requireNamespace("ggfortify", quietly = TRUE)
       ggplot2::autoplot(loadings_Gene()$pca_res, data = metadata(), colour = input$phenotypeSelector3, loadings = TRUE)
@@ -2654,6 +2717,7 @@ mod_module1_server <- function(id){
     )
 
     output$heatmap3 <- renderPlot({
+      req(input$runHeatmap3)
       selected_variable <- input$phenotypeSelector3
       levels_selected_variable <- unique(metadata()[[selected_variable]])
 
