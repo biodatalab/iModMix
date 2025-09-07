@@ -1,38 +1,38 @@
-testServer(
-  mod_module1_server,
-  # Add here your module params
-  args = list()
-  , {
-    ns <- session$ns
-    expect_true(
-      inherits(ns, "function")
-    )
-    expect_true(
-      grepl(id, ns(""))
-    )
-    expect_true(
-      grepl("test", ns("test"))
-    )
-    # Here are some examples of tests you can
-    # run on your module
-    # - Testing the setting of inputs
-    # session$setInputs(x = 1)
-    # expect_true(input$x == 1)
-    # - If ever your input updates a reactiveValues
-    # - Note that this reactiveValues must be passed
-    # - to the testServer function via args = list()
-    # expect_true(r$x == 1)
-    # - Testing output
-    # expect_true(inherits(output$tbl$html, "html"))
-})
- 
 test_that("module ui works", {
   ui <- mod_module1_ui(id = "test")
   golem::expect_shinytaglist(ui)
-  # Check that formals have not been removed
+
+  # Check that required formals are present
   fmls <- formals(mod_module1_ui)
-  for (i in c("id")){
-    expect_true(i %in% names(fmls))
-  }
+  expect_true("id" %in% names(fmls))
 })
- 
+
+test_that("module server initializes correctly", {
+  testServer(mod_module1_server, args = list(), {
+    ns <- session$ns
+    expect_true(inherits(ns, "function"))
+    expect_true(grepl(id, ns("")))
+    expect_true(grepl("test", ns("test")))
+  })
+})
+
+test_that("mod_module1 server produces infotable output", {
+  testServer(mod_module1_server, args = list(), {
+    # Fake input data (small csv-like dataframe)
+    fake_data <- data.frame(
+      feature = paste0("F", 1:5),
+      S1 = rnorm(5),
+      S2 = rnorm(5)
+    )
+
+    # Simulate upload of Data1
+    session$setInputs(Data1 = fake_data)
+
+    # Advance reactivity
+    session$flushReact()
+
+    # Check that infotable output slot is created
+    expect_true("infotable" %in% names(output))
+  })
+})
+

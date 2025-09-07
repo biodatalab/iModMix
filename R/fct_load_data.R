@@ -31,6 +31,11 @@ load_data <- function(Expression_mat = Expression_mat) {
   # Filter rows with missing values in more than 10% of the columns
   feature_mat <- subset(data, missing_count <= 0.1 * (ncol(data) - 2))
 
+  # Check if any rows remain after filtering
+  if (nrow(feature_mat) == 0) {
+    stop("No rows remain after filtering missing values")
+  }
+
   # Extract feature IDs and transpose the feature matrix
   features <- feature_mat$Feature_ID
   feature_mat_t <- t(feature_mat[, -c(1, ncol(feature_mat))])

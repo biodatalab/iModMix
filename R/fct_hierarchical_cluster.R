@@ -42,12 +42,14 @@ hierarchical_cluster <- function(parcor_mat, tom = TRUE, min_module_size = 10) {
                                                 verbose = 0)
   } else {
     # hierarchical clustering with partial correlation matrix
-    hclustTree <- hclust(as.dist(parcor_mat), method = "average")
+    parcor_diss <- 1 - abs(parcor_mat)  # convertir a disimilaridad
+    diag(parcor_diss) <- 0
+    hclustTree <- hclust(as.dist(parcor_diss), method = "average")
     dynamicMods <- dynamicTreeCut::cutreeDynamic(dendro = hclustTree,
-                                                method = "hybrid", distM = tom_diss,
-                                                deepSplit = 2, pamRespectsDendro = FALSE,
-                                                minClusterSize = min_module_size,
-                                                verbose = 0)
+                                                 method = "hybrid", distM = parcor_diss,
+                                                 deepSplit = 2, pamRespectsDendro = FALSE,
+                                                 minClusterSize = min_module_size,
+                                                 verbose = 0)
   }
   # starts counting assignments at 0 (0 is unassigned), so add 1 to all values to conform to R counting (starts at 1)
   dynamicMods <- dynamicMods + 1

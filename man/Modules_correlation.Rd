@@ -22,9 +22,9 @@ Calculates correlations between omic modules.
 \examples{
 # Simulate eigengene matrices for two omics datasets
 set.seed(123)
-eig1 <- matrix(rnorm(100), nrow = 10, ncol = 5)
+eig1 <- matrix(rnorm(50), nrow = 10, ncol = 5)
 colnames(eig1) <- paste0("ME", 1:5)
-eig2 <- matrix(rnorm(100), nrow = 10, ncol = 5)
+eig2 <- matrix(rnorm(50), nrow = 10, ncol = 5)
 colnames(eig2) <- paste0("ME", 1:5)
 
 # Simulate cluster assignments for each omic

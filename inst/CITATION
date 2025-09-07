@@ -1,0 +1,11 @@
+citHeader("iModMix Package")
+citEntry(
+  entry = "Article",
+  title = "iModMix: Integrative Module Analysis for Multi-omics Data",
+  author = person("Isis", "Narvaez-Bandera"),
+  year = "2024",
+  journal = "bioRxiv",
+  doi = "10.1101/2024.11.12.623208",
+  url = "https://www.biorxiv.org/content/10.1101/2024.11.12.623208"
+)
+citFooter("This package was supported by the NCI Research Project Grant (P01CA25084), Biostatistics and Bioinformatics Shared Resource and the Proteomics and Metabolomics Shared Resource at the H. Lee Moffitt Cancer Center & Research Institute (P30CA076292), the Cancer Bioinformatics Shared Resource at Huntsman Cancer Institute at the University of Utah (P30CA042014), the Cancer Research Institute Technology Impact Award, NIH T32CA233399, NIH U54HD090258, and the Anna D. Valentine and Charles L. Oehler Award. The content is those of the authors and does not represent the NIH. All authors confirm there are no conflicts of interest.")

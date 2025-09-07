@@ -1241,8 +1241,8 @@ mod_module1_server <- function(id){
           # If demo flag for FloresData is set, load that file
         } else if (demo_par_cor_Metab_All()) {
           Sys.sleep(5)
-          #par_cor1 <- iModMixData::loadPartialCorMetabolites()
-          par_cor1 <- readRDS(file.path(here::here(), "inst/Example_data/FloresData_K_TK", "PartialCorMetabolites.rds"))
+          par_cor1 <- iModMixData::loadPartialCorMetabolites()
+          #par_cor1 <- readRDS(file.path(here::here(), "inst/Example_data/FloresData_K_TK", "PartialCorMetabolites.rds"))
         }
         incProgress(100, detail = 'Complete!')
         list(par_cor1 = par_cor1)
@@ -1801,12 +1801,12 @@ mod_module1_server <- function(id){
           # If demo flag for ccRCC4 is set, load that file
         }else if (demo_par_cor_Prot()) {
           Sys.sleep(5)
-          #par_cor <- iModMixData::loadPartialCorGenes()
-          par_cor <- readRDS(file.path(here::here(),"/inst/Example_data/ccRCC4_Data", "PartialCorGenes.rds"))
+          par_cor <- iModMixData::loadPartialCorGenes()
+          #par_cor <- readRDS(file.path(here::here(),"/inst/Example_data/ccRCC4_Data", "PartialCorGenes.rds"))
         } else if (demo_par_cor_Prot_All()) {
           Sys.sleep(5)
-          #par_cor <- iModMixData::loadPartialCorProt()
-          par_cor <- readRDS(file.path(here::here(),"/inst/Example_data/FloresData_K_TK", "PartialCorProt.rds"))
+          par_cor <- iModMixData::loadPartialCorProt()
+          #par_cor <- readRDS(file.path(here::here(),"/inst/Example_data/FloresData_K_TK", "PartialCorProt.rds"))
         }
         incProgress(100, detail = 'Complete!')
         list(par_cor = par_cor)

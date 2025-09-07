@@ -61,7 +61,7 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
 
     result_list[["Comparison"]] <- t_test_results
 
-    boxplot_data <- tidyr::gather(merged_data, key = "Variable", value = "Expression", predictors)
+    boxplot_data <- tidyr::gather(merged_data, key = "Variable", value = "Expression", dplyr::all_of(predictors))
     boxplot_data$Class <- response
     boxplot_data_filtered <- boxplot_data[boxplot_data$Variable %in% t_test_results$Variable, ]
 
@@ -91,7 +91,7 @@ perform_classification <- function(eigengene_data, metadata, phenotype_variable,
 
       result_list[[paste(class_label, "vs Rest")]] <- t_test_results
 
-      boxplot_data <- tidyr::gather(merged_data, key = "Variable", value = "Expression", predictors)
+      boxplot_data <- tidyr::gather(merged_data, key = "Variable", value = "Expression", dplyr::all_of(predictors))
       boxplot_data$Class <- binary_response
       boxplot_data_filtered <- boxplot_data[boxplot_data$Variable %in% t_test_results$Variable, ]
 

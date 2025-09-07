@@ -60,7 +60,7 @@ Prot_annotation <- data.frame(
   stringsAsFactors = FALSE
 )
 metab_annotation <- data.frame(
-  `row ID` = c("M1", "M2"),
+  Feature_ID = c("M1", "M2"),
   HMDB = c("HMDB001", "HMDB002"),
   stringsAsFactors = FALSE
 )

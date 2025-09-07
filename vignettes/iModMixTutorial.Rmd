@@ -24,7 +24,7 @@ vignette: >
 
 iModMix can incorporate both identified and unidentified metabolites, addressing a key limitation of existing methodologies.
 
-```{r, echo=FALSE}
+```{r setup, echo=FALSE}
 suppressWarnings(library(knitr))
 
 opts_chunk$set(tidy = FALSE, message = FALSE, warning = FALSE)
@@ -71,7 +71,7 @@ Input data:
 * The Metadata should be a matrix with the first column named 'Sample' (with a capitalized 'S'). The second column on are user assigned based on comparisons desired, i.e. "disease" or "Genotype"
 * The Metadata should include unique sample IDs that match the sample IDs in your abundance/expression matrix files. Ensure that sample IDs are consistent across all datasets with thw same number of samples. This column enables linking omics data through samples.
 
-```{r}
+```{r upload1}
 # Load the package
 library(iModMix)
 
@@ -102,7 +102,7 @@ The iModMix downstream pipeline requires an input matrix of RNA-seq counts. The 
 This step is optional. If the input matrix already has samples as rows, features as columns, and contains no missing values, users may skip it.
 
 
-```{r}
+```{r Preprocess}
 # Preprocess of data for iModMix upload
 load_data1 <- load_data(Data_exp1)
 load_data1[1:5, 1:5]
@@ -112,7 +112,7 @@ load_data1[1:5, 1:5]
 
 Calculations for partial correlation is usually the slowest step. Partial correlation is a method of analyzing the relationship between two variables when other variables are present. Graphical Lasso (Glasso) is used to estimate the partial correlation and captures only direct associations. Below is a preview of the sparse partial correlation of the first five features. 
 
-```{r}
+```{r partial_cors1}
 # Perform Partial correlation
 parcorData1 <- partial_cors(load_data1, rho = 0.25)
 parcorData1[1:5, 1:5]
@@ -124,7 +124,7 @@ Axes: The vertical axis (y-axis) represents the dissimilarity between features, 
 Branches: Each line in the dendrogram represents a feature. Features that are closer in the hierarchy (i.e., joined at a lower height in the dendrogram) have more similar expression profiles.
 
 
-```{r}
+```{r hierarchical_cluster1}
 # Perform hierarchical clustering
 hcData1 <- hierarchical_cluster(parcor_mat = parcorData1, tom = TRUE, min_module_size = 10)
 
@@ -148,7 +148,7 @@ Let's see the cluster assignments. Hierarchical clustering generates multiple mo
 * **cluster**: The module where the feature is assigned 
 * **col**: The color used on the hierarchical clustering dendrogram.
 
-```{r}
+```{r cluster_assignments1}
 # Perform cluster assignments
 cluster_assig_Data1 <- cluster_assignments(as.data.frame(hcData1$cluster_assignments))
 head(cluster_assig_Data1)
@@ -159,7 +159,7 @@ The 904 features (identified metabolites) were assigned into 34 modules. The fir
 * Relating the modules to the phenotypes. 
 * Obtaining the correlation between omics datasets (integration). 
 
-```{r}
+```{r Eigengenes11}
 # Obtain Eigenfeatures
 eigenData1 <- Eigengenes(load_data1, hcData1$cluster_assignments[, 3])
 eigengenes_Data1 <- eigenData1$module_eigenmetab_Me
@@ -170,7 +170,7 @@ eigengenes_Data1[1:5, 1:5]
 
 Since this is purely an example of how to run the entire analysis from start to finish, we are going to limit our analysis to the first 1000 features.
 
-```{r}
+```{r upload2}
 # Get the path to the expression data file
 path_RNA_exp <- system.file("Example_data/ccRCC4_Data/RNA_exp.rds", package = "iModMix")
 
@@ -187,7 +187,7 @@ load_data2 <- load_data(Data_exp2)
 
 Calculate correlated matrix  
 
-```{r}
+```{r partial_cors2}
 # Partial correlation
 parcorData2 <- partial_cors(load_data2, rho = 0.25)
 parcorData2[1:5, 1:5]
@@ -195,7 +195,7 @@ parcorData2[1:5, 1:5]
 
 Calculate hierarchical clustering 
 
-```{r}
+```{r hierarchical_cluster2}
 # Perform hierarchical clustering
 hcData2 <- hierarchical_cluster(parcor_mat = parcorData2, tom = TRUE, min_module_size = 10)
 
@@ -218,7 +218,7 @@ WGCNA::plotDendroAndColors(
 
 Perform network construction and module eigengene calculation
 
-```{r}
+```{r cluster_assignments2}
 # Perform cluster assignment
 cluster_assig_Data2 <- cluster_assignments(as.data.frame(hcData2$cluster_assignments))
 eigenData2 <- Eigengenes(load_data2, hcData2$cluster_assignments[, 3])
@@ -234,7 +234,7 @@ Here, TN variable (Tumor, Normal) is selected as the phenotype variable of inter
 Boxplots are automatically generated at the bottom for significant eigenfeatures, with outliers identified as individual dots and a legend is provided to describe the compared phenotypes.
 
 
-```{r}
+```{r perform_classification2}
 # Perform Classification
 Classification_Data <- perform_classification(
   eigengene_data = eigengenes_Data1,
@@ -266,7 +266,7 @@ plot
 
 This step perform the integration of the datasets previously analyzed using the eigenfeatures obtained from the steps above. 
 
-```{r}
+```{r Multiomics}
 # Summarize into list the different eigenfeatures
 eigengenes_list <- list(eigengenes_Data1, eigengenes_Data2)
 cluster_list <- list(cluster_assig_Data1, cluster_assig_Data2)
@@ -303,7 +303,7 @@ network
 
 Enrichment analysis can be performed if annotation data for proteomics or transcriptomics is uploaded with the column Symbol available.  The drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the dataset cluster descriptions on table below. For the example transcriptomics (Data2) we select "GO_Biological_Process_2023". Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr.
 
-```{r}
+```{r enrichment}
 # Perform enrichment analysis per module
 selected_database <- "GO_Biological_Process_2023"
 # cluster_assignments_Data2_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assig_Data2, database = selected_database)

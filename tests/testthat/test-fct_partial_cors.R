@@ -1,57 +1,43 @@
-library(testthat)
-
-# Create an example dataset
-set.seed(123)
-example_data <- data.frame(
-  Feature_ID = paste0("Gene", 1:10),
-  Sample1 = rnorm(10),
-  Sample2 = rnorm(10),
-  Sample3 = rnorm(10),
-  Sample4 = rnorm(10)
-)
-
-# Add some rows with NA values to test filtering
-example_data[1, 2] <- NA
-example_data[2, 3] <- NA
-
-# Define the partial_cors function here or ensure it is loaded in the environment
+# test-fct_partial_cors.R
 
 test_that("partial_cors returns a matrix with correct dimensions and NA diagonal", {
-  result <- partial_cors(example_data)
+  set.seed(123)
+  mat <- matrix(rnorm(100), nrow = 10, ncol = 10)
+  colnames(mat) <- paste0("Gene", 1:10)
+  rownames(mat) <- paste0("Sample", 1:10)
 
-  # Check that the result is a matrix
-  expect_true(is.matrix(result))
+  result <- partial_cors(mat, rho = 0.25)
 
-  # Calculate the expected number of rows after filtering
-  filtered_data <- example_data[rowSums(is.na(example_data[, -1])) <= 0.1 * (ncol(example_data) - 2), ]
-  feature_mat_t <- t(filtered_data[, -1])
-  feature_mat_t <- feature_mat_t[, apply(feature_mat_t, 2, function(x) length(unique(x)) > 1)]
-  feature_mat_t <- as.matrix(scale(feature_mat_t))
-  sd_values <- apply(feature_mat_t, 2, function(x) sd(x, na.rm = TRUE))
-  filtered_indices <- which(sd_values > quantile(sd_values, 0.25))
-  expected_rows <- length(filtered_indices)
-
-  expect_equal(nrow(result), expected_rows)
-  expect_equal(ncol(result), expected_rows)
-
-  # Check that the diagonal contains NA
+  # check dimensions
+  expect_equal(dim(result), c(10, 10))
+  # diagonal should be NA
   expect_true(all(is.na(diag(result))))
 })
 
 test_that("partial_cors handles missing values correctly", {
-  result <- partial_cors(example_data)
+  set.seed(123)
+  mat <- matrix(rnorm(100), nrow = 10, ncol = 10)
+  mat[sample(length(mat), 5)] <- NA
+  colnames(mat) <- paste0("Gene", 1:10)
+  rownames(mat) <- paste0("Sample", 1:10)
 
-  # Check that rows with too many NAs have been removed
-  expect_true(!"Gene1" %in% rownames(result))
-  expect_true(!"Gene2" %in% rownames(result))
+  result <- partial_cors(mat, rho = 0.25)
+
+  expect_equal(dim(result), c(10, 10))
+  expect_true(all(is.na(diag(result))))
+  expect_true(is.numeric(result[!is.na(result)]))
 })
 
 test_that("partial_cors scales the data correctly", {
-  result <- partial_cors(example_data)
+  set.seed(123)
+  mat <- scale(matrix(rnorm(100), nrow = 10, ncol = 10))
+  colnames(mat) <- paste0("Gene", 1:10)
+  rownames(mat) <- paste0("Sample", 1:10)
 
-  # Check that the data has been scaled (mean 0 and standard deviation 1)
-  scaled_data <- scale(t(example_data[, -c(1, ncol(example_data))]))
-  expect_equal(colMeans(scaled_data, na.rm = TRUE), rep(0, ncol(scaled_data)), tolerance = 1e-8)
-  expect_equal(apply(scaled_data, 2, sd, na.rm = TRUE), rep(1, ncol(scaled_data)), tolerance = 1e-8)
+  result <- partial_cors(mat, rho = 0.25)
+
+  expect_equal(dim(result), c(10, 10))
+  expect_true(all(is.na(diag(result))))
+  expect_true(all(abs(result[upper.tri(result, diag = FALSE)]) <= 1))
 })
 

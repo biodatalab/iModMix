@@ -28,6 +28,6 @@ utils::globalVariables(c("missing_count"))
 #' @export
 Eigengenes <- function(load_data = load_data, cluster_assignments = cluster_assignments) {
   module_eigenmetab_List_Me <- WGCNA::moduleEigengenes(expr = as.matrix(load_data) , colors = cluster_assignments)
-  module_eigenmetab_Me <- module_eigenmetab_List_Me$eigengenes
+  module_eigenmetab_Me <- as.matrix(module_eigenmetab_List_Me$eigengenes)
   return(list(module_eigenmetab_List_Me = module_eigenmetab_List_Me, module_eigenmetab_Me = module_eigenmetab_Me))
   }
