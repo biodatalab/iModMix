@@ -18,6 +18,8 @@ biocViews: Software, Network, Clustering, Visualization, Transcriptomics,
   Proteomics, Metabolomics, GeneExpression, PrincipalComponent
 URL: https://github.com/biodatalab/iModMix
 BugReports: https://github.com/biodatalab/iModMix/issues
+Depends: 
+    R (>= 4.5.0)
 Imports: 
     config (>= 0.3.2),
     golem (>= 0.4.1),
@@ -40,7 +42,8 @@ Imports:
     httr,
     dplyr,
     stats,
-    iModMixData
+    iModMixData,
+    ExperimentHub (>= 3.22.0)
 Suggests: 
     testthat (>= 3.0.0),
     ggfortify,
@@ -54,7 +57,6 @@ Suggests:
     vroom,
     here,
     enrichR,
-    rmarkdown,
-    ExperimentHub
+    rmarkdown
 Config/testthat/edition: 3
 VignetteBuilder: knitr

@@ -16,7 +16,13 @@ run_app <- function(
     uiPattern = "/",
     ...
 )
-{  with_golem_options(
+{  # --- START: Inicialización de iModMixData ---
+  eh_cache <- tools::R_user_dir("ExperimentHub", "cache")
+  if (!dir.exists(eh_cache)) dir.create(eh_cache, recursive = TRUE)
+  eh <- ExperimentHub::ExperimentHub()
+  # --- END: Inicialización de iModMixData ---
+
+  with_golem_options(
     app = shinyApp(
       ui = app_ui,
       server = app_server,

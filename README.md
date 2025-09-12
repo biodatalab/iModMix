@@ -20,8 +20,10 @@ The iModMix suite can be downloaded (cloned) and installed through the GitHub re
 
 ### Only the first time the app is installed, enter the following command in the console:
 ```r
-install.packages("remotes")
-library(remotes)
+if (!require("BiocManager", quietly = TRUE)) 
+  install.packages("BiocManager")
+BiocManager::install(version = "3.22")
+BiocManager::install("iModMix")
 ```
 
 ### The following console command is to install from GitHub:
