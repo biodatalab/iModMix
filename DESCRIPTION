@@ -43,7 +43,7 @@ Imports:
     dplyr,
     stats,
     iModMixData,
-    ExperimentHub (>= 3.22.0)
+    ExperimentHub (>= 2.99.0)
 Suggests: 
     testthat (>= 3.0.0),
     ggfortify,
