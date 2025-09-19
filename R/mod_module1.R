@@ -2994,7 +2994,7 @@ mod_module1_server <- function(id){
         df2_2 <- as.data.frame(ImpVar_D1_D2()$expression_matrices[[2*i]])
         df4 <- ImpVar_D1_D2()$correlation_List[[i]]
         df4_1 <- hist(ImpVar_D1_D2()$correlation_matrices[[i]], main = paste("Top", i, "Modules Correlation"))
-        df4_2 <- corrplot::corrplot(ImpVar_D1_D2()$correlation_matrices[[i]], type = "upper", tl.col = "black", col = custom_palette)
+        df4_2 <- corrplot::corrplot(ImpVar_D1_D2()$correlation_matrices[[i]], type = "full", tl.col = "black", col = custom_palette)
         df5_1 <- ImpVar_D1_D2()$Important_features[[2*i - 1]]
         df5_2 <- ImpVar_D1_D2()$Important_features[[2*i]]
 
@@ -3308,7 +3308,7 @@ mod_module1_server <- function(id){
         df2_2 <- as.data.frame(ImpVar_D1_D3()$expression_matrices[[2*i]])
         df4 <- ImpVar_D1_D3()$correlation_List[[i]]
         df4_1 <- hist(ImpVar_D1_D3()$correlation_matrices[[i]], main = paste("Top", i, "Modules Correlation"))
-        df4_2 <- corrplot::corrplot(ImpVar_D1_D3()$correlation_matrices[[i]], type = "upper", tl.col = "black", col = custom_palette)
+        df4_2 <- corrplot::corrplot(ImpVar_D1_D3()$correlation_matrices[[i]], type = "full", tl.col = "black", col = custom_palette)
         df5_1 <- ImpVar_D1_D3()$Important_features[[2*i - 1]]
         df5_2 <- ImpVar_D1_D3()$Important_features[[2*i]]
 
@@ -3666,7 +3666,7 @@ mod_module1_server <- function(id){
         df2_2 <- as.data.frame(ImpVar_D2_D3()$expression_matrices[[2*i]])
         df4 <- ImpVar_D2_D3()$correlation_List[[i]]
         df4_1 <- hist(ImpVar_D2_D3()$correlation_matrices[[i]], main = paste("Top", i, "Modules Correlation"))
-        df4_2 <- corrplot::corrplot(ImpVar_D2_D3()$correlation_matrices[[i]], type = "upper", tl.col = "black", col = custom_palette)
+        df4_2 <- corrplot::corrplot(ImpVar_D2_D3()$correlation_matrices[[i]], type = "full", tl.col = "black", col = custom_palette)
         df5_1 <- ImpVar_D2_D3()$Important_features[[2*i - 1]]
         df5_2 <- ImpVar_D2_D3()$Important_features[[2*i]]
 
