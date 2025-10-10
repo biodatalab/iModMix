@@ -1,4 +1,4 @@
-#' perform_classification
+#' fctPerformClassification
 #'
 #' @description Performs classification using different methods such as Welch’s T-test, Random Forest, and K-Nearest Neighbors.
 #' @param eigengene_data A data frame of eigengenes organized with patient IDs in rows and variables in columns.
@@ -20,7 +20,7 @@
 #'   stringsAsFactors = FALSE
 #' )
 #' # Run classification
-#' result <- perform_classification(
+#' result <- fctPerformClassification(
 #'   eigengene_data = eigengene_data,
 #'   metadata = metadata,
 #'   phenotype_variable = "Phenotype",
@@ -31,7 +31,7 @@
 #' head(result$result)
 #'
 #' @export
-perform_classification <- function(eigengene_data, metadata, phenotype_variable, significance_threshold = 0.05) {
+fctPerformClassification <- function(eigengene_data, metadata, phenotype_variable, significance_threshold = 0.05) {
   requireNamespace("ggplot2", quietly = TRUE)
   if (is.null(phenotype_variable)) {
     return(NULL)

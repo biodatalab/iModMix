@@ -1,6 +1,6 @@
 Package: iModMix
 Title: Integrative Modules for Multi-Omics Data
-Version: 0.99.1
+Version: 0.99.2
 Authors@R: c(
     person(given = "Isis",
            family = "Narvaez-Bandera",
@@ -57,6 +57,7 @@ Suggests:
     vroom,
     here,
     enrichR,
+    SummarizedExperiment,
     rmarkdown
 Config/testthat/edition: 3
 VignetteBuilder: knitr

@@ -1,4 +1,4 @@
-#' cluster_assignments
+#' fctClusterAssignments
 #'
 #' @description Cluster assignments with annotation.
 #' @param cluster A data frame containing cluster assignments.
@@ -23,13 +23,13 @@
 #' )
 #'
 #' # Run without selected columns
-#' cluster_assignments(cluster_df, PhenoData = pheno_df)
+#' fctClusterAssignments(cluster_df, PhenoData = pheno_df)
 #'
 #' # Run with selected columns
-#' cluster_assignments(cluster_df, PhenoData = pheno_df, selected_columns = "Description")
+#' fctClusterAssignments(cluster_df, PhenoData = pheno_df, selected_columns = "Description")
 #'
 #' @export
-cluster_assignments <- function(cluster, PhenoData = NULL, selected_columns = NULL) {
+fctClusterAssignments <- function(cluster, PhenoData = NULL, selected_columns = NULL) {
   if (is.null(PhenoData)) {
     cluster_annot <- cluster
     cluster_annot$feature_name <- cluster_annot$feature

@@ -1,4 +1,4 @@
-#' partial_cors
+#' fctPartialCors
 #'
 #' @description Calculates partial correlations based on graphical lasso (https://www.rdocumentation.org/packages/glassoFast/versions/1.0/topics/glassoFast).
 #' @param load_data A prepossessed data matrix resulting from "load data" function.
@@ -12,13 +12,13 @@
 #' rownames(mat) <- paste0("Sample", 1:10)
 #'
 #' # Run partial correlation
-#' partial_cor_matrix <- partial_cors(mat, rho = 0.25)
+#' partial_cor_matrix <- fctPartialCors(mat, rho = 0.25)
 #'
 #' # View a portion of the result
 #' partial_cor_matrix[1:5, 1:5]
 #'
 #' @export
-partial_cors <- function(load_data, rho = .25) {
+fctPartialCors <- function(load_data, rho = .25) {
   # generate covariance matrix
   cov_mat <- cov(as.matrix(load_data), use = "pairwise.complete.obs")
   # calculate partial correlations
