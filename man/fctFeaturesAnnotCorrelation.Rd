@@ -5,26 +5,26 @@
 \title{fctFeaturesAnnotCorrelation}
 \usage{
 fctFeaturesAnnotCorrelation(
-  Cor_Datai_Dataj,
-  cluster_assignments_D1,
-  cluster_assignments_D2,
-  load_data1 = load_data1,
-  load_data2 = load_data2,
-  top_n = 5
+  corDataiDataj,
+  clusterAssignmentsD1,
+  clusterAssignmentsD2,
+  loadData1 = loadData1,
+  loadData2 = loadData2,
+  topn = 5
 )
 }
 \arguments{
-\item{Cor_Datai_Dataj}{A data frame with the first principal component of each protein cluster and their correlations.}
+\item{corDataiDataj}{A data frame with the first principal component of each protein cluster and their correlations.}
 
-\item{cluster_assignments_D1}{A data frame containing cluster assignments for metabolites.}
+\item{clusterAssignmentsD1}{A data frame containing cluster assignments for metabolites.}
 
-\item{cluster_assignments_D2}{A data frame containing cluster assignments and Enrichr terms for proteins.}
+\item{clusterAssignmentsD2}{A data frame containing cluster assignments and Enrichr terms for proteins.}
 
-\item{load_data1}{A prepossessed data matrix resulting from "load data" function from Data1.}
+\item{loadData1}{A prepossessed data matrix resulting from "load data" function from Data1.}
 
-\item{load_data2}{A prepossessed data matrix resulting from "load data" function from Data2.}
+\item{loadData2}{A prepossessed data matrix resulting from "load data" function from Data2.}
 
-\item{top_n}{The number of top correlations to select.}
+\item{topn}{The number of top correlations to select.}
 }
 \value{
 A list containing important features and correlation matrices.
@@ -34,7 +34,7 @@ Calculate correlation between the features of top correlated modules.
 }
 \examples{
 # Simulated correlation data
-Cor_Datai_Dataj <- data.frame(
+corDataiDataj <- data.frame(
   from = c("blue", "green"),
   to = c("red", "yellow"),
   value = c(0.9, 0.85),
@@ -42,34 +42,34 @@ Cor_Datai_Dataj <- data.frame(
 )
 
 # Simulated cluster assignments
-cluster_assignments_D1 <- data.frame(
+clusterAssignmentsD1 <- data.frame(
   feature = c("M1", "M2"),
   col = c("blue", "green"),
   stringsAsFactors = FALSE
 )
-cluster_assignments_D2 <- data.frame(
+clusterAssignmentsD2 <- data.frame(
   feature = c("P1", "P2"),
   col = c("red", "yellow"),
   stringsAsFactors = FALSE
 )
 
 # Simulated expression matrices
-load_data1 <- matrix(rnorm(20), nrow = 5, ncol = 4)
-colnames(load_data1) <- c("M1", "M2", "X1", "X2")
-rownames(load_data1) <- paste0("Sample", 1:5)
+loadData1 <- matrix(rnorm(20), nrow = 5, ncol = 4)
+colnames(loadData1) <- c("M1", "M2", "X1", "X2")
+rownames(loadData1) <- paste0("Sample", 1:5)
 
-load_data2 <- matrix(rnorm(20), nrow = 5, ncol = 4)
-colnames(load_data2) <- c("P1", "P2", "Y1", "Y2")
-rownames(load_data2) <- paste0("Sample", 1:5)
+loadData2 <- matrix(rnorm(20), nrow = 5, ncol = 4)
+colnames(loadData2) <- c("P1", "P2", "Y1", "Y2")
+rownames(loadData2) <- paste0("Sample", 1:5)
 
 # Run the function
 result <- fctFeaturesAnnotCorrelation(
-  Cor_Datai_Dataj = Cor_Datai_Dataj,
-  cluster_assignments_D1 = cluster_assignments_D1,
-  cluster_assignments_D2 = cluster_assignments_D2,
-  load_data1 = load_data1,
-  load_data2 = load_data2,
-  top_n = 2
+  corDataiDataj = corDataiDataj,
+  clusterAssignmentsD1 = clusterAssignmentsD1,
+  clusterAssignmentsD2 = clusterAssignmentsD2,
+  loadData1 = loadData1,
+  loadData2 = loadData2,
+  topn = 2
 )
 
 # View top correlations

@@ -1,18 +1,18 @@
 #' fctPerformClassification
 #'
 #' @description Performs classification using different methods such as Welch’s T-test, Random Forest, and K-Nearest Neighbors.
-#' @param eigengene_data A data frame of eigengenes organized with patient IDs in rows and variables in columns.
-#' @param metadata A data frame containing metadata, with a column call "Sample" that matches patient IDs in eigengene_data.
-#' @param phenotype_variable The variable selected by the user in the Shiny app (response variable).
-#' @param significance_threshold A numeric value to filter p-value. Default is 00.5.
+#' @param eigengeneData A data frame of eigengenes organized with patient IDs in rows and variables in columns.
+#' @param metadata A data frame containing metadata, with a column call "Sample" that matches patient IDs in eigengeneData.
+#' @param phenotypeVariable The variable selected by the user in the Shiny app (response variable).
+#' @param significanceThreshold A numeric value to filter p-value. Default is 00.5.
 #' @return A data frame with metrics such as AUC, Accuracy, and Error Rate for each binary classification.
 #' @importFrom stats p.adjust
 #' @examples
 #' # Simulate eigengene data
 #' set.seed(123)
-#' eigengene_data <- as.data.frame(matrix(rnorm(100), nrow = 10, ncol = 10))
-#' colnames(eigengene_data) <- paste0("ME", 1:10)
-#' rownames(eigengene_data) <- paste0("Sample", 1:10)
+#' eigengeneData <- as.data.frame(matrix(rnorm(100), nrow = 10, ncol = 10))
+#' colnames(eigengeneData) <- paste0("ME", 1:10)
+#' rownames(eigengeneData) <- paste0("Sample", 1:10)
 #' # Simulate metadata with a binary phenotype
 #' metadata <- data.frame(
 #'   Sample = paste0("Sample", 1:10),
@@ -21,25 +21,25 @@
 #' )
 #' # Run classification
 #' result <- fctPerformClassification(
-#'   eigengene_data = eigengene_data,
+#'   eigengeneData = eigengeneData,
 #'   metadata = metadata,
-#'   phenotype_variable = "Phenotype",
-#'   significance_threshold = 0.05
+#'   phenotypeVariable = "Phenotype",
+#'   significanceThreshold = 0.05
 #' )
 #'
 #' # View results
 #' head(result$result)
 #'
 #' @export
-fctPerformClassification <- function(eigengene_data, metadata, phenotype_variable, significance_threshold = 0.05) {
+fctPerformClassification <- function(eigengeneData, metadata, phenotypeVariable, significanceThreshold = 0.05) {
   requireNamespace("ggplot2", quietly = TRUE)
-  if (is.null(phenotype_variable)) {
+  if (is.null(phenotypeVariable)) {
     return(NULL)
   }
-  metadata_subset <- metadata[, c("Sample", phenotype_variable), drop = FALSE]
-  merged_data <- merge(eigengene_data, metadata_subset, by.x = "row.names", by.y = "Sample")
+  metadata_subset <- metadata[, c("Sample", phenotypeVariable), drop = FALSE]
+  merged_data <- merge(eigengeneData, metadata_subset, by.x = "row.names", by.y = "Sample")
   predictors <- names(merged_data)[-c(1, ncol(merged_data))]
-  response <- as.factor(merged_data[[phenotype_variable]])
+  response <- as.factor(merged_data[[phenotypeVariable]])
 
   result_list <- list()
   plot_list <- list()
@@ -56,7 +56,7 @@ fctPerformClassification <- function(eigengene_data, metadata, phenotype_variabl
       )
     })
       t_test_results$Adjusted_pValue <- round(stats::p.adjust(t_test_results$Result_pValue, method = "BH"), 4)
-      t_test_results <- t_test_results[t_test_results$Result_pValue <= significance_threshold, ]
+      t_test_results <- t_test_results[t_test_results$Result_pValue <= significanceThreshold, ]
       t_test_results <- t_test_results[order(t_test_results$Result_pValue), ]
 
     result_list[["Comparison"]] <- t_test_results
@@ -86,7 +86,7 @@ fctPerformClassification <- function(eigengene_data, metadata, phenotype_variabl
       })
 
       t_test_results$Adjusted_pValue <- stats::p.adjust(t_test_results$Result_pValue, method = "BH")
-      t_test_results <- t_test_results[t_test_results$Result_pValue <= significance_threshold, ]
+      t_test_results <- t_test_results[t_test_results$Result_pValue <= significanceThreshold, ]
       t_test_results <- t_test_results[order(t_test_results$Result_pValue), ]
 
       result_list[[paste(class_label, "vs Rest")]] <- t_test_results

@@ -3,8 +3,8 @@ utils::globalVariables(c("missing_count"))
 #' fctEigengenes
 #'
 #' @description Calculates module eigengenes using the WGCNA package.
-#' @param load_data A prepossessed data matrix resulting from "load data" function
-#' @param cluster_assignments A vector of cluster assignments for each feature.
+#' @param loadData A prepossessed data matrix resulting from "load data" function
+#' @param clusterAssignments A vector of cluster assignments for each feature.
 #' @return A list containing:
 #' \item{module_eigenmetab_List_Me}{The full result from WGCNA::moduleEigengenes.}
 #' \item{module_eigenmetab_Me}{The matrix of module eigengenes.}
@@ -20,14 +20,14 @@ utils::globalVariables(c("missing_count"))
 #' clusters <- rep(1:2, each = 5)
 #'
 #' # Run Eigengenes function
-#' result <- fctEigengenes(load_data = mat, cluster_assignments = clusters)
+#' result <- fctEigengenes(loadData = mat, clusterAssignments = clusters)
 #'
 #' # View eigengene matrix
 #' head(result$module_eigenmetab_Me)
 #'
 #' @export
-fctEigengenes <- function(load_data = load_data, cluster_assignments = cluster_assignments) {
-  module_eigenmetab_List_Me <- WGCNA::moduleEigengenes(expr = as.matrix(load_data) , colors = cluster_assignments)
+fctEigengenes <- function(loadData = loadData, clusterAssignments = clusterAssignments) {
+  module_eigenmetab_List_Me <- WGCNA::moduleEigengenes(expr = as.matrix(loadData) , colors = clusterAssignments)
   module_eigenmetab_Me <- as.matrix(module_eigenmetab_List_Me$eigengenes)
   return(list(module_eigenmetab_List_Me = module_eigenmetab_List_Me, module_eigenmetab_Me = module_eigenmetab_Me))
 }

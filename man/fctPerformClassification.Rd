@@ -5,20 +5,20 @@
 \title{fctPerformClassification}
 \usage{
 fctPerformClassification(
-  eigengene_data,
+  eigengeneData,
   metadata,
-  phenotype_variable,
-  significance_threshold = 0.05
+  phenotypeVariable,
+  significanceThreshold = 0.05
 )
 }
 \arguments{
-\item{eigengene_data}{A data frame of eigengenes organized with patient IDs in rows and variables in columns.}
+\item{eigengeneData}{A data frame of eigengenes organized with patient IDs in rows and variables in columns.}
 
-\item{metadata}{A data frame containing metadata, with a column call "Sample" that matches patient IDs in eigengene_data.}
+\item{metadata}{A data frame containing metadata, with a column call "Sample" that matches patient IDs in eigengeneData.}
 
-\item{phenotype_variable}{The variable selected by the user in the Shiny app (response variable).}
+\item{phenotypeVariable}{The variable selected by the user in the Shiny app (response variable).}
 
-\item{significance_threshold}{A numeric value to filter p-value. Default is 00.5.}
+\item{significanceThreshold}{A numeric value to filter p-value. Default is 00.5.}
 }
 \value{
 A data frame with metrics such as AUC, Accuracy, and Error Rate for each binary classification.
@@ -29,9 +29,9 @@ Performs classification using different methods such as Welch’s T-test, Random
 \examples{
 # Simulate eigengene data
 set.seed(123)
-eigengene_data <- as.data.frame(matrix(rnorm(100), nrow = 10, ncol = 10))
-colnames(eigengene_data) <- paste0("ME", 1:10)
-rownames(eigengene_data) <- paste0("Sample", 1:10)
+eigengeneData <- as.data.frame(matrix(rnorm(100), nrow = 10, ncol = 10))
+colnames(eigengeneData) <- paste0("ME", 1:10)
+rownames(eigengeneData) <- paste0("Sample", 1:10)
 # Simulate metadata with a binary phenotype
 metadata <- data.frame(
   Sample = paste0("Sample", 1:10),
@@ -40,10 +40,10 @@ metadata <- data.frame(
 )
 # Run classification
 result <- fctPerformClassification(
-  eigengene_data = eigengene_data,
+  eigengeneData = eigengeneData,
   metadata = metadata,
-  phenotype_variable = "Phenotype",
-  significance_threshold = 0.05
+  phenotypeVariable = "Phenotype",
+  significanceThreshold = 0.05
 )
 
 # View results

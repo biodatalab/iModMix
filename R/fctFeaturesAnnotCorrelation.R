@@ -1,16 +1,16 @@
 #' fctFeaturesAnnotCorrelation
 #'
 #' @description Calculate correlation between the features of top correlated modules.
-#' @param Cor_Datai_Dataj A data frame with the first principal component of each protein cluster and their correlations.
-#' @param cluster_assignments_D2 A data frame containing cluster assignments and Enrichr terms for proteins.
-#' @param cluster_assignments_D1 A data frame containing cluster assignments for metabolites.
-#' @param load_data1 A prepossessed data matrix resulting from "load data" function from Data1.
-#' @param load_data2 A prepossessed data matrix resulting from "load data" function from Data2.
-#' @param top_n The number of top correlations to select.
+#' @param corDataiDataj A data frame with the first principal component of each protein cluster and their correlations.
+#' @param clusterAssignmentsD2 A data frame containing cluster assignments and Enrichr terms for proteins.
+#' @param clusterAssignmentsD1 A data frame containing cluster assignments for metabolites.
+#' @param loadData1 A prepossessed data matrix resulting from "load data" function from Data1.
+#' @param loadData2 A prepossessed data matrix resulting from "load data" function from Data2.
+#' @param topn The number of top correlations to select.
 #' @return A list containing important features and correlation matrices.
 #' @examples
 #' # Simulated correlation data
-#' Cor_Datai_Dataj <- data.frame(
+#' corDataiDataj <- data.frame(
 #'   from = c("blue", "green"),
 #'   to = c("red", "yellow"),
 #'   value = c(0.9, 0.85),
@@ -18,74 +18,74 @@
 #' )
 #'
 #' # Simulated cluster assignments
-#' cluster_assignments_D1 <- data.frame(
+#' clusterAssignmentsD1 <- data.frame(
 #'   feature = c("M1", "M2"),
 #'   col = c("blue", "green"),
 #'   stringsAsFactors = FALSE
 #' )
-#' cluster_assignments_D2 <- data.frame(
+#' clusterAssignmentsD2 <- data.frame(
 #'   feature = c("P1", "P2"),
 #'   col = c("red", "yellow"),
 #'   stringsAsFactors = FALSE
 #' )
 #'
 #' # Simulated expression matrices
-#' load_data1 <- matrix(rnorm(20), nrow = 5, ncol = 4)
-#' colnames(load_data1) <- c("M1", "M2", "X1", "X2")
-#' rownames(load_data1) <- paste0("Sample", 1:5)
+#' loadData1 <- matrix(rnorm(20), nrow = 5, ncol = 4)
+#' colnames(loadData1) <- c("M1", "M2", "X1", "X2")
+#' rownames(loadData1) <- paste0("Sample", 1:5)
 #'
-#' load_data2 <- matrix(rnorm(20), nrow = 5, ncol = 4)
-#' colnames(load_data2) <- c("P1", "P2", "Y1", "Y2")
-#' rownames(load_data2) <- paste0("Sample", 1:5)
+#' loadData2 <- matrix(rnorm(20), nrow = 5, ncol = 4)
+#' colnames(loadData2) <- c("P1", "P2", "Y1", "Y2")
+#' rownames(loadData2) <- paste0("Sample", 1:5)
 #'
 #' # Run the function
 #' result <- fctFeaturesAnnotCorrelation(
-#'   Cor_Datai_Dataj = Cor_Datai_Dataj,
-#'   cluster_assignments_D1 = cluster_assignments_D1,
-#'   cluster_assignments_D2 = cluster_assignments_D2,
-#'   load_data1 = load_data1,
-#'   load_data2 = load_data2,
-#'   top_n = 2
+#'   corDataiDataj = corDataiDataj,
+#'   clusterAssignmentsD1 = clusterAssignmentsD1,
+#'   clusterAssignmentsD2 = clusterAssignmentsD2,
+#'   loadData1 = loadData1,
+#'   loadData2 = loadData2,
+#'   topn = 2
 #' )
 #'
 #' # View top correlations
 #' result$Top_correlations
 #'
 #' @export
-fctFeaturesAnnotCorrelation <- function(Cor_Datai_Dataj, cluster_assignments_D1, cluster_assignments_D2,
-                                      load_data1 = load_data1, load_data2 = load_data2, top_n = 5)  {
+fctFeaturesAnnotCorrelation <- function(corDataiDataj, clusterAssignmentsD1, clusterAssignmentsD2,
+                                      loadData1 = loadData1, loadData2 = loadData2, topn = 5)  {
   # Select the top n correlations
-  Top_correlations <- Cor_Datai_Dataj[order(-abs(Cor_Datai_Dataj$value)), ][seq_len(top_n), ]
+  Top_correlations <- corDataiDataj[order(-abs(corDataiDataj$value)), ][seq_len(topn), ]
 
   # Remove the "ME" prefix from Prot_module and Metab_module columns
   Top_correlations[c("from", "to")] <- lapply(Top_correlations[c("from", "to")], function(x) sub("^D[123]", "", x))
 
   # Initialize lists to store cluster assignments, annotation matrices, and expression matrices
-  cluster_assignments_list <- list()
+  clusterAssignmentslist <- list()
   expression_matrices_list <- list()
   correlation_matrices_list <- list()
   Important_features_list <- list()
   correlation_List_list <- list()
 
   # Loop through each top correlation and extract variables from clusters
-  for (i in seq_len(top_n)) {
+  for (i in seq_len(topn)) {
     Metab_module <- Top_correlations[i, "from"]
     Prot_module <- Top_correlations[i, "to"]
 
     # Extract variables for Prot and Metab
-    cluster_top_Metab <- cluster_assignments_D1[grepl(Metab_module, cluster_assignments_D1$col), ]
-    cluster_top_Prot <- cluster_assignments_D2[grepl(Prot_module, cluster_assignments_D2$col), ]
+    cluster_top_Metab <- clusterAssignmentsD1[grepl(Metab_module, clusterAssignmentsD1$col), ]
+    cluster_top_Prot <- clusterAssignmentsD2[grepl(Prot_module, clusterAssignmentsD2$col), ]
 
     # Store cluster assignments
-    cluster_assignments_list[[paste("cluster_assignments_D1_", i)]] <- cluster_top_Metab
-    cluster_assignments_list[[paste("cluster_assignments_D2_", i)]] <- cluster_top_Prot
+    clusterAssignmentslist[[paste("clusterAssignmentsD1_", i)]] <- cluster_top_Metab
+    clusterAssignmentslist[[paste("clusterAssignmentsD2_", i)]] <- cluster_top_Prot
 
     # Extract variables for Prot and Metab from their respective annotation matrices
     cluster_variables_Metab <- cluster_top_Metab$feature
     cluster_variables_Prot <- cluster_top_Prot$feature
 
-    cluster_expression_matrix_Metab <- load_data1[, colnames(load_data1) %in% cluster_variables_Metab, drop = FALSE]
-    cluster_expression_matrix_Prot <- load_data2[, colnames(load_data2) %in% cluster_variables_Prot, drop = FALSE]
+    cluster_expression_matrix_Metab <- loadData1[, colnames(loadData1) %in% cluster_variables_Metab, drop = FALSE]
+    cluster_expression_matrix_Prot <- loadData2[, colnames(loadData2) %in% cluster_variables_Prot, drop = FALSE]
 
     # Calculate and store the correlation matrix between Prot and Metab expression matrices
     correlation_matrix <- cor(cluster_expression_matrix_Metab, cluster_expression_matrix_Prot, method = 'spearman', use = "pairwise.complete.obs")
@@ -103,16 +103,16 @@ fctFeaturesAnnotCorrelation <- function(Cor_Datai_Dataj, cluster_assignments_D1,
     correlation_matrices_list[[paste("Correlation_Matrix_Cluster_", i)]] <- correlation_matrix
 
     # Convert the correlation matrix to a long format
-    Cor_Datai_Dataj_list <- reshape2::melt(correlation_matrix, id.var = "Correlation")
-    colnames(Cor_Datai_Dataj_list) <- c("Data1", "Data2", "Correlation")
-    Cor_Datai_Dataj_list <-  Cor_Datai_Dataj_list[order(abs(Cor_Datai_Dataj_list$Correlation), decreasing = TRUE), ]
-    Cor_Datai_Dataj_list$Correlation <- round(Cor_Datai_Dataj_list$Correlation, 4)
+    corDataiDataj_list <- reshape2::melt(correlation_matrix, id.var = "Correlation")
+    colnames(corDataiDataj_list) <- c("Data1", "Data2", "Correlation")
+    corDataiDataj_list <-  corDataiDataj_list[order(abs(corDataiDataj_list$Correlation), decreasing = TRUE), ]
+    corDataiDataj_list$Correlation <- round(corDataiDataj_list$Correlation, 4)
 
-    correlation_List_list[[paste("Correlation_List_Cluster_", i)]] <- Cor_Datai_Dataj_list
+    correlation_List_list[[paste("Correlation_List_Cluster_", i)]] <- corDataiDataj_list
   }
 
-  VarD1 <- as.data.frame(table(cluster_assignments_D1$col))
-  VarD2 <- as.data.frame(table(cluster_assignments_D2$col))
+  VarD1 <- as.data.frame(table(clusterAssignmentsD1$col))
+  VarD2 <- as.data.frame(table(clusterAssignmentsD2$col))
 
   # Merge the counts with Top_correlations
   Top_correlations <- merge(Top_correlations, VarD1, by.x = "from", by.y = "Var1", all.x = TRUE)
@@ -127,7 +127,7 @@ fctFeaturesAnnotCorrelation <- function(Cor_Datai_Dataj, cluster_assignments_D1,
 
   return(list(
     Top_correlations = Top_correlations,
-    cluster_assignments = cluster_assignments_list,
+    cluster_assignments = clusterAssignmentslist,
     expression_matrices = expression_matrices_list,
     correlation_matrices = correlation_matrices_list,
     Important_features = Important_features_list,

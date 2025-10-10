@@ -4,10 +4,10 @@
 \alias{fctLoadData}
 \title{fctLoadData}
 \usage{
-fctLoadData(Expression_mat = Expression_mat)
+fctLoadData(expressionMat = expressionMat)
 }
 \arguments{
-\item{Expression_mat}{A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.}
+\item{expressionMat}{A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.}
 }
 \value{
 A prepossessed data matrix.
@@ -24,13 +24,13 @@ rownames(mat) <- paste0("Sample", 1:10)
 mat[sample(length(mat), 50)] <- NA  # introduce some NAs
 
 # Add a Feature_ID column to mimic expected input
-Expression_mat <- cbind(Feature_ID = paste0("F", 1:10), mat)
-Expression_mat <- as.data.frame(Expression_mat)
+expressionMat <- cbind(Feature_ID = paste0("F", 1:10), mat)
+expressionMat <- as.data.frame(expressionMat)
 
 # Convert Feature_ID to character (if needed)
-Expression_mat$Feature_ID <- as.character(Expression_mat$Feature_ID)
+expressionMat$Feature_ID <- as.character(expressionMat$Feature_ID)
 
 # Run the function
-processed_data <- fctLoadData(Expression_mat)
+processed_data <- fctLoadData(expressionMat)
 
 }

@@ -4,12 +4,12 @@
 \alias{fctEigengenes}
 \title{fctEigengenes}
 \usage{
-fctEigengenes(load_data = load_data, cluster_assignments = cluster_assignments)
+fctEigengenes(loadData = loadData, clusterAssignments = clusterAssignments)
 }
 \arguments{
-\item{load_data}{A prepossessed data matrix resulting from "load data" function}
+\item{loadData}{A prepossessed data matrix resulting from "load data" function}
 
-\item{cluster_assignments}{A vector of cluster assignments for each feature.}
+\item{clusterAssignments}{A vector of cluster assignments for each feature.}
 }
 \value{
 A list containing:
@@ -31,7 +31,7 @@ rownames(mat) <- paste0("Sample", 1:10)
 clusters <- rep(1:2, each = 5)
 
 # Run Eigengenes function
-result <- fctEigengenes(load_data = mat, cluster_assignments = clusters)
+result <- fctEigengenes(loadData = mat, clusterAssignments = clusters)
 
 # View eigengene matrix
 head(result$module_eigenmetab_Me)

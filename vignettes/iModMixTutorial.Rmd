@@ -99,22 +99,22 @@ Input data:
 library(iModMix)
 
 # Get the path to the expression data file
-path_Metab_exp <- system.file("Example_data/ccRCC4_Data/Metab_exp.rds", package = "iModMix")
+pathMetabExp <- system.file("Example_data/ccRCC4_Data/Metab_exp.rds", package = "iModMix")
 
 # Load the expression data
-Data_exp1 <- readRDS(path_Metab_exp)
+dataExp1 <- readRDS(pathMetabExp)
 
 # Check the expression data
-Data_exp1[1:5, 1:5]
+dataExp1[1:5, 1:5]
 
 # Get the path to the Metadata file
-path_Metadata <- system.file("Example_data/ccRCC4_Data/Metadata.rds", package = "iModMix")
+pathMetadata <- system.file("Example_data/ccRCC4_Data/Metadata.rds", package = "iModMix")
 
 # Load the Metadata
-Metadata <- readRDS(path_Metadata)
+metadata <- readRDS(pathMetadata)
 
 # Check the Metadata
-head(Metadata)
+head(metadata)
 ```
 
 ### Perform preprocessing of data
@@ -127,8 +127,8 @@ This step is optional. If the input matrix already has samples as rows, features
 
 ```{r Preprocess}
 # Preprocess of data for iModMix upload
-load_data1 <- fctLoadData(Data_exp1)
-load_data1[1:5, 1:5]
+loadData1 <- fctLoadData(dataExp1)
+loadData1[1:5, 1:5]
 ```
 
 ### Perform Partial correlation analysis, network construction and module eigengene calculation
@@ -137,7 +137,7 @@ Calculations for partial correlation is usually the slowest step. Partial correl
 
 ```{r partial_cors1}
 # Perform Partial correlation
-parcorData1 <- fctPartialCors(load_data1, rho = 0.25)
+parcorData1 <- fctPartialCors(loadData1, rho = 0.25)
 parcorData1[1:5, 1:5]
 ```
 Hierarchical clustering is used to identify common neighbors between the features. Calculations are determined using the topographical overlap matrix (TOM) and are based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram. 
@@ -149,7 +149,7 @@ Branches: Each line in the dendrogram represents a feature. Features that are cl
 
 ```{r hierarchical_cluster1}
 # Perform hierarchical clustering
-hcData1 <- fctHierarchicalCluster(parcor_mat = parcorData1, tom = TRUE, min_module_size = 10)
+hcData1 <- fctHierarchicalCluster(parcorMat = parcorData1, tom = TRUE, minModuleSize = 10)
 
 hcClu <- hcData1$hclustTree
 hcMod <- as.matrix(hcData1$dynamicMods_numeric)
@@ -173,8 +173,8 @@ Let's see the cluster assignments. Hierarchical clustering generates multiple mo
 
 ```{r cluster_assignments1}
 # Perform cluster assignments
-cluster_assig_Data1 <- fctClusterAssignments(as.data.frame(hcData1$cluster_assignments))
-head(cluster_assig_Data1)
+clusterAssigData1 <- fctClusterAssignments(as.data.frame(hcData1$cluster_assignments))
+head(clusterAssigData1)
 ```
 
 The 904 features (identified metabolites) were assigned into 34 modules. The first principal component (PC1) is calculated for each module, referred to as an eigenfeature. Eigenfeatures are useful for
@@ -184,9 +184,9 @@ The 904 features (identified metabolites) were assigned into 34 modules. The fir
 
 ```{r Eigengenes11}
 # Obtain Eigenfeatures
-eigenData1 <- fctEigengenes(load_data1, hcData1$cluster_assignments[, 3])
-eigengenes_Data1 <- eigenData1$module_eigenmetab_Me
-eigengenes_Data1[1:5, 1:5]
+eigenData1 <- fctEigengenes(loadData1, hcData1$cluster_assignments[, 3])
+eigengenesData1 <- eigenData1$module_eigenmetab_Me
+eigengenesData1[1:5, 1:5]
 ```
 
 ### Load expression Data 2 and perform partial correlation analysis, network construction and module eigengene calculation
@@ -195,24 +195,24 @@ Since this is purely an example of how to run the entire analysis from start to 
 
 ```{r upload2}
 # Get the path to the expression data file
-path_RNA_exp <- system.file("Example_data/ccRCC4_Data/RNA_exp.rds", package = "iModMix")
+pathRNAexp <- system.file("Example_data/ccRCC4_Data/RNA_exp.rds", package = "iModMix")
 
 # Load the expression data
-Data_exp2 <- readRDS(path_RNA_exp)
-Data_exp2 <- Data_exp2[1:1000, ]
+dataExp2 <- readRDS(pathRNAexp)
+dataExp2 <- dataExp2[1:1000, ]
 
 # Check the expression data
-Data_exp2[1:5, 1:5]
+dataExp2[1:5, 1:5]
 
 # Preprocessing of data for iModMix upload
-load_data2 <- fctLoadData(Data_exp2)
+loadData2 <- fctLoadData(dataExp2)
 ```
 
 Calculate correlated matrix  
 
 ```{r partial_cors2}
 # Partial correlation
-parcorData2 <- fctPartialCors(load_data2, rho = 0.25)
+parcorData2 <- fctPartialCors(loadData2, rho = 0.25)
 parcorData2[1:5, 1:5]
 ```
 
@@ -220,7 +220,7 @@ Calculate hierarchical clustering
 
 ```{r hierarchical_cluster2}
 # Perform hierarchical clustering
-hcData2 <- fctHierarchicalCluster(parcor_mat = parcorData2, tom = TRUE, min_module_size = 10)
+hcData2 <- fctHierarchicalCluster(parcorMat = parcorData2, tom = TRUE, minModuleSize = 10)
 
 # Access the hierarchical clustering tree and module assignments
 hcClu2 <- hcData2$hclustTree
@@ -243,10 +243,10 @@ Perform network construction and module eigengene calculation
 
 ```{r cluster_assignments2}
 # Perform cluster assignment
-cluster_assig_Data2 <- fctClusterAssignments(as.data.frame(hcData2$cluster_assignments))
-eigenData2 <- fctEigengenes(load_data2, hcData2$cluster_assignments[, 3])
-eigengenes_Data2 <- eigenData2$module_eigenmetab_Me
-eigengenes_Data2[1:5, 1:5]
+clusterAssigData2 <- fctClusterAssignments(as.data.frame(hcData2$cluster_assignments))
+eigenData2 <- fctEigengenes(loadData2, hcData2$cluster_assignments[, 3])
+eigengenesData2 <- eigenData2$module_eigenmetab_Me
+eigengenesData2[1:5, 1:5]
 ```
 ## Relate modules to phenotype
 
@@ -259,23 +259,23 @@ Boxplots are automatically generated at the bottom for significant eigenfeatures
 
 ```{r perform_classification2}
 # Perform Classification
-Classification_Data <- fctPerformClassification(
-  eigengene_data = eigengenes_Data1,
-  metadata = Metadata,
-  phenotype_variable = "TN",
-  significance_threshold = 0.09
+ClassificationData <- fctPerformClassification(
+  eigengeneData = eigengenesData1,
+  metadata = metadata,
+  phenotypeVariable = "TN",
+  significanceThreshold = 0.09
 )
 
-Classification_Data$result[1:10, ]
+ClassificationData$result[1:10, ]
 
 # Plot BoxPlot
-selected_variable <- "TN"
-levels <- unique(Metadata[[selected_variable]])
-class_label <- paste(levels, collapse = " vs ")
-plot <- Classification_Data$plots[[1]]
+selectedVariable <- "TN"
+levels <- unique(metadata[[selectedVariable]])
+classLabel <- paste(levels, collapse = " vs ")
+plot <- ClassificationData$plots[[1]]
 plot <- plot +
   ggplot2::labs(
-    title = class_label, fill = as.factor(levels),
+    title = classLabel, fill = as.factor(levels),
     x = "Variables",
     y = "Class"
   ) +
@@ -291,20 +291,20 @@ This step perform the integration of the datasets previously analyzed using the 
 
 ```{r Multiomics}
 # Summarize into list the different eigenfeatures
-eigengenes_list <- list(eigengenes_Data1, eigengenes_Data2)
-cluster_list <- list(cluster_assig_Data1, cluster_assig_Data2)
-Integration_Data1_Data2 <- fctModulesCorrelation(eigengenes_list, cluster_list, threshold = 0.6)
-TopCorrelations <- Integration_Data1_Data2[["Top_cor_Prot_metab"]]
+eigengenesList <- list(eigengenesData1, eigengenesData2)
+clusterList <- list(clusterAssigData1, clusterAssigData2)
+IntegrationData1Data2 <- fctModulesCorrelation(eigengenesList, clusterList, threshold = 0.6)
+TopCorrelations <- IntegrationData1Data2[["Top_cor_Prot_metab"]]
 head(TopCorrelations)
 
 # Plot correlation
-Correlation_Plot <- Integration_Data1_Data2$Correlation_Plot
-hist(Correlation_Plot[[1]], main = "Correlation: Data 1 / Data 2 ")
+CorrelationPlot <- IntegrationData1Data2$Correlation_Plot
+hist(CorrelationPlot[[1]], main = "Correlation: Data 1 / Data 2 ")
 
 # Plot Network
-nodes <- as.data.frame(Integration_Data1_Data2$nodes)
-edges <- as.data.frame(Integration_Data1_Data2$edges)
-n <- Integration_Data1_Data2$n
+nodes <- as.data.frame(IntegrationData1Data2$nodes)
+edges <- as.data.frame(IntegrationData1Data2$edges)
+n <- IntegrationData1Data2$n
 
 shapes <- c("diamond", "triangle", "dot")
 colors <- c("orange", "darkgreen", "darkblue")
@@ -324,17 +324,18 @@ network
 
 ## Enrichment analysis using gene Symbol 
 
-Enrichment analysis can be performed if annotation data for proteomics or transcriptomics is uploaded with the column Symbol available.  The drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the dataset cluster descriptions on table below. For the example transcriptomics (Data2) we select "GO_Biological_Process_2023". Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr.
+Enrichment analysis can be performed if annotation data for proteomics or transcriptomics is uploaded with the column Symbol available.  The drop-down menu displays available libraries for pathway analysis. Choose a library to automatically amend the dataset cluster descriptions on table below. 
+For example, selecting "GO_Biological_Process_2023" will annotate cluster descriptions with enriched biological processes.
 
-```{r enrichment}
+To perform enrichment analysis programmatically, you can use the function `fctAssignmentGenesEnrichr()`. Under column enriched_Term the most highly correlated pathway is displayed and in the following columns, along with enriched_Genes, and p-values as determined by Enrichr. The following code shows how to run the enrichment analysis using transcriptomics data (`data2`). This chunk is not evaluated to avoid long loading times during vignette rendering.
+
+
+```{r enrichmentAnalysisCode, eval = FALSE}
 # Perform enrichment analysis per module
-selected_database <- "GO_Biological_Process_2023"
-
-# The following function call is commented out to avoid long loading times during vignette rendering.
-# cluster_assignments_Data2_enrich <- fctAssignmentGenesEnrichr(cluster_assignments_ProtGenes = cluster_assig_Data2, database = selected_database)
-
-# Instead, we show a representative subset of the enrichment results:
+selectedDatabase <- "GO_Biological_Process_2023"
+clusterAssignmentsData2Enrich <- fctAssignmentGenesEnrichr(clusterAssignmentsProtGenes = clusterAssigData2, database = selectedDatabase)
 ```
+ we show a representative subset of the enrichment results:
  
  Enrichment Analysis Results[1:5,]
 
@@ -359,22 +360,12 @@ Below is an example of how to convert your expression matrix and metadata into a
 library(SummarizedExperiment)
 
 # Assuming:
-# - 'Data_exp1' has metabolites (features) in rows and samples in columns
-# - 'Feature_ID' is the first column
-# - 'Metadata' has sample information with 'Sample' column matching column names of Data_exp1 (except Feature_ID)
-
-# Prepare assay matrix (remove Feature_ID and set rownames)
-assay_data <- as.matrix(Data_exp1[, -1])
-rownames(assay_data) <- Data_exp1$Feature_ID
-
-# Ensure sample order matches between assay and metadata
-Metadata <- Metadata[match(colnames(assay_data), Metadata$Sample), ]
+# - 'dataExp1' has features in rows and samples in columns
+# - 'Feature_ID' is the first column of dataExp1
+# - 'metadata' has sample information with 'Sample' column matching column names of dataExp1 (except Feature_ID)
 
 # Create SummarizedExperiment object
-se <- SummarizedExperiment(
-    assays = list(counts = assay_data),
-    colData = Metadata
-)
+se <- fctiModMix2SE(dataExp1, metadata)
 
 # Check structure
 se
