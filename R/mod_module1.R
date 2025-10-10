@@ -1165,7 +1165,7 @@ mod_module1_server <- function(id){
     load_data1 <- reactive({
       req(Metab_exp())
       Expression_mat <- Metab_exp()
-      feature_mat_t_imp_data <- load_data(Expression_mat = Expression_mat)
+      feature_mat_t_imp_data <- fctLoadData(Expression_mat = Expression_mat)
       return(list(feature_mat_t_imp_data = feature_mat_t_imp_data))
     })
 
@@ -1227,7 +1227,7 @@ mod_module1_server <- function(id){
           req(load_data1()$feature_mat_t_imp_data)
           load_data1 <- load_data1()$feature_mat_t_imp_data
           Sys.sleep(5)
-          par_cor1 <- partial_cors(load_data = load_data1, rho = .25)
+          par_cor1 <- fctPartialCors(load_data = load_data1, rho = .25)
           # If user uploaded a file, read it
         } else if (!is.null(input$PartialCorrelationData1)) {
           req(input$PartialCorrelationData1)
@@ -1265,7 +1265,7 @@ mod_module1_server <- function(id){
 
     hierarchical_cluster1 <- reactive({
       par_cor <- as.matrix(partial_cors1()$par_cor1)
-      hc <- hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
+      hc <- fctHierarchicalCluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
       hclusterTree <- hc$hclustTree
       hcDynMods <- hc$dynamicMods_numeric
       hcCluster_assignments <- hc$cluster_assignments
@@ -1317,11 +1317,11 @@ mod_module1_server <- function(id){
     cluster_assignments_Data1 <- reactive({
       cluster <- as.data.frame(hierarchical_cluster1()$hcCluster_assignments)
       if (is.null(Metab_annot())) {
-        cluster_assignments_D1 <- cluster_assignments(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
+        cluster_assignments_D1 <- fctClusterAssignments(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
       } else {
         Metab_annot <- Metab_annot()
         annot_Uni <- Metab_annot[Metab_annot$Feature_ID %in% colnames(partial_cors1()$par_cor), ]
-        cluster_assignments_D1 <- cluster_assignments(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping1)
+        cluster_assignments_D1 <- fctClusterAssignments(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping1)
       }
       return(list(cluster_assignments_D1 = cluster_assignments_D1))
     })
@@ -1349,7 +1349,7 @@ mod_module1_server <- function(id){
       req(load_data1()$feature_mat_t_imp_data)
       load_data <- load_data1()$feature_mat_t_imp_data
       Cluster_assignments <- hierarchical_cluster1()$hcCluster_assignments[,3]
-      Eigengenes <- Eigengenes( load_data = load_data, cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
+      Eigengenes <- fctEigengenes( load_data = load_data, cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
       return(list(Eigengenes = Eigengenes))
     })
 
@@ -1424,7 +1424,7 @@ mod_module1_server <- function(id){
           req(input$databaseSelector1)
           selected_database <- input$databaseSelector1
           cluster_assignments_D1 <- cluster_assignments_Data1()$cluster_assignments_D1
-          cluster_assignments_enrich_D1 <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_D1,
+          cluster_assignments_enrich_D1 <- fctAssignmentGenesEnrichr(cluster_assignments_ProtGenes = cluster_assignments_D1,
                                                                      database = selected_database)
           Sys.sleep(1)
         } else if (demo_enrich_Prot()) {
@@ -1485,7 +1485,7 @@ mod_module1_server <- function(id){
       metadata <- as.data.frame(metadata())
       phenotype_variable <- input$phenotypeSelector
       significance_threshold <- input$pValueThreshold
-      Classification_Data <- perform_classification( eigengene_data = eigengenes_metab,
+      Classification_Data <- fctPerformClassification( eigengene_data = eigengenes_metab,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
                                                            significance_threshold = significance_threshold
@@ -1732,7 +1732,7 @@ mod_module1_server <- function(id){
     load_data2 <- reactive({
       req(Prot_exp())
       Expression_mat <- Prot_exp()
-      feature_mat_t_imp_data <- load_data(Expression_mat = Expression_mat)
+      feature_mat_t_imp_data <- fctLoadData(Expression_mat = Expression_mat)
       return(list(feature_mat_t_imp_data = feature_mat_t_imp_data))
     })
 
@@ -1792,7 +1792,7 @@ mod_module1_server <- function(id){
           req(load_data2()$feature_mat_t_imp_data)
           load_data2 <- load_data2()$feature_mat_t_imp_data
           Sys.sleep(5)
-          par_cor <- partial_cors(load_data = load_data2, rho = .25)
+          par_cor <- fctPartialCors(load_data = load_data2, rho = .25)
         } else if (!is.null(input$PartialCorrelationData2)) {
           req(input$PartialCorrelationData2)
           user_file2 <- input$PartialCorrelationData2$datapath
@@ -1829,7 +1829,7 @@ mod_module1_server <- function(id){
 
     hierarchical_cluster2 <- reactive({
       par_cor <- as.matrix(partial_cors2()$par_cor)
-      hc <- hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
+      hc <- fctHierarchicalCluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
       hclusterTree <- hc$hclustTree
       hcDynMods <- hc$dynamicMods_numeric
       hcCluster_assignments <- hc$cluster_assignments
@@ -1883,11 +1883,11 @@ mod_module1_server <- function(id){
     cluster_assignments_Data2 <- reactive({
       cluster <- as.data.frame(hierarchical_cluster2()$hcCluster_assignments)
       if (is.null(Prot_annot())) {
-        cluster_assignments_D2 <- cluster_assignments(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
+        cluster_assignments_D2 <- fctClusterAssignments(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
       } else {
         Prot_annot <- Prot_annot()
         annot_Uni <- Prot_annot[Prot_annot$Feature_ID %in% colnames(partial_cors2()$par_cor), ]
-        cluster_assignments_D2 <- cluster_assignments(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping2)
+        cluster_assignments_D2 <- fctClusterAssignments(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping2)
       }
       return(list(cluster_assignments_D2 = cluster_assignments_D2))
     })
@@ -1915,7 +1915,7 @@ mod_module1_server <- function(id){
       req(load_data2()$feature_mat_t_imp_data)
       load_data <- load_data2()$feature_mat_t_imp_data
       Cluster_assignments <- hierarchical_cluster2()$hcCluster_assignments[,3]
-      Eigengenes <- Eigengenes(load_data = load_data,
+      Eigengenes <- fctEigengenes(load_data = load_data,
                               cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
       return(list(Eigengenes = Eigengenes))
     })
@@ -1986,7 +1986,7 @@ mod_module1_server <- function(id){
           req(input$databaseSelector2)
           selected_database <- input$databaseSelector2
           cluster_assignments_ProtGenes <- cluster_assignments_Data2()$cluster_assignments_D2
-          cluster_assignments_Data2_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
+          cluster_assignments_Data2_enrich <- fctAssignmentGenesEnrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
                                                                      database = selected_database)
           Sys.sleep(1)
         } else if (demo_enrich_Prot()) {
@@ -2041,7 +2041,7 @@ mod_module1_server <- function(id){
       metadata <- as.data.frame(metadata())
       phenotype_variable <- input$phenotypeSelector2
       significance_threshold <- input$pValueThreshold2
-      Classification_Data2 <- perform_classification( eigengene_data = eigengenes_prot,
+      Classification_Data2 <- fctPerformClassification( eigengene_data = eigengenes_prot,
                                                          metadata = metadata,
                                                          phenotype_variable = phenotype_variable,
                                                          significance_threshold = significance_threshold)
@@ -2294,7 +2294,7 @@ mod_module1_server <- function(id){
     load_data3 <- reactive({
       req(Gene_exp())
       Expression_mat <- Gene_exp()
-      feature_mat_t_imp_data <- load_data(Expression_mat = Expression_mat)
+      feature_mat_t_imp_data <- fctLoadData(Expression_mat = Expression_mat)
       return(list(feature_mat_t_imp_data = feature_mat_t_imp_data))
     })
 
@@ -2354,7 +2354,7 @@ mod_module1_server <- function(id){
           req(load_data3()$feature_mat_t_imp_data)
           load_data3 <- load_data3()$feature_mat_t_imp_data
           Sys.sleep(5)
-          par_cor <- partial_cors(load_data = load_data3, rho = .25)
+          par_cor <- fctPartialCors(load_data = load_data3, rho = .25)
           incProgress(100, detail = 'Complete!')
         } else {
           req(input$PartialCorrelationData3)
@@ -2382,7 +2382,7 @@ mod_module1_server <- function(id){
 
     hierarchical_cluster3 <- reactive({
       par_cor <- as.matrix(partial_cors3()$par_cor)
-      hc <- hierarchical_cluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
+      hc <- fctHierarchicalCluster(parcor_mat = par_cor, tom = TRUE, min_module_size = 10)
       hclusterTree <- hc$hclustTree
       hcDynMods <- hc$dynamicMods_numeric
       hcCluster_assignments <- hc$cluster_assignments
@@ -2436,11 +2436,11 @@ mod_module1_server <- function(id){
     cluster_assignments_Data3 <- reactive({
       cluster <- as.data.frame(hierarchical_cluster3()$hcCluster_assignments)
       if (is.null(Gene_annot())) {
-        cluster_assignments_D3 <- cluster_assignments(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
+        cluster_assignments_D3 <- fctClusterAssignments(cluster = cluster, PhenoData = NULL, selected_columns = NULL)
       } else {
         Gene_annot <- Gene_annot()
         annot_Uni <- Gene_annot[Gene_annot$Feature_ID %in% colnames(partial_cors3()$par_cor), ]
-        cluster_assignments_D3 <- cluster_assignments(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping3)
+        cluster_assignments_D3 <- fctClusterAssignments(cluster = cluster, PhenoData = annot_Uni, selected_columns = input$Mapping3)
       }
       return(list(cluster_assignments_D3 = cluster_assignments_D3))
     })
@@ -2480,7 +2480,7 @@ mod_module1_server <- function(id){
           req(input$databaseSelector3)
           selected_database <- input$databaseSelector3
           cluster_assignments_ProtGenes <- cluster_assignments_Data3()$cluster_assignments_D3
-          cluster_assignments_Data3_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
+          cluster_assignments_Data3_enrich <- fctAssignmentGenesEnrichr(cluster_assignments_ProtGenes = cluster_assignments_ProtGenes,
                                                                      database = selected_database)
           Sys.sleep(5)
         incProgress(100, detail = 'Complete!')
@@ -2511,7 +2511,7 @@ mod_module1_server <- function(id){
       req(load_data3()$feature_mat_t_imp_data)
       load_data <- load_data3()$feature_mat_t_imp_data
       Cluster_assignments <- hierarchical_cluster3()$hcCluster_assignments[,3]
-      Eigengenes <- Eigengenes(load_data = load_data,
+      Eigengenes <- fctEigengenes(load_data = load_data,
                               cluster_assignments = Cluster_assignments)$module_eigenmetab_Me
       return(list(Eigengenes = Eigengenes))
     })
@@ -2591,7 +2591,7 @@ mod_module1_server <- function(id){
       metadata <- as.data.frame(metadata())
       phenotype_variable <- input$phenotypeSelector3
       significance_threshold <- input$pValueThreshold3
-      Classification_Data <- perform_classification( eigengene_data = eigengenes_prot,
+      Classification_Data <- fctPerformClassification( eigengene_data = eigengenes_prot,
                                                      metadata = metadata,
                                                      phenotype_variable = phenotype_variable,
                                                      significance_threshold = significance_threshold)
@@ -2790,7 +2790,7 @@ mod_module1_server <- function(id){
         eigengenes_list <- c(eigengenes_list, list(Eigengene3()$Eigengenes))
         cluster_list <- c(cluster_list, list(hierarchical_cluster3()$hcCluster_assignments))
       }
-      Cor_Prot_Metab <- Modules_correlation(eigengenes_list, cluster_list, threshold = threshold)
+      Cor_Prot_Metab <- fctModulesCorrelation(eigengenes_list, cluster_list, threshold = threshold)
         Top_cor_Prot_metab <- Cor_Prot_Metab$Top_cor_Prot_metab
         Correlation_Plot <- Cor_Prot_Metab$Correlation_Plot
         Cor_list <- Cor_Prot_Metab$Cor_list
@@ -2965,7 +2965,7 @@ mod_module1_server <- function(id){
       load_data1 <- load_data1()$feature_mat_t_imp_data
       req(load_data2()$feature_mat_t_imp_data)
       load_data2 <- load_data2()$feature_mat_t_imp_data
-      ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Datai_Dataj = Cor_Data1_Data2,
+      ImpVar_Prot_Metab <- fctFeaturesAnnotCorrelation(Cor_Datai_Dataj = Cor_Data1_Data2,
                                                      cluster_assignments_D1 = cluster_assignments_D1,
                                                      cluster_assignments_D2 = cluster_assignments_D2,
                                                      load_data1 = load_data1,
@@ -3086,7 +3086,7 @@ mod_module1_server <- function(id){
       metadata <- as.data.frame(metadata())
       phenotype_variable <- input$phenotypeSelector_imp_12_1
       significance_threshold <- input$pValueThreshold_imp_12_1
-      Classification_Data <- perform_classification( eigengene_data = df2_1,
+      Classification_Data <- fctPerformClassification( eigengene_data = df2_1,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
                                                            significance_threshold = significance_threshold)
@@ -3176,7 +3176,7 @@ mod_module1_server <- function(id){
       metadata <- as.data.frame(metadata())
       phenotype_variable <- input$phenotypeSelector_imp_12_2
       significance_threshold <- input$pValueThreshold_imp_12_2
-      Classification_Data <- perform_classification( eigengene_data = df2_2,
+      Classification_Data <- fctPerformClassification( eigengene_data = df2_2,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
                                                            significance_threshold = significance_threshold)
@@ -3279,7 +3279,7 @@ mod_module1_server <- function(id){
       load_data1 <- load_data1()$feature_mat_t_imp_data
       req(load_data3()$feature_mat_t_imp_data)
       load_data3 <- load_data3()$feature_mat_t_imp_data
-      ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Datai_Dataj = Cor_Data1_Data3,
+      ImpVar_Prot_Metab <- fctFeaturesAnnotCorrelation(Cor_Datai_Dataj = Cor_Data1_Data3,
                                                      cluster_assignments_D1 = cluster_assignments_D1,
                                                      cluster_assignments_D2 = cluster_assignments_D3,
                                                      load_data1 = load_data1,
@@ -3420,7 +3420,7 @@ mod_module1_server <- function(id){
       metadata <- as.data.frame(metadata())
       phenotype_variable <- input$phenotypeSelector_imp_13_1
       significance_threshold <- input$pValueThreshold_imp_13_1
-      Classification_Data <- perform_classification( eigengene_data = df2_1,
+      Classification_Data <- fctPerformClassification( eigengene_data = df2_1,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
                                                            significance_threshold = significance_threshold)
@@ -3522,7 +3522,7 @@ mod_module1_server <- function(id){
       metadata <- as.data.frame(metadata())
       phenotype_variable <- input$phenotypeSelector_imp_13_3
       significance_threshold <- input$pValueThreshold_imp_13_3
-      Classification_Data <- perform_classification( eigengene_data = df2_2,
+      Classification_Data <- fctPerformClassification( eigengene_data = df2_2,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
                                                            significance_threshold = significance_threshold)
@@ -3637,7 +3637,7 @@ mod_module1_server <- function(id){
       load_data2 <- load_data2()$feature_mat_t_imp_data
       req(load_data3()$feature_mat_t_imp_data)
       load_data3 <- load_data3()$feature_mat_t_imp_data
-      ImpVar_Prot_Metab <- FeaturesAnnot_correlation(Cor_Datai_Dataj = Cor_Data2_Data3,
+      ImpVar_Prot_Metab <- fctFeaturesAnnotCorrelation(Cor_Datai_Dataj = Cor_Data2_Data3,
                                                      cluster_assignments_D1 = cluster_assignments_D2,
                                                      cluster_assignments_D2 = cluster_assignments_D3,
                                                      load_data1 = load_data2,
@@ -3778,7 +3778,7 @@ mod_module1_server <- function(id){
       metadata <- as.data.frame(metadata())
       phenotype_variable <- input$phenotypeSelector_imp_23_2
       significance_threshold <- input$pValueThreshold_imp_23_2
-      Classification_Data <- perform_classification( eigengene_data = df2_1,
+      Classification_Data <- fctPerformClassification( eigengene_data = df2_1,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
                                                            significance_threshold = significance_threshold)
@@ -3880,7 +3880,7 @@ mod_module1_server <- function(id){
       metadata <- as.data.frame(metadata())
       phenotype_variable <- input$phenotypeSelector_imp_23_3
       significance_threshold <- input$pValueThreshold_imp_23_3
-      Classification_Data <- perform_classification( eigengene_data = df2_2,
+      Classification_Data <- fctPerformClassification( eigengene_data = df2_2,
                                                            metadata = metadata,
                                                            phenotype_variable = phenotype_variable,
                                                            significance_threshold = significance_threshold)

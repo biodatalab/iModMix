@@ -1,4 +1,4 @@
-#' annotation_matrices_list
+#' fctAnnotationMatricesList
 #'
 #' @description Calculate correlation between the features of top correlated modules.
 #' @param Cor_Prot_Metab A data frame with the first principal component of each protein cluster and their correlations.
@@ -42,7 +42,7 @@
 #' )
 #'
 #' # Run the function
-#' result <- annotation_matrices_list(
+#' result <- fctAnnotationMatricesList(
 #'   Cor_Prot_Metab,
 #'   cluster_assignments_Prot,
 #'   cluster_assignments_metab,
@@ -52,9 +52,9 @@
 #' )
 #'
 #' # View result
-#' names(result$annotation_matrices_list)
+#' names(result$fctAnnotationMatricesList)
 #' @export
-annotation_matrices_list <- function(Cor_Prot_Metab,
+fctAnnotationMatricesList <- function(Cor_Prot_Metab,
                                      cluster_assignments_Prot,
                                      cluster_assignments_metab,
                                      Prot_annotation = NULL,
@@ -64,7 +64,7 @@ annotation_matrices_list <- function(Cor_Prot_Metab,
   Top_correlations <- Cor_Prot_Metab[order(-abs(Cor_Prot_Metab$Correlation)), ][seq_len(top_n), ]
 
   # Initialize list
-  annotation_matrices_list <- list()
+  fctAnnotationMatricesList <- list()
 
   for (i in seq_len(top_n)) {
     Prot_module <- Top_correlations[i, "Prot_module"]
@@ -78,14 +78,14 @@ annotation_matrices_list <- function(Cor_Prot_Metab,
 
     if (!is.null(Prot_annotation)) {
       cluster_annotation_matrix_Prot <- Prot_annotation[Prot_annotation$Feature_ID %in% cluster_variables_Prot, , drop = FALSE]
-      annotation_matrices_list[[paste0("Annotation_Matrix_Cluster_Prot_", i)]] <- cluster_annotation_matrix_Prot
+      fctAnnotationMatricesList[[paste0("Annotation_Matrix_Cluster_Prot_", i)]] <- cluster_annotation_matrix_Prot
     }
 
     if (!is.null(metab_annotation)) {
       cluster_annotation_matrix_Metab <- metab_annotation[metab_annotation$Feature_ID %in% cluster_variables_Metab, , drop = FALSE]
-      annotation_matrices_list[[paste0("Annotation_Matrix_Cluster_Metab_", i)]] <- cluster_annotation_matrix_Metab
+      fctAnnotationMatricesList[[paste0("Annotation_Matrix_Cluster_Metab_", i)]] <- cluster_annotation_matrix_Metab
     }
   }
 
-  return(list(annotation_matrices_list = annotation_matrices_list))
+  return(list(fctAnnotationMatricesList = fctAnnotationMatricesList))
 }

@@ -1,4 +1,4 @@
-#' FeaturesAnnot_correlation
+#' fctFeaturesAnnotCorrelation
 #'
 #' @description Calculate correlation between the features of top correlated modules.
 #' @param Cor_Datai_Dataj A data frame with the first principal component of each protein cluster and their correlations.
@@ -39,7 +39,7 @@
 #' rownames(load_data2) <- paste0("Sample", 1:5)
 #'
 #' # Run the function
-#' result <- FeaturesAnnot_correlation(
+#' result <- fctFeaturesAnnotCorrelation(
 #'   Cor_Datai_Dataj = Cor_Datai_Dataj,
 #'   cluster_assignments_D1 = cluster_assignments_D1,
 #'   cluster_assignments_D2 = cluster_assignments_D2,
@@ -52,7 +52,7 @@
 #' result$Top_correlations
 #'
 #' @export
-FeaturesAnnot_correlation <- function(Cor_Datai_Dataj, cluster_assignments_D1, cluster_assignments_D2,
+fctFeaturesAnnotCorrelation <- function(Cor_Datai_Dataj, cluster_assignments_D1, cluster_assignments_D2,
                                       load_data1 = load_data1, load_data2 = load_data2, top_n = 5)  {
   # Select the top n correlations
   Top_correlations <- Cor_Datai_Dataj[order(-abs(Cor_Datai_Dataj$value)), ][seq_len(top_n), ]

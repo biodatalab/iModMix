@@ -30,6 +30,7 @@ suppressWarnings(library(knitr))
 opts_chunk$set(tidy = FALSE, message = FALSE, warning = FALSE)
 ```
 
+
 # Installation
 
 ## Download the package from Bioconductor
@@ -53,6 +54,28 @@ devtools::install_github("biodatalab/iModMix")
 ```{r Load, message=FALSE}
 library(iModMix)
 ```
+
+
+## Launching the iModMix Shiny App
+
+`iModMix` includes an interactive Shiny application that allows users to explore multi-omics integration results in a user-friendly interface. The app can be launched locally from R or accessed online.
+
+### Launch the app locally
+
+To launch the app from your R session, simply run:
+
+```{r launchApp, eval=FALSE}
+iModMix::run_app()
+```
+
+This will open the app in your default web browser. Make sure the package is installed and loaded before running the command.
+
+###  Access the app online
+
+You can also explore the app without installing anything by visiting the hosted version:
+https://imodmix.moffitt.org/
+This online version provides access to the same interactive features, including module visualization, enrichment analysis, and metadata exploration.
+
 
 # Example to integrate 2 omics datasets
 
@@ -104,7 +127,7 @@ This step is optional. If the input matrix already has samples as rows, features
 
 ```{r Preprocess}
 # Preprocess of data for iModMix upload
-load_data1 <- load_data(Data_exp1)
+load_data1 <- fctLoadData(Data_exp1)
 load_data1[1:5, 1:5]
 ```
 
@@ -114,7 +137,7 @@ Calculations for partial correlation is usually the slowest step. Partial correl
 
 ```{r partial_cors1}
 # Perform Partial correlation
-parcorData1 <- partial_cors(load_data1, rho = 0.25)
+parcorData1 <- fctPartialCors(load_data1, rho = 0.25)
 parcorData1[1:5, 1:5]
 ```
 Hierarchical clustering is used to identify common neighbors between the features. Calculations are determined using the topographical overlap matrix (TOM) and are based on the sparse partial correlations. Hierarchical clustering is visualized as a dendrogram. 
@@ -126,7 +149,7 @@ Branches: Each line in the dendrogram represents a feature. Features that are cl
 
 ```{r hierarchical_cluster1}
 # Perform hierarchical clustering
-hcData1 <- hierarchical_cluster(parcor_mat = parcorData1, tom = TRUE, min_module_size = 10)
+hcData1 <- fctHierarchicalCluster(parcor_mat = parcorData1, tom = TRUE, min_module_size = 10)
 
 hcClu <- hcData1$hclustTree
 hcMod <- as.matrix(hcData1$dynamicMods_numeric)
@@ -150,7 +173,7 @@ Let's see the cluster assignments. Hierarchical clustering generates multiple mo
 
 ```{r cluster_assignments1}
 # Perform cluster assignments
-cluster_assig_Data1 <- cluster_assignments(as.data.frame(hcData1$cluster_assignments))
+cluster_assig_Data1 <- fctClusterAssignments(as.data.frame(hcData1$cluster_assignments))
 head(cluster_assig_Data1)
 ```
 
@@ -161,7 +184,7 @@ The 904 features (identified metabolites) were assigned into 34 modules. The fir
 
 ```{r Eigengenes11}
 # Obtain Eigenfeatures
-eigenData1 <- Eigengenes(load_data1, hcData1$cluster_assignments[, 3])
+eigenData1 <- fctEigengenes(load_data1, hcData1$cluster_assignments[, 3])
 eigengenes_Data1 <- eigenData1$module_eigenmetab_Me
 eigengenes_Data1[1:5, 1:5]
 ```
@@ -182,14 +205,14 @@ Data_exp2 <- Data_exp2[1:1000, ]
 Data_exp2[1:5, 1:5]
 
 # Preprocessing of data for iModMix upload
-load_data2 <- load_data(Data_exp2)
+load_data2 <- fctLoadData(Data_exp2)
 ```
 
 Calculate correlated matrix  
 
 ```{r partial_cors2}
 # Partial correlation
-parcorData2 <- partial_cors(load_data2, rho = 0.25)
+parcorData2 <- fctPartialCors(load_data2, rho = 0.25)
 parcorData2[1:5, 1:5]
 ```
 
@@ -197,7 +220,7 @@ Calculate hierarchical clustering
 
 ```{r hierarchical_cluster2}
 # Perform hierarchical clustering
-hcData2 <- hierarchical_cluster(parcor_mat = parcorData2, tom = TRUE, min_module_size = 10)
+hcData2 <- fctHierarchicalCluster(parcor_mat = parcorData2, tom = TRUE, min_module_size = 10)
 
 # Access the hierarchical clustering tree and module assignments
 hcClu2 <- hcData2$hclustTree
@@ -220,8 +243,8 @@ Perform network construction and module eigengene calculation
 
 ```{r cluster_assignments2}
 # Perform cluster assignment
-cluster_assig_Data2 <- cluster_assignments(as.data.frame(hcData2$cluster_assignments))
-eigenData2 <- Eigengenes(load_data2, hcData2$cluster_assignments[, 3])
+cluster_assig_Data2 <- fctClusterAssignments(as.data.frame(hcData2$cluster_assignments))
+eigenData2 <- fctEigengenes(load_data2, hcData2$cluster_assignments[, 3])
 eigengenes_Data2 <- eigenData2$module_eigenmetab_Me
 eigengenes_Data2[1:5, 1:5]
 ```
@@ -236,7 +259,7 @@ Boxplots are automatically generated at the bottom for significant eigenfeatures
 
 ```{r perform_classification2}
 # Perform Classification
-Classification_Data <- perform_classification(
+Classification_Data <- fctPerformClassification(
   eigengene_data = eigengenes_Data1,
   metadata = Metadata,
   phenotype_variable = "TN",
@@ -270,7 +293,7 @@ This step perform the integration of the datasets previously analyzed using the 
 # Summarize into list the different eigenfeatures
 eigengenes_list <- list(eigengenes_Data1, eigengenes_Data2)
 cluster_list <- list(cluster_assig_Data1, cluster_assig_Data2)
-Integration_Data1_Data2 <- Modules_correlation(eigengenes_list, cluster_list, threshold = 0.6)
+Integration_Data1_Data2 <- fctModulesCorrelation(eigengenes_list, cluster_list, threshold = 0.6)
 TopCorrelations <- Integration_Data1_Data2[["Top_cor_Prot_metab"]]
 head(TopCorrelations)
 
@@ -306,8 +329,11 @@ Enrichment analysis can be performed if annotation data for proteomics or transc
 ```{r enrichment}
 # Perform enrichment analysis per module
 selected_database <- "GO_Biological_Process_2023"
-# cluster_assignments_Data2_enrich <- Assigment_genes_enrichr(cluster_assignments_ProtGenes = cluster_assig_Data2, database = selected_database)
-# cluster_assignments_Data2_enrich[1:5,]
+
+# The following function call is commented out to avoid long loading times during vignette rendering.
+# cluster_assignments_Data2_enrich <- fctAssignmentGenesEnrichr(cluster_assignments_ProtGenes = cluster_assig_Data2, database = selected_database)
+
+# Instead, we show a representative subset of the enrichment results:
 ```
  
  Enrichment Analysis Results[1:5,]
@@ -320,6 +346,39 @@ selected_database <- "GO_Biological_Process_2023"
 | CDH2    | cluster_000019 | #B45B76 | CDH2         | Detection Of Muscle Stretch    | 1/6              | CDH2           | 0.007179245      | 0.11473611                 |
 | AKT3    | cluster_000019 | #B45B76 | AKT3         | Detection Of Muscle Stretch    | 1/6              | CDH2           | 0.007179245      | 0.11473611                 |
 
+This table summarizes enriched biological processes associated with selected modules. The full enrichment analysis can be reproduced by uncommenting the function call above.
+
+## Working with Bioconductor's SummarizedExperiment class
+
+To ensure compatibility with Bioconductor standards, `iModMix` supports input data structured as `SummarizedExperiment` objects. This allows users to integrate metabolomics or other omics data using standardized containers that facilitate downstream analysis and interoperability with other Bioconductor packages.
+
+Below is an example of how to convert your expression matrix and metadata into a `SummarizedExperiment` object:
+
+```{r summarizedExperimentExample}
+# Load required library
+library(SummarizedExperiment)
+
+# Assuming:
+# - 'Data_exp1' has metabolites (features) in rows and samples in columns
+# - 'Feature_ID' is the first column
+# - 'Metadata' has sample information with 'Sample' column matching column names of Data_exp1 (except Feature_ID)
+
+# Prepare assay matrix (remove Feature_ID and set rownames)
+assay_data <- as.matrix(Data_exp1[, -1])
+rownames(assay_data) <- Data_exp1$Feature_ID
+
+# Ensure sample order matches between assay and metadata
+Metadata <- Metadata[match(colnames(assay_data), Metadata$Sample), ]
+
+# Create SummarizedExperiment object
+se <- SummarizedExperiment(
+    assays = list(counts = assay_data),
+    colData = Metadata
+)
+
+# Check structure
+se
+```
 
 # Session Information
 

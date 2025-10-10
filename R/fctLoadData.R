@@ -1,4 +1,4 @@
-#' load_data
+#' fctLoadData
 #'
 #' @description A function to load and preprocess the expression data.
 #' @param Expression_mat A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.
@@ -19,10 +19,10 @@
 #' Expression_mat$Feature_ID <- as.character(Expression_mat$Feature_ID)
 #'
 #' # Run the function
-#' processed_data <- load_data(Expression_mat)
+#' processed_data <- fctLoadData(Expression_mat)
 #'
 #' @export
-load_data <- function(Expression_mat = Expression_mat) {
+fctLoadData <- function(Expression_mat = Expression_mat) {
   data <- Expression_mat
 
   # Calculate the number of missing values in each row

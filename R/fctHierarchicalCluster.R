@@ -1,4 +1,4 @@
-#' hierarchical_cluster
+#' fctHierarchicalCluster
 #'
 #' @description Perform hierarchical clustering of a partial correlation matrix. By default uses the topological overlap measure (TOM)
 #' @param parcor_mat A partial correlation matrix from glassoFast$wi: Estimated inverse covariance matrix
@@ -19,13 +19,13 @@
 #' colnames(parcor_mat) <- rownames(parcor_mat) <- paste0("Gene", 1:10)
 #'
 #' # Run hierarchical clustering
-#' result <- hierarchical_cluster(parcor_mat, tom = TRUE, min_module_size = 3)
+#' result <- fctHierarchicalCluster(parcor_mat, tom = TRUE, min_module_size = 3)
 #'
 #' # View module assignments
 #' head(result$cluster_assignments)
 #'
 #' @export
-hierarchical_cluster <- function(parcor_mat, tom = TRUE, min_module_size = 10) {
+fctHierarchicalCluster <- function(parcor_mat, tom = TRUE, min_module_size = 10) {
   # needed here? do any of our functions use multithreading?
   WGCNA::enableWGCNAThreads()
   if (tom) {
