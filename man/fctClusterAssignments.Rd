@@ -4,14 +4,14 @@
 \alias{fctClusterAssignments}
 \title{fctClusterAssignments}
 \usage{
-fctClusterAssignments(cluster, PhenoData = NULL, selected_columns = NULL)
+fctClusterAssignments(cluster, phenoData = NULL, selectedColumns = NULL)
 }
 \arguments{
 \item{cluster}{A data frame containing cluster assignments.}
 
-\item{PhenoData}{A data frame with the annotation names of the Dataset. Should have a column called Feature_ID.}
+\item{phenoData}{A data frame with the annotation names of the Dataset. Should have a column called Feature_ID.}
 
-\item{selected_columns}{Columns selected for the user to merge in the cluster assignments table}
+\item{selectedColumns}{Columns selected for the user to merge in the cluster assignments table}
 }
 \value{
 A data frame containing cluster assignments and selected columns by user.
@@ -37,9 +37,9 @@ pheno_df <- data.frame(
 )
 
 # Run without selected columns
-fctClusterAssignments(cluster_df, PhenoData = pheno_df)
+fctClusterAssignments(cluster_df, phenoData = pheno_df)
 
 # Run with selected columns
-fctClusterAssignments(cluster_df, PhenoData = pheno_df, selected_columns = "Description")
+fctClusterAssignments(cluster_df, phenoData = pheno_df, selectedColumns = "Description")
 
 }

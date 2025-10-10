@@ -2,8 +2,8 @@
 #'
 #' @description Cluster assignments with annotation.
 #' @param cluster A data frame containing cluster assignments.
-#' @param PhenoData A data frame with the annotation names of the Dataset. Should have a column called Feature_ID.
-#' @param selected_columns Columns selected for the user to merge in the cluster assignments table
+#' @param phenoData A data frame with the annotation names of the Dataset. Should have a column called Feature_ID.
+#' @param selectedColumns Columns selected for the user to merge in the cluster assignments table
 #' @return A data frame containing cluster assignments and selected columns by user.
 #' @examples
 #' # Simulated cluster assignment data
@@ -23,20 +23,20 @@
 #' )
 #'
 #' # Run without selected columns
-#' fctClusterAssignments(cluster_df, PhenoData = pheno_df)
+#' fctClusterAssignments(cluster_df, phenoData = pheno_df)
 #'
 #' # Run with selected columns
-#' fctClusterAssignments(cluster_df, PhenoData = pheno_df, selected_columns = "Description")
+#' fctClusterAssignments(cluster_df, phenoData = pheno_df, selectedColumns = "Description")
 #'
 #' @export
-fctClusterAssignments <- function(cluster, PhenoData = NULL, selected_columns = NULL) {
-  if (is.null(PhenoData)) {
+fctClusterAssignments <- function(cluster, phenoData = NULL, selectedColumns = NULL) {
+  if (is.null(phenoData)) {
     cluster_annot <- cluster
     cluster_annot$feature_name <- cluster_annot$feature
     cluster_annot <- cluster_annot[, c("feature", "cluster", "col", "feature_name")]
   } else {
-    if (is.null(selected_columns)) {
-      cluster_annot <- merge(cluster, PhenoData, by.x = "feature", by.y = "Feature_ID", all.x = TRUE)
+    if (is.null(selectedColumns)) {
+      cluster_annot <- merge(cluster, phenoData, by.x = "feature", by.y = "Feature_ID", all.x = TRUE)
       if ("Symbol" %in% colnames(cluster_annot)) {
         cluster_annot$feature_name <- ifelse(is.na(cluster_annot$Symbol) | cluster_annot$Symbol == "", cluster_annot$feature, cluster_annot$Symbol)
       } else {
@@ -44,13 +44,13 @@ fctClusterAssignments <- function(cluster, PhenoData = NULL, selected_columns = 
       }
       cluster_annot <- cluster_annot[, c("feature", "cluster", "col", "feature_name")]
     } else {
-      cluster_annot <- merge(cluster, PhenoData, by.x = "feature", by.y = "Feature_ID", all.x = TRUE)
+      cluster_annot <- merge(cluster, phenoData, by.x = "feature", by.y = "Feature_ID", all.x = TRUE)
       if ("Symbol" %in% colnames(cluster_annot)) {
         cluster_annot$feature_name <- ifelse(is.na(cluster_annot$Symbol) | cluster_annot$Symbol == "", cluster_annot$feature, cluster_annot$Symbol)
       } else {
         cluster_annot$feature_name <- cluster_annot$feature
       }
-      cluster_annot <- cluster_annot[, c("feature", "cluster", "col", "feature_name", selected_columns)]
+      cluster_annot <- cluster_annot[, c("feature", "cluster", "col", "feature_name", selectedColumns)]
     }
   }
   return(cluster_annot)

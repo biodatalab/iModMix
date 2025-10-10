@@ -1,7 +1,7 @@
 #' fctLoadData
 #'
 #' @description A function to load and preprocess the expression data.
-#' @param Expression_mat A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.
+#' @param expressionMat A feature matrix (e.g., gene expression) with samples in rows and features (e.g., genes) in columns. Row names must be unique.
 #' @return A prepossessed data matrix.
 #' @examples
 #' # Simulated expression matrix with missing values
@@ -12,18 +12,18 @@
 #' mat[sample(length(mat), 50)] <- NA  # introduce some NAs
 #'
 #' # Add a Feature_ID column to mimic expected input
-#' Expression_mat <- cbind(Feature_ID = paste0("F", 1:10), mat)
-#' Expression_mat <- as.data.frame(Expression_mat)
+#' expressionMat <- cbind(Feature_ID = paste0("F", 1:10), mat)
+#' expressionMat <- as.data.frame(expressionMat)
 #'
 #' # Convert Feature_ID to character (if needed)
-#' Expression_mat$Feature_ID <- as.character(Expression_mat$Feature_ID)
+#' expressionMat$Feature_ID <- as.character(expressionMat$Feature_ID)
 #'
 #' # Run the function
-#' processed_data <- fctLoadData(Expression_mat)
+#' processed_data <- fctLoadData(expressionMat)
 #'
 #' @export
-fctLoadData <- function(Expression_mat = Expression_mat) {
-  data <- Expression_mat
+fctLoadData <- function(expressionMat = expressionMat) {
+  data <- expressionMat
 
   # Calculate the number of missing values in each row
   data$missing_count <- rowSums(is.na(data))

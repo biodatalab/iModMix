@@ -4,12 +4,12 @@
 \alias{fctModulesCorrelation}
 \title{fctModulesCorrelation}
 \usage{
-fctModulesCorrelation(eigengenes_list, cluster_list, threshold = 0.5)
+fctModulesCorrelation(eigengenesList, clusterList, threshold = 0.5)
 }
 \arguments{
-\item{eigengenes_list}{List with the first principal component of each cluster.}
+\item{eigengenesList}{List with the first principal component of each cluster.}
 
-\item{cluster_list}{list containing cluster_assignments matrix.}
+\item{clusterList}{list containing cluster_assignments matrix.}
 
 \item{threshold}{A numeric value to filter correlations. Default is 0.5.}
 }
@@ -43,8 +43,8 @@ cluster2 <- data.frame(
 
 # Run the correlation function
 result <- fctModulesCorrelation(
-  eigengenes_list = list(eig1, eig2),
-  cluster_list = list(cluster1, cluster2),
+  eigengenesList = list(eig1, eig2),
+  clusterList = list(cluster1, cluster2),
   threshold = 0.5
 )
 

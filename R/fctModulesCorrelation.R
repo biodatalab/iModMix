@@ -1,8 +1,8 @@
 #' fctModulesCorrelation
 #'
 #' @description Calculates correlations between omic modules.
-#' @param eigengenes_list List with the first principal component of each cluster.
-#' @param cluster_list list containing cluster_assignments matrix.
+#' @param eigengenesList List with the first principal component of each cluster.
+#' @param clusterList list containing cluster_assignments matrix.
 #' @param threshold A numeric value to filter correlations. Default is 0.5.
 #' @return  Return the Top_correlations between Prot and metab eigengenes, graph of red, correlation plot.
 #' @examples
@@ -29,18 +29,18 @@
 #'
 #' # Run the correlation function
 #' result <- fctModulesCorrelation(
-#'   eigengenes_list = list(eig1, eig2),
-#'   cluster_list = list(cluster1, cluster2),
+#'   eigengenesList = list(eig1, eig2),
+#'   clusterList = list(cluster1, cluster2),
 #'   threshold = 0.5
 #' )
 #'
 #' # View top correlations
 #' head(result$Top_cor_Prot_metab)
 #' @export
-fctModulesCorrelation <- function(eigengenes_list, cluster_list, threshold = 0.50) {
-  n <- length(eigengenes_list)
-  eigengenes <- eigengenes_list
-  clusters <- cluster_list
+fctModulesCorrelation <- function(eigengenesList, clusterList, threshold = 0.50) {
+  n <- length(eigengenesList)
+  eigengenes <- eigengenesList
+  clusters <- clusterList
 
   cor_list <- list()
 

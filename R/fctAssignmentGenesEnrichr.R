@@ -1,7 +1,7 @@
 #' fctAssignmentGenesEnrichr
 #'
 #' @description Enrichr terms for genes (Proteins and transcriptomics)
-#' @param cluster_assignments_ProtGenes (data frame containing cluster_assignments and HMDB/Symbol)
+#' @param clusterAssignmentsProtGenes (data frame containing cluster_assignments and HMDB/Symbol)
 #' @param database A list with all the available databases from enrichr
 #' @return result_list data frame containing cluster_assignments and Enrichr terms
 #' @examples
@@ -17,7 +17,7 @@
 #'
 #'   # Run enrichment analysis using Enrichr (requires internet connection)
 #'   enriched_results <- fctAssignmentGenesEnrichr(
-#'     cluster_assignments_ProtGenes = cluster_assignments,
+#'     clusterAssignmentsProtGenes = cluster_assignments,
 #'     database = "GO_Biological_Process_2023"
 #'   )
 #'
@@ -26,12 +26,12 @@
 #' }
 #'
 #' @export
-fctAssignmentGenesEnrichr <- function(cluster_assignments_ProtGenes,
+fctAssignmentGenesEnrichr <- function(clusterAssignmentsProtGenes,
                                     database = "GO_Biological_Process_2023" ) {
   websiteLive <- getOption("enrichR.live")
 
   dbs <- database
-  Genes_enrich <- cluster_assignments_ProtGenes
+  Genes_enrich <- clusterAssignmentsProtGenes
 
   # New columns
   Genes_enrich$enriched_Term <- NA

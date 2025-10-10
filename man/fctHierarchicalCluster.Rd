@@ -4,14 +4,14 @@
 \alias{fctHierarchicalCluster}
 \title{fctHierarchicalCluster}
 \usage{
-fctHierarchicalCluster(parcor_mat, tom = TRUE, min_module_size = 10)
+fctHierarchicalCluster(parcorMat, tom = TRUE, minModuleSize = 10)
 }
 \arguments{
-\item{parcor_mat}{A partial correlation matrix from glassoFast$wi: Estimated inverse covariance matrix}
+\item{parcorMat}{A partial correlation matrix from glassoFast$wi: Estimated inverse covariance matrix}
 
 \item{tom}{TRUE: topological overlap measure; FALSE: partial correlation matrix; default is TRUE.}
 
-\item{min_module_size}{Smallest modules to be generated; default is 10}
+\item{minModuleSize}{Smallest modules to be generated; default is 10}
 }
 \value{
 result_list List containing TOM_diss (TOM dissimilarity; NA if argument TOM = FALSE), hclustTree (hierarchical clustering object), dynamicMods (index of module membership for features), and mod_count (number of modules).
@@ -28,12 +28,12 @@ rownames(mat) <- paste0("Sample", 1:10)
 
 # Compute covariance and partial correlation matrix
 cov_mat <- cov(mat)
-parcor_mat <- glassoFast::glassoFast(cov_mat, rho = 0.25)$wi
-diag(parcor_mat) <- NA
-colnames(parcor_mat) <- rownames(parcor_mat) <- paste0("Gene", 1:10)
+parcorMat <- glassoFast::glassoFast(cov_mat, rho = 0.25)$wi
+diag(parcorMat) <- NA
+colnames(parcorMat) <- rownames(parcorMat) <- paste0("Gene", 1:10)
 
 # Run hierarchical clustering
-result <- fctHierarchicalCluster(parcor_mat, tom = TRUE, min_module_size = 3)
+result <- fctHierarchicalCluster(parcorMat, tom = TRUE, minModuleSize = 3)
 
 # View module assignments
 head(result$cluster_assignments)

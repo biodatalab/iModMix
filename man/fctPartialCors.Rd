@@ -4,10 +4,10 @@
 \alias{fctPartialCors}
 \title{fctPartialCors}
 \usage{
-fctPartialCors(load_data, rho = 0.25)
+fctPartialCors(loadData, rho = 0.25)
 }
 \arguments{
-\item{load_data}{A prepossessed data matrix resulting from "load data" function.}
+\item{loadData}{A prepossessed data matrix resulting from "load data" function.}
 
 \item{rho}{The regularization parameter for lasso. (a non-negative value or a p by p matrix of regularization parameters).}
 }

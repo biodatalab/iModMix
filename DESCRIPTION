@@ -1,6 +1,6 @@
 Package: iModMix
 Title: Integrative Modules for Multi-Omics Data
-Version: 0.99.2
+Version: 0.99.3
 Authors@R: c(
     person(given = "Isis",
            family = "Narvaez-Bandera",
@@ -43,6 +43,7 @@ Imports:
     dplyr,
     stats,
     iModMixData,
+    SummarizedExperiment,
     ExperimentHub (>= 2.99.0)
 Suggests: 
     testthat (>= 3.0.0),
@@ -57,7 +58,6 @@ Suggests:
     vroom,
     here,
     enrichR,
-    SummarizedExperiment,
     rmarkdown
 Config/testthat/edition: 3
 VignetteBuilder: knitr

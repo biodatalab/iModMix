@@ -1,7 +1,7 @@
 #' fctPartialCors
 #'
 #' @description Calculates partial correlations based on graphical lasso (https://www.rdocumentation.org/packages/glassoFast/versions/1.0/topics/glassoFast).
-#' @param load_data A prepossessed data matrix resulting from "load data" function.
+#' @param loadData A prepossessed data matrix resulting from "load data" function.
 #' @param rho The regularization parameter for lasso. (a non-negative value or a p by p matrix of regularization parameters).
 #' @return partial_cor_mat A partial correlation matrix with NA's in the diagonal.
 #' @examples
@@ -18,9 +18,9 @@
 #' partial_cor_matrix[1:5, 1:5]
 #'
 #' @export
-fctPartialCors <- function(load_data, rho = .25) {
+fctPartialCors <- function(loadData, rho = .25) {
   # generate covariance matrix
-  cov_mat <- cov(as.matrix(load_data), use = "pairwise.complete.obs")
+  cov_mat <- cov(as.matrix(loadData), use = "pairwise.complete.obs")
   # calculate partial correlations
   glassoFast_result <- glassoFast::glassoFast(cov_mat, rho = rho, thr = 1e-04,
                                              maxIt = 10000, start = "cold",
@@ -30,8 +30,8 @@ fctPartialCors <- function(load_data, rho = .25) {
   # set diagonal values to 0; hierarchical clustering will give an error with NA diagonal values
   diag(partial_cor_mat) <- NA
   # set row/colnames to match feature matrix
-  rownames(partial_cor_mat) <- colnames(load_data)
-  colnames(partial_cor_mat) <- colnames(load_data)
+  rownames(partial_cor_mat) <- colnames(loadData)
+  colnames(partial_cor_mat) <- colnames(loadData)
   # return the resulting partial correlations
   return(partial_cor_mat)
 }

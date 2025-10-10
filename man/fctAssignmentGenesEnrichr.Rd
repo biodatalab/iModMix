@@ -5,12 +5,12 @@
 \title{fctAssignmentGenesEnrichr}
 \usage{
 fctAssignmentGenesEnrichr(
-  cluster_assignments_ProtGenes,
+  clusterAssignmentsProtGenes,
   database = "GO_Biological_Process_2023"
 )
 }
 \arguments{
-\item{cluster_assignments_ProtGenes}{(data frame containing cluster_assignments and HMDB/Symbol)}
+\item{clusterAssignmentsProtGenes}{(data frame containing cluster_assignments and HMDB/Symbol)}
 
 \item{database}{A list with all the available databases from enrichr}
 }
@@ -33,7 +33,7 @@ if (interactive()) {
 
   # Run enrichment analysis using Enrichr (requires internet connection)
   enriched_results <- fctAssignmentGenesEnrichr(
-    cluster_assignments_ProtGenes = cluster_assignments,
+    clusterAssignmentsProtGenes = cluster_assignments,
     database = "GO_Biological_Process_2023"
   )
 
