@@ -1674,9 +1674,9 @@ mod_module1_server <- function(id){
     ###### Data2
     # Data Input
 
-    observeEvent(input$Data2, {
-      req(input$Data2)
-      filedata_value <- read.csv(input$Data2$datapath)
+    observeEvent(input$data2, {
+      req(input$data2)
+      filedata_value <- read.csv(input$data2$datapath)
       Prot_exp(filedata_value)
     })
 
@@ -2233,9 +2233,9 @@ mod_module1_server <- function(id){
     ####### Data3
     # Data Input
 
-    observeEvent(input$Data3, {
-      req(input$Data3)
-      filedata_value <- read.csv(input$Data3$datapath)
+    observeEvent(input$data3, {
+      req(input$data3)
+      filedata_value <- read.csv(input$data3$datapath)
       Gene_exp(filedata_value)
     })
 
