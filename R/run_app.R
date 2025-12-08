@@ -16,7 +16,8 @@ run_app <- function(
     uiPattern = "/",
     ...
 )
-{  # --- START: Inicialización de iModMixData ---
+{ options(shiny.maxRequestSize = 1000*1024^2)  # 100 MB
+  # --- START: Inicialización de iModMixData ---
   eh_cache <- tools::R_user_dir("ExperimentHub", "cache")
   if (!dir.exists(eh_cache)) dir.create(eh_cache, recursive = TRUE)
   eh <- ExperimentHub::ExperimentHub()
