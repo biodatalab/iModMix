@@ -22,8 +22,9 @@ mod_module1_ui <- function(id) {
   ns <- NS(id)
 
   tagList(
-
-    sidebarPanel(
+    
+    sidebarLayout(
+      sidebarPanel(
       width = 4,
 
       fileInput(
@@ -1067,6 +1068,7 @@ mod_module1_ui <- function(id) {
                  )
       )
     )
+  )
   )
 }
 

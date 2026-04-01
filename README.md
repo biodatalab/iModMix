@@ -4,6 +4,7 @@ output:
   pdf_document: default
 ---
 # IModMix Tutorial
+[![DOI](https://img.shields.io/badge/DOI-10.1093/bioinformatics/btag030-blue)](https://doi.org/10.1093/bioinformatics/btag030)
 `iModMix` is a novel network-based approach that integrates multi-omics data, including metabolomics, proteomics, and transcriptomics data, into a unified network to unveil associations across various layers of omics data and reveal significant associations with phenotypes of interest.
 
 # Introduction
@@ -183,3 +184,16 @@ If there are more than two levels, it compares one level against the others.
 Dots mark outliers and a legend is provided for the compared phenotypes.
                                      
 ![](https://github.com/user-attachments/assets/9cad9a8f-cec8-4723-b871-fe99344e3ee0)
+
+## Publication
+
+If you use **iModMix**, please cite:
+
+Narváez-Bandera I, Lui A, Mekonnen YA, Rubio V, Sulman N, Wilson C, Ackerman HD, Ospina OE, Gonzalez-Calderon G, Flores E, Li Q, Chen A, Fridley B, Stewart P.  
+**iModMix: Integrative Module Analysis for Multi-omics Data.**  
+*Bioinformatics*. 2026;42(2):btag030.  
+https://doi.org/10.1093/bioinformatics/btag030  
+
+Preprint: https://doi.org/10.1101/2024.11.12.623208  
+
+[Read the full publication](https://pubmed.ncbi.nlm.nih.gov/39605665/)
