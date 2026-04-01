@@ -60,7 +60,9 @@ In summary, this application will allow the user to perform multi-omic integrati
 
 When using iModMix, please cite the following publication:
 
-Narváez-Bandera, I., Lui, A., Mekonnen, Y. A., Rubio, V., Sulman, N., Wilson, C., Ackerman, H., Ospina, o., Gonzalez-Calderon1 , G., Flores, E., Li, Q., Chen, A., Fridley, B., & Stewart, P. (2024). iModMix: Integrative Module Analysis for Multi-omics Data. bioRxiv, 2024-11.
+Narváez-Bandera I, Lui A, Mekonnen YA, Rubio V, Sulman N, Wilson C, Ackerman HD, Ospina OE, Gonzalez-Calderon G, Flores E, Li Q, Chen A, Fridley B, Stewart P. iModMix: Integrative Module Analysis for Multi-omics Data. bioRxiv [Preprint]. 2025 May 14:2024.11.12.623208. doi: 10.1101/2024.11.12.623208. Update in: Bioinformatics. 2026 Feb 3;42(2):btag030. 
+doi: 10.1093/bioinformatics/btag030. PMID: 39605665; PMCID: PMC11601443.
 
-Read the full publication: https://www.biorxiv.org/content/biorxiv/early/2024/12/17/2024.11.12.623208.full.pdf
+Read the full publication:
+https://pubmed.ncbi.nlm.nih.gov/39605665/
 
