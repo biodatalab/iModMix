@@ -1,6 +1,6 @@
 Package: iModMix
 Title: Integrative Modules for Multi-Omics Data
-Version: 1.1.1
+Version: 1.1.2
 Authors@R: c(
     person(given = "Isis",
            family = "Narvaez-Bandera",
